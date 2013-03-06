@@ -1,8 +1,7 @@
 #ifndef LEXERDEF_H_INCLUDED
 #define LEXERDEF_H_INCLUDED
-typedef char[] *buffer;
+typedef char *buffer;
 typdef int buffersize;
-buffersize k=1024;
 
 typedef enum
 {

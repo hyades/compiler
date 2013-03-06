@@ -6,6 +6,6 @@ char getNextChar(FILE *fp, bool *back);
 token keywordId(char *lexeme, keywordTable kt);//returns token for lexeme if it is a keyword or fieldname
 token mainFun(char *lexeme, keywordTable kt);//returns token for lexeme if it is main or function
 void addKeyword(keywordTable kt, char *keyword, symbol s);
-int hash(char *keyword);//find hash value of string based on key K
+int hash(char *keyword, int hashkey);//find hash value of string based on hashkey
 void initkt(keywordTable kt);
 #endif // LEXER_H_INCLUDED
