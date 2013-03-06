@@ -14,13 +14,13 @@ MAYANK GUPTA 2010A7PS022P
 
 #include"lexer.h"
 
-tokenInfo getNextToken(FILE *fp)
+tokenInfo getNextToken(FILE *fp)//get next token
 {
 
     tokeninfo t;
     static bool back = 0;
-    int state = 1,i=0
-                    char c;
+    int state=1,i=0;
+    char c;
     char lexeme[100];
 
     while(1)
@@ -142,7 +142,7 @@ char getNextChar(FILE *fp, bool *back)//gets next character from source file at 
 
 void addKeyword(keywordTable kt, char *keyword, symbol s)//recursively called to add keyword to keywordTable
 {
-    int hval,hashkey=36;//twice the no. of keywords
+    int hval,hashkey=48;//twice the no. of keywords
     hval=hash(keyword);
     while(kt[h].present==TRUE)
         hval=(++hval)%hashkey;
@@ -157,4 +157,32 @@ int hash(char *keyword, int hashkey)//hash function
     while(keyword[i]!='\0')
         hash=(hash*mul+s[i++])%hashkey;
     return hash;
+}
+
+void initkt(keywordTable kt)//initialize keywordTable with keywords
+{
+    addKeyword(kt, "_main", TK_MAIN );
+    addKeyword(kt, "call", TK_CALL);
+    addKeyword(kt, "else", TK_ELSE);
+    addKeyword(kt, "end", TK_END);
+    addKeyword(kt, "endif", TK_ENDIF);
+    addKeyword(kt, "endrecord", TK_ENDRECORD);
+    addKeyword(kt, "endwhile", TK_ENDWHILE);
+    addKeyword(kt, "global", TK_GLOBAL);
+    addKeyword(kt, "if", TK_IF);
+    addKeyword(kt, "input", TK_INPUT);
+    addKeyword(kt, "int", TK_INT);
+    addKeyword(kt, "list", TK_LIST);
+    addKeyword(kt, "output", TK_OUTPUT);
+    addKeyword(kt, "parameter", TK_PARAMETER);
+    addKeyword(kt, "parameters", TK_PARAMETERS);
+    addKeyword(kt, "read", TK_READ);
+    addKeyword(kt, "real", TK_REAL);
+    addKeyword(kt, "record", TK_RECORD);
+    addKeyword(kt, "return", TK_RETURN);
+    addKeyword(kt, "then", TK_THEN);
+    addKeyword(kt, "type", TK_TYPE);
+    addKeyword(kt, "while", TK_WHILE);
+    addKeyword(kt, "with", TK_WITH);
+    addKeyword(kt, "write", TK_WRITE);
 }
