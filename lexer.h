@@ -1,7 +1,7 @@
 #ifndef LEXER_H_INCLUDED
 #define LEXER_H_INCLUDED
 FILE *getStream(FILE *fp, buffer B, buffersize k);
-tokenInfo getNextToken(FILE *fp);
+tokenInfo getNextToken(FILE *fp, keywordTable kt, bool *error);
 char getNextChar(FILE *fp, bool *back);
 token keywordId(char *lexeme, keywordTable kt);//returns token for lexeme if it is a keyword or fieldname
 token mainFun(char *lexeme, keywordTable kt);//returns token for lexeme if it is main or function
