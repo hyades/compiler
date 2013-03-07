@@ -34,7 +34,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
         {
             case 1:
                     c = getNextChar(fp,&back);
-                    printf(" %c ",c);
+                    //printf(" %c ",c);
                     if((int)c==EOF)return NULL;
                     else if(c=='-')state = 2;
                     else if(c=='!')state = 3;
@@ -75,11 +75,12 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else if(c==' '||c=='\t'||c=='\n')
                     {
-                        if(c=='\n')
-                        printf("newline\n");
                         state = 45;
-                        if(c=='\n')
-                            (*linenumber)++;  //ADD TO INPUT PARAMETERS
+                    }
+                    else if(c=='\n')
+                    {
+                        state = 45;
+                        (*linenumber)++;  //ADD TO INPUT PARAMETERS
                     }
                     else
                     {
@@ -497,7 +498,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
 
 
         }
-        //printf("State = %d   c = %c\n", state,c);
+        printf("State = %d   c = %c\n", state,c);
     }
 }
 
@@ -511,14 +512,6 @@ int getStream(int fp, buffer B, buffersize k)//reads k characters from source fi
     */
     int amtRead=0;
     amtRead = read(fp,B,k);
-    int i;
-    for(i=0;i<k;i++)
-    {
-        if(B[i]=='\n')
-            printf("newline");
-        else
-            printf("%c", B[i]);
-    }
     return amtRead;
 
 
