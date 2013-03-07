@@ -11,13 +11,14 @@ MAYANK GUPTA 2010A7PS022P
 #include<stdio.h>
 #include<ctype.h>
 #include<string.h>
-
+#include"lexerDef.h"
 #include"lexer.h"
 
-tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)//get next token
+
+tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//get next token
 {
 
-    tokeninfo t;
+    tokenInfo t;
     static bool back = 0;
     int state=1,i=0;
     char c;
@@ -30,7 +31,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
         {
             case 1:
                     c = getNextChar(fp,&back);
-                    if(int(c)==EOF)return NULL;
+                    if((int)c==EOF)return NULL;
                     else if(c=='-')state = 2;
                     else if(c=='!')state = 3;
                     else if(c=='#'){state = 5;lexeme[i++] = c;}
@@ -91,7 +92,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
                     break;
             case 4:
                     t = (tokenInfo)malloc(sizeof(tokenInfo));
-                    t->s = TK_NT;
+                    t->s = TK_NE;
                     return t;
                     break;
             case 5:
@@ -339,7 +340,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
                     break;
             case 31:
                     c = getNextChar(fp,&back);
-                    if((isalpha(c))
+                    if(isalpha(c))
                        {
                            lexeme[i++] =c;
                            state = 32;
@@ -462,7 +463,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
                     }
                     break;
             case 46:
-                    c = getNextToken(fp,&back)
+                    c = getNextChar(fp,&back);
                     if(c=='\n')state = 1;
                     else state = 46;
                     break;
@@ -478,21 +479,27 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
     }
 }
 
-
-FILE *getStream(FILE *fp, buffer B, buffersize k)//reads k characters from source file into buffer B
+int getStream(int fp, buffer B, buffersize k)//reads k characters from source file into buffer B
 {
+    /*
     int ch, i=0;
     for (ch = fgetc(fp); ch != EOF && ch != '\n' && i<k; ch = fgetc(fp))
         B[i++] = (char)ch;
     return fp;
+    */
+    int amtRead=0;
+    amtRead = read(fp,B,k);
+    return amtRead;
+
+
 }
 
 
-char getNextChar(FILE *fp, bool *back)//gets next character from source file at position x
+char getNextChar(int fp, bool *back)//gets next character from source file at position x
 {
-    static int x=0,k=100;
-    static buffer b1=(buffer)malloc(sizeof(buffer));
-    static buffer b2=(buffer)malloc(sizeof(buffer));
+    static int x=0,k=100,y;
+    static buffer b1;
+    static buffer b2;
     x%=k*2;
     if(*back==TRUE)
     {
@@ -504,29 +511,29 @@ char getNextChar(FILE *fp, bool *back)//gets next character from source file at 
     else
     {
         if(x==0)
-            fp=getStream(fp, b1, k);
-        else if(x==100)
-            fp=getStream(fp, b2, k);
+            y=getStream(fp, b1, k);
+        else if(x==k)
+            y=getStream(fp, b2, k);
     }
-    if(fp==EOF)
+    if(x==y)
     {
         x++;
         return (char)EOF;
     }
-    if(x<100)
-        return *b1[x++];
-    return *b2[x++-100];
+    if(x<k)
+        return b1[x++];
+    return b2[x++ - k];
 }
 
 void addKeyword(keywordTable kt, char *keyword, symbol s)//recursively called to add keyword to keywordTable
 {
     int hval,hashkey=48;//twice the no. of keywords
-    hval=hash(keyword);
-    while(kt[h].present==TRUE)
+    hval=hash(keyword,hashkey);
+    while(kt[hval].present==TRUE)
         hval=(++hval)%hashkey;
     strcpy(kt[hval].keyword, keyword);
-    KT[hval].present=TRUE;
-    KT[hval].s=s;
+    kt[hval].present=TRUE;
+    kt[hval].s=s;
 }
 
 int hash(char *keyword, int hashkey)//hash function
