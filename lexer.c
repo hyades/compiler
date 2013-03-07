@@ -28,195 +28,298 @@ tokenInfo getNextToken(FILE *fp)//get next token
 
         switch(state)
         {
-        case 1:
-            c = getNextChar(fp,&back);
-            if(int(c)==EOF)return NULL;
-            else if(c=='-')state = 2;
-            else if(c=='!')state = 3;
-            else if(c=='#')state = 5;
-            else if(c=='%')state = 7;
-            else if(c=='&')state = 8;
-            else if(c=='(')state = 11;
-            else if(c==')')state = 12;
-            else if(c=='*')state = 13;
-            else if(c=='.')state = 14;
-            else if(c=='/')state = 15;
-            else if(c==':')state = 16;
-            else if(c==';')state = 17;
-            else if(c=='@')state = 18;
-            else if(c=='[')state = 21;
-            else if(c==']')state = 30;
-            else if(c=='_')state = 31;
-            else if(c=='~')state = 34;
-            else if(c=='+')state = 35;
-            else if(c=='<')state = 36;
-            else if(c=='=')state = 41;
-            else if(c=='>')state = 43;
-            else if(isdigit(c))state = 22;
-            else if((c=='a')||(c>='e'&&c<='z'))state = 26;
-            else if(c>='b'&&c<='d')state = 27;
-            else if(c==' '||c=='\t'||c=='\n')state = 45;
-            else
-            {
-                *error = TRUE;
-                return NULL;
-            }
-            break;
+            case 1:
+                    c = getNextChar(fp,&back);
+                    if(int(c)==EOF)return NULL;
+                    else if(c=='-')state = 2;
+                    else if(c=='!')state = 3;
+                    else if(c=='#'){state = 5;lexeme[i++] = c;}
+                    else if(c=='%')state = 7;
+                    else if(c=='&')state = 8;
+                    else if(c=='(')state = 11;
+                    else if(c==')')state = 12;
+                    else if(c=='*')state = 13;
+                    else if(c=='.')state = 14;
+                    else if(c=='/')state = 15;
+                    else if(c==':')state = 16;
+                    else if(c==';')state = 17;
+                    else if(c=='@')state = 18;
+                    else if(c=='[')state = 21;
+                    else if(c==']')state = 30;
+                    else if(c=='_')state = 31;
+                    else if(c=='~')state = 34;
+                    else if(c=='+')state = 35;
+                    else if(c=='<')state = 36;
+                    else if(c=='=')state = 41;
+                    else if(c=='>')state = 43;
+                    else if(isdigit(c))
+                    {
+                        state = 22;
+                        lexeme[i++] = c;
+                    }
+                    else if((c=='a')||(c>='e'&&c<='z'))
+                    {
+                        state = 26;
+                        lexeme[i++] =c;
+                    }
+                    else if(c>='b'&&c<='d')
+                    {
+                        state = 27;
+                        lexeme[i++] =c;
+                    }
+                    else if(c==' '||c=='\t'||c=='\n')
+                    {
+                        state = 45;
+                        *linenumber++;  //ADD TO INNPUT PARAMETERS
+                    }
+                    else
+                    {
+                        *error = TRUE;
+                        return NULL;
+                    }
+                    break;
 
-        case 2:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_MINUS;
-            return t;
-            break;
+            case 2:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_MINUS;
+                    return t;
+                    break;
 
-        case 3:
-            c = getNextChar(fp,&back);
-            if(c=='=')state = 4;
-            break;
-        case 4:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_NT;
-            return t;
-            break;
-        case 5:
-            c = getNextChar(fp,&back);
-            if(c>='a'&&c<='z')state =6;
-            break;
+            case 3:
+                    c = getNextChar(fp,&back);
+                    if(c=='=')state = 4;
+                    break;
+            case 4:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_NT;
+                    return t;
+                    break;
+            case 5:
+                    c = getNextChar(fp,&back);
+                    if(c>='a'&&c<='z')
+                    {
+                        state =6;
+                        lexeme[i++] =c;
+                    }
+                    break;
 
-        case 6:
-            c = getNextChar(fp,&back);
-            if(c>='a'&&c<='z')
-            {
-                state = 6;
-                lexeme[i++] = c;
-            }
+            case 6:
+                    c = getNextChar(fp,&back);
+                    if(c>='a'&&c<='z')
+                    {
+                        state = 6;
+                        lexeme[i++] = c;
+                    }
 
-            else
-            {
-                t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_RECORDID;
-                strcpy(t->lexeme,lexeme);
-                return t;
-            }
-            break;
+                    else
+                    {
+                        back = 1;
+                        t = (tokenInfo)malloc(sizeof(tokenInfo));
+                        t->s = TK_RECORDID;
+                        strcpy(t->lexeme,lexeme);
+                        return t;
+                    }
+                    break;
 
-        case 7:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_COMMENT;
-            return t;
-            break;
-        case 8:
-            c = getNextChar(fp,&back);
-            if(c=='&')
-            {
-                state = 9;
-                lexeme[i++] = c;
-            }
-            break;
+            case 7:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_COMMENT;
+                    return t;
+                    break;
+            case 8:
+                    c = getNextChar(fp,&back);
+                    if(c=='&')
+                    {
+                        state = 9;
+                        lexeme[i++] = c;
+                    }
+                    break;
 
-        case 9:
-            c = getNextChar(fp,&back);
-            if(c=='&')
-            {
-                state = 10;
-                lexeme[i++] =c;
+            case 9:
+                    c = getNextChar(fp,&back);
+                    if(c=='&')
+                    {
+                        state = 10;
+                        lexeme[i++] =c;
 
-            }
-            break;
-        case 10:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            strcpy(t->lexeme,lexeme);
-            t->s = TK_AND;
-            return t;
-            break;
-        case 11:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_OP;
-            return t;
-            break;
-        case 12:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_CL;
-            return t;
-            break;
-        case 13:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_MUL;
-            return t;
-            break;
-        case 14:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_DOT;
-            return t;
-            break;
-        case 15:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_DIV;
-            return t;
-            break;
-        case 16:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_COLON;
-            return t;
-            break;
-        case 17:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_SEM;
-            return t;
-            break;
-        case 18:
-            c = getNextChar(fp,&back);
-            if(c=='@')
-            {
-                lexeme[i++] = c;
-                state = 19;
-            }
-            break;
-        case 19:
-            c = getNextChar(fp,&back);
-            if(c=='@')
-            {
-                lexeme[i++] = c;
-                state = 20;
-            }
-            break;
-        case 20:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_OR;
-            strcpy(t->lexeme,lexeme);
-            return t;
-            break;
-        case 21:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_SQL;
-            return t;
-            break;
-        case 30:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_SQR;
-            return t;
-            break;
-        case 31:
-            //take care of _main lexeme use lookup
-
-        case 34:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_NOT;
-            return t;
-            break;
-        case 35:
-            t = (tokenInfo)malloc(sizeof(tokenInfo));
-            t->s = TK_PLUS;
-            return t;
-            break;
-        case 36:
-            //todo
-        case 41:
-            //todo
-        case 43:
-            //todo
+                    }
+                    break;
+            case 10:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    strcpy(t->lexeme,lexeme);
+                    t->s = TK_AND;
+                    return t;
+                    break;
+            case 11:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_OP;
+                    return t;
+                    break;
+            case 12:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_CL;
+                    return t;
+                    break;
+            case 13:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_MUL;
+                    return t;
+                    break;
+            case 14:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_DOT;
+                    return t;
+                    break;
+            case 15:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_DIV;
+                    return t;
+                    break;
+            case 16:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_COLON;
+                    return t;
+                    break;
+            case 17:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_SEM;
+                    return t;
+                    break;
+            case 18:
+                    c = getNextChar(fp,&back);
+                    if(c=='@')
+                    {
+                        lexeme[i++] = c;
+                        state = 19;
+                    }
+                    break;
+            case 19:
+                    c = getNextChar(fp,&back);
+                    if(c=='@')
+                    {
+                        lexeme[i++] = c;
+                        state = 20;
+                    }
+                    break;
+            case 20:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_OR;
+                    strcpy(t->lexeme,lexeme);
+                    return t;
+                    break;
+            case 21:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_SQL;
+                    return t;
+                    break;
+            case 22:
+                    c = getNextChar(fp,&back);
+                    if(isdigit(c))
+                    {
+                        state = 22;
+                        lexeme[i++] = c;
+                    }
+                    else if(c=='.')
+                    {
+                        state = 23;
+                        lexeme[i++] = c;
+                    }
+                    else
+                    {
+                        back = yes;
 
 
+                    }
+
+            case 30:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_SQR;
+                    return t;
+                    break;
+            case 31:
+                    //take care of _main lexeme use lookup
+
+            case 34:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_NOT;
+                    return t;
+                    break;
+            case 35:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_PLUS;
+                    return t;
+                    break;
+            case 36:
+
+                    c = getNextChar(fp,&back);
+                    if(c=='-')state = 37;
+                    else if(c=='=')state = 40;
+                    else
+                    {
+                        t = (tokenInfo)malloc(sizeof(tokenInfo));
+                        t->s = TK_LT;
+                        return t;
+                    }
+                    break;
+            case 37:
+                    c = getNextChar(fp,&back);
+                    if(c=='-')state = 38;
+                    break;
+
+            case 38:
+                    c = getNextChar(fp,&back);
+                    if(c=='-')state = 39;
+                    break;
+            case 39:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_ASSIGNOP;
+                    return t;
+                    break;
+            case 40:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_LE;
+                    return t;
+                    break;
+
+            case 41:
+                    c = getNextChar(fp,&back);
+                    if(c=='=')state = 42;
+                    break;
+
+            case 42:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_EQ;
+                    return t;
+                    break;
+            case 43:
+                    c = getNextChar(fp,&back);
+                    if(c=='=')state = 44;
+                    else
+                    {
+                        t = (tokenInfo)malloc(sizeof(tokenInfo));
+                        t->s = TK_GT;
+                        return t;
+                    }
+                    break;
+            case 44:
+                    t = (tokenInfo)malloc(sizeof(tokenInfo));
+                    t->s = TK_GE;
+                    return t;
+                    break;
+            case 45:
+                    c = getNextChar(fp,&back);
+                    if(c==' '||c=='\t')state = 45;
+                    else if(c=='\n')
+                    {
+                        *linenumber++;
+                        state = 45;
+                    }
+                    else
+                    {
+                        back = 1;
+                        state = 1;
+                    }
+                    break;
 
 
 
