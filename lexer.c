@@ -5,7 +5,8 @@ BATCH 26
 AAYUSH AHUJA 2010A7PS023P
 MAYANK GUPTA 2010A7PS022P
 -=-=-=-=-=-=-=-=-=-=-=-=-=
-
+lexer.c
+-=-=-=-=-=-=-=-=-=-=-=-=-=
 */
 
 #include<stdio.h>
@@ -75,7 +76,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        *error = TRUE;
+                        *error = 1;
                         return NULL;
                     }
                     break;
@@ -607,3 +608,4 @@ token mainFun(char *lexeme, keywordTable kt)//returns token for lexeme if it is 
     t.s=TK_FUNID;
     return t;
 }
+

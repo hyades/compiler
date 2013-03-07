@@ -1,3 +1,14 @@
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+BATCH 26
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+AAYUSH AHUJA 2010A7PS023P
+MAYANK GUPTA 2010A7PS022P
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+lexerDef.h
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
+
 #ifndef LEXERDEF_H_INCLUDED
 #define LEXERDEF_H_INCLUDED
 typedef char * buffer;

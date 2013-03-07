@@ -1,3 +1,14 @@
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+BATCH 26
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+AAYUSH AHUJA 2010A7PS023P
+MAYANK GUPTA 2010A7PS022P
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+lexer.h
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
+
 #ifndef LEXER_H_INCLUDED
 #define LEXER_H_INCLUDED
 int getStream(int fp, buffer B, buffersize k);//reads k characters from source file into buffer B
