@@ -19,7 +19,8 @@ typedef struct
     symbol s;
     char lexeme[100];
 } token;
-typedef token* ptoken;
+typedef token * ptoken;
+typedef token * tokenInfo;
 
 typedef struct
 {

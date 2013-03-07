@@ -533,7 +533,7 @@ int hash(char *keyword, int hashkey)//hash function
 {
     int hash=0,mul=3,i=0;
     while(keyword[i]!='\0')
-        hash=(hash*mul+s[i++])%hashkey;
+        hash=(hash*mul+keyword[i++])%hashkey;
     return hash;
 }
 
