@@ -37,13 +37,13 @@ int main()
         while(1)
         {
             t = getNextToken(fp,kt,&error,&linenumber);
-            if(!t)break;
+            if(t==NULL)break;
             if(t->lexeme)
                 fprintf(f,"[ %s %s %d ]\n",toStr(t->s),t->lexeme,linenumber);
             else
                 fprintf(f,"[ %s %d ]\n",toStr(t->s),linenumber);
         }
-
+    close(fp);
         return 0;
 
 }
