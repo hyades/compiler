@@ -19,4 +19,5 @@ token mainFun(char *lexeme, keywordTable kt);//returns token for lexeme if it is
 void addKeyword(keywordTable kt, char *keyword, symbol s);//recursively called to add keyword to keywordTable
 int hash(char *keyword, int hashkey);//find hash value of string based on hashkey
 void initkt(keywordTable kt);
+char* toStr ( symbol s );//return Symbol as string
 #endif // LEXER_H_INCLUDED

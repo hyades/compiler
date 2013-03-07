@@ -17,35 +17,33 @@ run.c
 #include "lexerDef.h"
 #include "lexer.h"
 
-
-char* toStr ( symbol s )
-{
-    switch(s)
-    {
-        case TK_MAIN:return "TK_MAIN";
-
-    }
-
-}
 int main()
 {
-    int fp;
+    int fp,i;
     tokenInfo t;
-    keywordTable kt;
+    keyword kt[48];
+    for(i=0; i<48; i++)
+        kt[i].present=FALSE;
     fp = open("input.txt",O_RDONLY);
+    if(fp==-1)
+    {
+        printf("not found");
+        return 0;
+    }
     int linenumber = 1;
     bool error = 0;
     initkt(kt);
-    FILE *f = fopen("tokens.txt","w");
-    while(1)
-    {
-        t = getNextToken(fp,kt,&error,&linenumber);
-        if(!t)break;
-        if(t->lexeme)
-            fprintf(f,"[ %s %s %d ]\n",toStr(t->s),t->lexeme,linenumber);
-        else
-            fprintf(f,"[ %s %d ]\n",toStr(t->s),linenumber);
-    }
+        FILE *f = fopen("tokens.txt","w");
+        while(1)
+        {
+            t = getNextToken(fp,kt,&error,&linenumber);
+            if(!t)break;
+            if(t->lexeme)
+                fprintf(f,"[ %s %s %d ]\n",toStr(t->s),t->lexeme,linenumber);
+            else
+                fprintf(f,"[ %s %d ]\n",toStr(t->s),linenumber);
+        }
 
-    return 0;
+        return 0;
+
 }
