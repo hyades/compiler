@@ -21,7 +21,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
     static bool back = 0;
     int state=1,i=0;
     char c;
-    char lexeme[100];
+    char lexeme[100]; //assuming max lexeme size os 100
 
     while(1)
     {
@@ -124,6 +124,7 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
             case 7:
                     t = (tokenInfo)malloc(sizeof(tokenInfo));
                     t->s = TK_COMMENT;
+                    state = 46;
                     return t;
                     break;
             case 8:
@@ -460,6 +461,12 @@ tokenInfo getNextToken(FILE *fp ,keywordTable kt, bool *error, int *linenumber)/
                         state = 1;
                     }
                     break;
+            case 46:
+                    c = getNextToken(fp,&back)
+                    if(c=='\n')state = 1;
+                    else state = 46;
+                    break;
+
 
 
 
