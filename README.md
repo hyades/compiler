@@ -1,4 +1,4 @@
-compiler for PLCC
+PLCC COMPILER PROJECT
 =================
 
 Compiler in C
