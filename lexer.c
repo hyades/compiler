@@ -22,7 +22,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
 {
 
     tokenInfo t;
-    static bool back = 0;
+    static int back = 0;
     int state=1,i=0;
     char c;
     char lexeme[100] = {}; //assuming max lexeme size as 100
@@ -76,6 +76,8 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     else if(isspace(c))
                     {
                         state = 45;
+                        if(c=='\n'||c=='\r')
+                        	(*linenumber)++;
                     }
 
                     else
@@ -146,7 +148,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
 
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_RECORDID;
                         lexeme[i]='\0';
@@ -314,7 +316,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                      {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_NUM;
                         lexeme[i]='\0';
@@ -372,7 +374,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         lexeme[i]='\0';
                         *t=keywordId(lexeme, kt);
@@ -394,7 +396,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_FIELDID;
                         lexeme[i]='\0';
@@ -416,7 +418,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_ID;
                         lexeme[i]='\0';
@@ -433,7 +435,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_ID;
                         lexeme[i]='\0';
@@ -481,7 +483,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         lexeme[i]='\0';
                         *t=mainFun(lexeme, kt);
@@ -497,7 +499,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_FUNID;
                         lexeme[i]='\0';
@@ -520,12 +522,11 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     return t;
                     break;
             case 36:
-
                     c = getNextChar(fp,&back);
                     if(c=='-'){state = 37;lexeme[i++]=c;}
                     else if(c=='='){state = 40;lexeme[i++]=c;}
                     else
-                    {
+                    {	
                         t = (tokenInfo)malloc(sizeof(tokenInfo));
                         t->s = TK_LT;
                         lexeme[i]='\0';
@@ -537,13 +538,13 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     c = getNextChar(fp,&back);
                     if(c=='-'){state = 38;lexeme[i++] = c;}
                     else
-                    {
-                    	*error = TRUE;
+                    {	
+                    	back = 2;
                     	t = (tokenInfo)malloc(sizeof(tokenInfo));
-                    	t->s = TK_ERROR;
-                    	lexeme[i] = '\0';
+                        t->s = TK_LT;
+                        lexeme[i]='\0';
                     	strcpy(t->lexeme,lexeme);
-                    	return t;
+                        return t;
                     }
                     break;
 
@@ -552,12 +553,12 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     if(c=='-'){state = 39;lexeme[i++]=c;}
                     else
                     {
-                    	*error = TRUE;
+                    	back = 3;
                     	t = (tokenInfo)malloc(sizeof(tokenInfo));
-                    	t->s = TK_ERROR;
-                    	lexeme[i] = '\0';
+                        t->s = TK_LT;
+                        lexeme[i]='\0';
                     	strcpy(t->lexeme,lexeme);
-                    	return t;
+                        return t;
                     }
                     break;
             case 39:
@@ -618,7 +619,8 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             case 45:			//WHITESPACE STATE
                     c = getNextChar(fp,&back);
                     if(c=='\n'||c=='\r')
-                    {
+                    {	
+                    	printf("newline\n");
                         (*linenumber)++;
                         state = 45;
                     }
@@ -628,7 +630,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     }
                     else
                     {
-                        back = TRUE;
+                        back = 1;
                         state = 1;
                     }
                     break;
@@ -636,7 +638,6 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     c = getNextChar(fp,&back);
                     if(c=='\n')
                     {
-                    	back = 1;
                     	lexeme[i]='\0';
                     	strcpy(t->lexeme,lexeme);
                     	(*linenumber)++;
@@ -659,7 +660,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
 
 
         }
-        //printf("State = %d   c = %c\n", state,c);
+        //printf("State = %d   c = %c	line=%d\n", state,c,*linenumber);
     }
 }
 
@@ -679,7 +680,7 @@ int getStream(int fp, buffer B, buffersize k)//reads k characters from source fi
 }
 
 
-char getNextChar(int fp, bool *back)//gets next character from source file at position x
+char getNextChar(int fp, int *back)//gets next character from source file at position x
 {
     static int x=0,k=100,y;
     static char cb1[100];
@@ -689,12 +690,12 @@ char getNextChar(int fp, bool *back)//gets next character from source file at po
     int flag=0;
     x%=k*2;
     //printf("x = %d\n",x);
-    if(*back==TRUE)
+    if(*back>=1)
     {
-        x--;
+        x-=*back;
         x+=k*2;
         x%=k*2;
-        *back=FALSE;
+        *back=0;
     }
     else
     {
@@ -718,7 +719,6 @@ char getNextChar(int fp, bool *back)//gets next character from source file at po
         return b1[x++];
     return b2[x++ - k];
 }
-
 void addKeyword(keywordTable kt, char *keyword, symbol s)//recursively called to add keyword to keywordTable
 {
     int hval,hashkey=48;//twice the no. of keywords
@@ -927,9 +927,9 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
     while(1)
     {
         t = getNextToken(fp,kt,&error,&linenumber);
-        if(t==NULL||error==1)
+        if(t==NULL)
         {
-            if(error==1)printf("error!\n");
+            //if(error==1)printf("error!\n");
             break;
         }
         tokenList temp=(tokenList)malloc(sizeof(tokenList));
@@ -944,7 +944,8 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
             curr=curr->next;
         }
         curr->t=t;
-        curr->linenumber=linenumber;
+        if(t->s==TK_COMMENT)curr->linenumber=linenumber-1;
+        else curr->linenumber=linenumber;
         curr->next=NULL;
     }
     return list;
