@@ -504,7 +504,6 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                         strcpy(t->lexeme,lexeme);
                         return t;
                     }
-                    break;
             case 34:
                     t = (tokenInfo)malloc(sizeof(tokenInfo));
                     t->s = TK_NOT;
