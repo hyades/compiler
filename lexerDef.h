@@ -42,5 +42,13 @@ typedef struct
 
 typedef keyword * keywordTable;
 
+struct tokenlist
+{
+    tokenInfo t;
+    struct tokenlist * next;
+    int linenumber;
+};
+typedef struct tokenlist * tokenList;
+
 
 #endif // LEXERDEF_H_INCLUDED

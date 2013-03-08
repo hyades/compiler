@@ -42,9 +42,9 @@ int main()
                 if(error==1)printf("error!\n");
                 break;
             }
-            
-            fprintf(f,"%s\n",toStr(t->s));
-            
+
+            fprintf(f,"%s %d\n",toStr(t->s), linenumber);
+
         }
     close(fp);
         return 0;

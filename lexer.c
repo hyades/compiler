@@ -77,7 +77,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     {
                         state = 45;
                     }
-                    
+
                     else
                     {
                         *error = 1;
@@ -86,7 +86,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     	lexeme[i] = '\0';
                     	strcpy(t->lexeme,lexeme);
                     	return t;
-                        
+
                     }
                     break;
 
@@ -639,6 +639,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
                     	back = 1;
                     	lexeme[i]='\0';
                     	strcpy(t->lexeme,lexeme);
+                    	(*linenumber)++;
                     	return t;
                     }
                     else state = 46;
@@ -914,5 +915,47 @@ char* toStr ( symbol s )
         return "TK_COMMA";
     default:
         return "INVALID";
+    }
+}
+
+tokenList createTokenList(int fp, keywordTable kt)//create Token List
+{
+    int linenumber = 1;
+    bool error = 0;
+    tokenInfo t;
+    tokenList list,curr=NULL;
+    while(1)
+    {
+        t = getNextToken(fp,kt,&error,&linenumber);
+        if(t==NULL||error==1)
+        {
+            if(error==1)printf("error!\n");
+            break;
+        }
+        tokenList temp=(tokenList)malloc(sizeof(tokenList));
+        if(curr==NULL)
+        {
+            curr=temp;
+            list=temp;
+        }
+        else
+        {
+            curr->next=temp;
+            curr=curr->next;
+        }
+        curr->t=t;
+        curr->linenumber=linenumber;
+        curr->next=NULL;
+    }
+    return list;
+}
+
+void printTokenList(int fp, keywordTable kt, tokenList list)//print Token List
+{
+    tokenInfo t;
+    while(list!=NULL)
+    {
+        printf("%s %s %d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
+        list=list->next;
     }
 }

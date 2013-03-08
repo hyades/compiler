@@ -20,4 +20,6 @@ void addKeyword(keywordTable kt, char *keyword, symbol s);//recursively called t
 int hash(char *keyword, int hashkey);//find hash value of string based on hashkey
 void initkt(keywordTable kt);
 char* toStr ( symbol s );//return Symbol as string
+tokenList createTokenList(int fp, keywordTable kt);//create Token List
+void printTokenList(int fp, keywordTable kt, tokenList list);//print Token List
 #endif // LEXER_H_INCLUDED
