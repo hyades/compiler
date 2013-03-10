@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
         kw[i].present=FALSE;
     keywordTable kt = kw;
     initkt(kt);
-    keyword kn[100];
-    for(i=0; i<100; i++)
+    keyword kn[200];
+    for(i=0; i<200; i++)
         kn[i].present=FALSE;
     keywordTable nt = kn;
     initNt(nt);
