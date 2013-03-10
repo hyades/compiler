@@ -25,6 +25,11 @@ int main(int argc, char *argv[])
         kw[i].present=FALSE;
     keywordTable kt = kw;
     initkt(kt);
+    keyword kn[100];
+    for(i=0; i<100; i++)
+        kn[i].present=FALSE;
+    keywordTable nt = kn;
+    initNt(nt);
     fp = open(argv[1],O_RDONLY);
     if(fp==-1)
     {
