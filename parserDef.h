@@ -32,6 +32,4 @@ typedef struct parsetree * ParseTree;
 
 
 
-
-
 #endif // PARSERDEF_H_INCLUDED

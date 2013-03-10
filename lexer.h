@@ -18,7 +18,7 @@ token keywordId(char *lexeme, keywordTable kt);//returns token for lexeme if it 
 token mainFun(char *lexeme, keywordTable kt);//returns token for lexeme if it is main or function
 void addKeyword(keywordTable kt, char *keyword, symbol s);//recursively called to add keyword to keywordTable
 int hash(char *keyword, int hashkey);//find hash value of string based on hashkey
-void initkt(keywordTable kt);
+void initkt(keywordTable kt);//initialize keyword table
 char* toStr ( symbol s );//return Symbol as string
 tokenList createTokenList(int fp, keywordTable kt);//create Token List
 void printTokenList(int fp, keywordTable kt, tokenList list);//print Token List
