@@ -21,18 +21,23 @@ driver.c
 
 int main(int argc, char *argv[])
 {
-    FILE *set=fopen("sets.txt", "r");
-    FILE *grammar=fopen("rules.txt", "r");
+    FILE *s=fopen("sets.txt", "r");
+    FILE *g=fopen("rules.txt", "r");
     FILE *fp=fopen("parsetable.txt", "w");
     Table T[60][60];
     grammar G[70];
     sets S[60];
     keyword kn[200];
+    int i,Gno,Sno;
     for(i=0; i<200; i++)
         kn[i].present=FALSE;
     keywordTable nt = kn;
     initNt(nt);
-    createGrammar(grammar, )
+    Gno = createGrammar(g,G,nt);
+    Sno = createSets(s,S,nt);
+    initTable(T);
+    createParseTable(G,T,S,Gno);
+    printTable(T);
 
     return 0;
 }

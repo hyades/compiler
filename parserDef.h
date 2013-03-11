@@ -12,7 +12,7 @@ typedef struct
 
 }sets;
 
-sets S[60];
+
 
 typedef struct
 {
@@ -23,11 +23,10 @@ typedef struct
 
 }grammar;
 
-grammar G[70];
 
 typedef int Table;
 
-Table T[60][60];
+
 
 struct parsetree
 {

@@ -26,14 +26,14 @@ symbol toSym(char *a, keywordTable nt)
     symbol s;
     while(1)
     {
-        if(kt[hval].present==FALSE)
+        if(nt[hval].present==FALSE)
         {
             s=TK_ERROR;
             return s;
         }
         else if(!strcmp(a,nt[hval].keyword))
         {
-            s=kt[hval].s;
+            s=nt[hval].s;
             return s;
         }
         hval++;
@@ -166,7 +166,7 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
     while(1)
     {
         fscanf(fp,"%s",a);
-        if(fp.eof())break;
+        if(feof(fp))break;
         if(strcmp(a,",")==0)
         {
             k++;
@@ -215,7 +215,7 @@ int createGrammar(FILE * fp,grammar G[], keywordTable nt)
     while(1)
     {
         fscanf(fp,"%s",a);
-        if(fp.eof())break;
+        if(feof(fp))break;
         if(k==0)
         {
             G[ruleNumber].ruleNumber = ruleNumber;
@@ -238,9 +238,9 @@ int createGrammar(FILE * fp,grammar G[], keywordTable nt)
     return ruleNumber;
 }
 
-void createParseTable(grammar G[], Table T[][60], sets S[], int Gno, int Sno)
+void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
 {
-    int i;
+    int i,j,k;
     for(i=0; i<Gno; i++)
     {
         for(j=0; j<G[i].listno; j++)
@@ -253,15 +253,15 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno, int Sno)
             }
             else
             {
-                for(k=0;k<S[G[i].list[j] - programs].firstno;k++)
+                for(k=0;k<S[G[i].list[j] - program].firstno;k++)
                     addtoTable(G[i].nt, S[G[i].list[j]].first[k], i, T);
-                if (S[G[i].list[j] - programs].eps == 0)
+                if (S[G[i].list[j] - program].eps == 0)
                     break;
             }
         }
         if(j==G[i].listno)
         {
-                for(k=0;k<S[G[i].nt - programs].firstno;k++)
+                for(k=0;k<S[G[i].nt - program].firstno;k++)
                     addtoTable(G[i].nt, S[G[i].nt].follow[k], i, T);
         }
     }
@@ -278,7 +278,7 @@ void initTable(Table T[][60])
 
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60])
 {
-    T[nt-programs][t]=ruleno;
+    T[nt-program][t]=ruleno;
 }
 
 void printTable(FILE *fp, Table T[][60])
@@ -289,4 +289,12 @@ void printTable(FILE *fp, Table T[][60])
         for(j=0;j<60;j++)
             fprintf(fp, "%d\t", T[i][j]);
         fprintf(fp, "\n");
+    }
+}
+
+
+bool isTerminal(symbol s)
+{
+    if(s-program<0)return 1;
+    else return 0;
 }
