@@ -159,14 +159,14 @@ void initNt(keywordTable nt)
     addNt(nt,"TK_WRITE ",TK_WRITE );
 }
 
-void createGrammar(FILE * fp,grammar G[])
+int createSets(FILE * fp,sets S[],keywordTable nt)
 {
-    char a[200];
+    char a[30];
     int i = 0,k=0,first=0,follow=0;
-    while(fp.eof())
+    while(1)
     {
         fscanf(fp,"%s",a);
-        if(a==NULL)break;
+        if(fp.eof())break;
         if(strcmp(a,",")==0)
         {
             k++;
@@ -174,30 +174,119 @@ void createGrammar(FILE * fp,grammar G[])
         }
         if(k==0)
         {
-            G[i].nt = toSym(a,nt);
+            S[i].nt = toSym(a,nt);
             first = 0;
             follow = 0;
 
         }
         else if(k==1)
         {
-            G[i].first[first++]  = toSym(a,nt);
+            S[i].first[first++]  = toSym(a,nt);
         }
         else if(k==2)
         {
-            G[i].follow[follow++] = toSym(a,nt);
+            S[i].follow[follow++] = toSym(a,nt);
 
         }
         else
         {
             if(strcmp(a,"yes")==0)
-                G[i].eps = 1;
+                S[i].eps = 1;
             else
-                G[i].eps = 0;
+                S[i].eps = 0;
             i++;
             k=0;
+            S[i].firstno = first;
+            S[i].followno = follow;
         }
 
 
+
     }
+    return i;
+}
+
+int createGrammar(FILE * fp,grammar G[], keywordTable nt)
+{
+    char a[30];
+    int k = 0;
+    int ruleNumber = 0;
+    int listno = 0;
+    while(1)
+    {
+        fscanf(fp,"%s",a);
+        if(fp.eof())break;
+        if(k==0)
+        {
+            G[ruleNumber].ruleNumber = ruleNumber;
+            G[ruleNumber].nt = toSym(a,nt);
+            k++;
+            listno = 0;
+        }
+        if(k==1)
+        {
+            if(strcmp(a,".")==0)
+            {
+                k=0;
+                G[ruleNumber].listno = listno;
+                ruleNumber++;
+                continue;
+            }
+            G[ruleNumber].list[listno++] = toSym(a,nt);
+        }
+    }
+    return ruleNumber;
+}
+
+void createParseTable(grammar G[], Table T[][60], sets S[], int Gno, int Sno)
+{
+    int i;
+    for(i=0; i<Gno; i++)
+    {
+        for(j=0; j<G[i].listno; j++)
+        {
+
+            if(isTerminal(G[i].list[j]))
+            {
+                addtoTable(G[i].nt, G[i].list[j], i, T);
+                break;
+            }
+            else
+            {
+                for(k=0;k<S[G[i].list[j] - programs].firstno;k++)
+                    addtoTable(G[i].nt, S[G[i].list[j]].first[k], i, T);
+                if (S[G[i].list[j] - programs].eps == 0)
+                    break;
+            }
+        }
+        if(j==G[i].listno)
+        {
+                for(k=0;k<S[G[i].nt - programs].firstno;k++)
+                    addtoTable(G[i].nt, S[G[i].nt].follow[k], i, T);
+        }
+    }
+
+}
+
+void initTable(Table T[][60])
+{
+    int i,j;
+    for(i=0;i<60;i++)
+        for(j=0;j<60;j++)
+            T[i][j]=0;
+}
+
+void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60])
+{
+    T[nt-programs][t]=ruleno;
+}
+
+void printTable(FILE *fp, Table T[][60])
+{
+    int i,j;
+    for(i=0;i<60;i++)
+    {
+        for(j=0;j<60;j++)
+            fprintf(fp, "%d\t", T[i][j]);
+        fprintf(fp, "\n");
 }
