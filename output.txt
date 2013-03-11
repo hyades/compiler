@@ -1,0 +1,157 @@
+
+
+
+
+Gno = 89
+
+
+
+nt= program t=TK_FUNID
+nt= program t=TK_MAIN
+nt= mainfunction t=TK_MAIN
+nt= otherfunctions t=TK_FUNID
+nt= otherfunctions t=TK_MAIN
+nt= function t=TK_FUNID
+nt= input_par t=TK_INPUT
+nt= output_par t=TK_OUTPUT
+nt= output_par t=TK_SEM
+nt= parameter_list t=TK_INT
+nt= parameter_list t=TK_REAL
+nt= parameter_list t=TK_RECORD
+nt= datatype t=TK_INT
+nt= datatype t=TK_REAL
+nt= datatype t=TK_RECORD
+nt= primitivedatatype t=TK_INT
+nt= primitivedatatype t=TK_REAL
+nt= constructeddatatype t=TK_RECORD
+nt= remaining_list t=TK_COMMA
+nt= remaining_list t=TK_SQR
+nt= stmts t=TK_RECORD
+nt= stmts t=TK_TYPE
+nt= stmts t=TK_WHILE
+nt= stmts t=TK_IF
+nt= stmts t=TK_READ
+nt= stmts t=TK_WRITE
+nt= stmts t=TK_CALL
+nt= stmts t=TK_ID
+nt= stmts t=TK_RECORDID
+nt= stmts t=TK_SQL
+nt= stmts t=TK_RETURN
+nt= typedefinitions t=TK_RECORD
+nt= typedefinitions t=TK_TYPE
+nt= typedefinitions t=TK_WHILE
+nt= typedefinitions t=TK_IF
+nt= typedefinitions t=TK_READ
+nt= typedefinitions t=TK_WRITE
+nt= typedefinitions t=TK_CALL
+nt= typedefinitions t=TK_ID
+nt= typedefinitions t=TK_RECORDID
+nt= typedefinitions t=TK_SQL
+nt= typedefinitions t=TK_RETURN
+nt= typedefinition t=TK_RECORD
+nt= fielddefinitions t=TK_TYPE
+nt= fielddefinition t=TK_TYPE
+nt= morefields t=TK_TYPE
+nt= morefields t=TK_ENDRECORD
+nt= declarations t=TK_TYPE
+nt= declarations t=TK_WHILE
+nt= declarations t=TK_IF
+nt= declarations t=TK_READ
+nt= declarations t=TK_WRITE
+nt= declarations t=TK_CALL
+nt= declarations t=TK_ID
+nt= declarations t=TK_RECORDID
+nt= declarations t=TK_SQL
+nt= declarations t=TK_RETURN
+nt= declaration t=TK_TYPE
+nt= global_or_not t=TK_COLON
+nt= global_or_not t=TK_SEM
+nt= otherstmts t=TK_WHILE
+nt= otherstmts t=TK_IF
+nt= otherstmts t=TK_READ
+nt= otherstmts t=TK_WRITE
+nt= otherstmts t=TK_CALL
+nt= otherstmts t=TK_ID
+nt= otherstmts t=TK_RECORDID
+nt= otherstmts t=TK_SQL
+nt= otherstmts t=TK_RETURN
+nt= otherstmts t=TK_ENDWHILE
+nt= otherstmts t=TK_ELSE
+nt= otherstmts t=TK_ENDIF
+nt= stmt t=TK_ID
+nt= stmt t=TK_RECORDID
+nt= stmt t=TK_WHILE
+nt= stmt t=TK_IF
+nt= stmt t=TK_READ
+nt= stmt t=TK_WRITE
+nt= stmt t=TK_CALL
+nt= stmt t=TK_SQL
+nt= assignmentstmt t=TK_ID
+nt= assignmentstmt t=TK_RECORDID
+nt= singleorrecid t=TK_ID
+nt= singleorrecid t=TK_RECORDID
+nt= funcallstmt t=TK_SQL
+nt= funcallstmt t=TK_CALL
+nt= outputparameters t=TK_SQL
+nt= outputparameters t=TK_CALL
+nt= inputparameters t=TK_SQL
+nt= iterativestmt t=TK_WHILE
+nt= conditionalstmt t=TK_IF
+nt= elsepart t=TK_ELSE
+nt= elsepart t=TK_ENDIF
+nt= iostmt t=TK_READ
+nt= iostmt t=TK_WRITE
+nt= allvar t=TK_ID
+nt= allvar t=TK_NUM
+nt= allvar t=TK_RNUM
+nt= allvar t=TK_RECORDID
+nt= arithmeticexpression t=TK_OP
+nt= arithmeticexpression t=TK_ID
+nt= arithmeticexpression t=TK_NUM
+nt= arithmeticexpression t=TK_RNUM
+nt= arithmeticexpression t=TK_RECORDID
+nt= expprime t=TK_PLUS
+nt= expprime t=TK_MINUS
+nt= expprime t=TK_SEM
+nt= expprime t=TK_CL
+nt= term t=TK_OP
+nt= term t=TK_ID
+nt= term t=TK_NUM
+nt= term t=TK_RNUM
+nt= term t=TK_RECORDID
+nt= termprime t=TK_MUL
+nt= termprime t=TK_DIV
+nt= termprime t=TK_PLUS
+nt= termprime t=TK_MINUS
+nt= termprime t=TK_SEM
+nt= termprime t=TK_CL
+nt= factor t=TK_OP
+nt= factor t=TK_ID
+nt= factor t=TK_NUM
+nt= factor t=TK_RNUM
+nt= factor t=TK_RECORDID
+nt= highprecedenceoperators t=TK_MUL
+nt= highprecedenceoperators t=TK_DIV
+nt= lowprecedenceoperators t=TK_PLUS
+nt= lowprecedenceoperators t=TK_MINUS
+nt= all t=TK_ID
+nt= all t=TK_NUM
+nt= all t=TK_RNUM
+nt= all t=TK_RECORDID
+nt= temp t=TK_MUL
+nt= temp t=TK_DIV
+nt= temp t=TK_PLUS
+nt= temp t=TK_MINUS
+nt= temp t=TK_SEM
+nt= temp t=TK_CL
+nt= temp t=TK_DOT
+nt= booleanexpression t=TK_OP
+nt= booleanexpression t=TK_CL
+
+
+
+
+i=89
+
+
+

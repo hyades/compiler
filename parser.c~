@@ -297,7 +297,6 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
 		            addtoTable(G[i].nt, S[(int)(G[i].nt - program)].follow[k], i, T);
         }
     }
-    printf("\n\n\n\ni=%d\n\n\n\n", i);
 
 }
 
