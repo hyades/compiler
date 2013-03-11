@@ -5,16 +5,28 @@ typedef struct
 {
     symbol nt;
     symbol first[60];
+    int firstno;
+    int followno;
     symbol follow[60];
     bool eps;
 
+}sets;
+
+
+
+typedef struct
+{
+    symbol nt;
+    int ruleNumber;
+    symbol list[20];
+    int listno;
+
 }grammar;
 
-grammar G[60];
 
 typedef int Table;
 
-Table T[60][60];
+
 
 struct parsetree
 {
