@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     FILE *g=fopen("rules.txt", "r");
     FILE *fp=fopen("parsetable.csv", "w");
     Table T[60][60];
-    grammar G[70];
+    grammar G[100];
     sets S[60];
 
     keyword kn[2000];
