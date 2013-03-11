@@ -158,3 +158,46 @@ void initNt(keywordTable nt)
     addNt(nt,"TK_WITH ",TK_WITH );
     addNt(nt,"TK_WRITE ",TK_WRITE );
 }
+
+void createGrammar(FILE * fp,grammar G[])
+{
+    char a[200];
+    int i = 0,k=0,first=0,follow=0;
+    while(fp.eof())
+    {
+        fscanf(fp,"%s",a);
+        if(a==NULL)break;
+        if(strcmp(a,",")==0)
+        {
+            k++;
+            continue;
+        }
+        if(k==0)
+        {
+            G[i].nt = toSym(a,nt);
+            first = 0;
+            follow = 0;
+
+        }
+        else if(k==1)
+        {
+            G[i].first[first++]  = toSym(a,nt);
+        }
+        else if(k==2)
+        {
+            G[i].follow[follow++] = toSym(a,nt);
+
+        }
+        else
+        {
+            if(strcmp(a,"yes")==0)
+                G[i].eps = 1;
+            else
+                G[i].eps = 0;
+            i++;
+            k=0;
+        }
+
+
+    }
+}
