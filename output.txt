@@ -1,0 +1,1261 @@
+program
+k=0
+,
+COMMA
+TK_MAIN
+k=1 first = 20
+TK_FUNID
+k=1 first = 19
+,
+COMMA
+,
+COMMA
+no
+mainfunction
+k=0
+,
+COMMA
+TK_MAIN
+k=1 first = 20
+,
+COMMA
+,
+COMMA
+no
+otherfunctions
+k=0
+,
+COMMA
+TK_FUNID
+k=1 first = 19
+,
+COMMA
+TK_MAIN
+k=3 folllow=1
+,
+COMMA
+yes
+function
+k=0
+,
+COMMA
+TK_FUNID
+k=1 first = 19
+,
+COMMA
+TK_FUNID
+k=3 folllow=1
+TK_MAIN
+k=3 folllow=2
+,
+COMMA
+no
+input_par
+k=0
+,
+COMMA
+TK_INPUT
+k=1 first = 36
+,
+COMMA
+TK_OUTPUT
+k=3 folllow=1
+TK_SEM
+k=3 folllow=2
+,
+COMMA
+no
+output_par
+k=0
+,
+COMMA
+TK_OUTPUT
+k=1 first = 39
+,
+COMMA
+TK_SEM
+k=3 folllow=1
+,
+COMMA
+yes
+constructeddatatype
+k=0
+,
+COMMA
+TK_RECORD
+k=1 first = 44
+,
+COMMA
+TK_ID
+k=3 folllow=1
+TK_COLON
+k=3 folllow=2
+,
+COMMA
+no
+remaining_list
+k=0
+,
+COMMA
+TK_COMMA
+k=1 first = 53
+,
+COMMA
+TK_SQR
+k=3 folllow=1
+,
+COMMA
+yes
+parameter_list
+k=0
+,
+COMMA
+TK_INT
+k=1 first = 37
+TK_REAL
+k=1 first = 43
+TK_RECORD
+k=1 first = 44
+,
+COMMA
+TK_SQR
+k=3 folllow=1
+,
+COMMA
+no
+stmts
+k=0
+,
+COMMA
+TK_RETURN
+k=1 first = 45
+TK_RECORD
+k=1 first = 44
+TK_TYPE
+k=1 first = 47
+TK_WHILE
+k=1 first = 48
+TK_IF
+k=1 first = 35
+TK_READ
+k=1 first = 42
+TK_WRITE
+k=1 first = 50
+TK_CALL
+k=1 first = 28
+TK_IDTK_RECORDID
+k=1 first = 53
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_END
+k=3 folllow=1
+,
+COMMA
+no
+typedefinitions
+k=0
+,
+COMMA
+TK_RECORD
+k=1 first = 44
+,
+COMMA
+TK_TYPE
+k=3 folllow=1
+TK_WHILE
+k=3 folllow=2
+TK_IF
+k=3 folllow=3
+TK_READ
+k=3 folllow=4
+TK_WRITE
+k=3 folllow=5
+TK_CALL
+k=3 folllow=6
+TK_ID
+k=3 folllow=7
+TK_RECORDID
+k=3 folllow=8
+TK_SQL
+k=3 folllow=9
+TK_RETURN
+k=3 folllow=10
+,
+COMMA
+yes
+typedefinition
+k=0
+,
+COMMA
+TK_RECORD
+k=1 first = 44
+,
+COMMA
+TK_RECORD
+k=3 folllow=1
+TK_TYPE
+k=3 folllow=2
+TK_WHILE
+k=3 folllow=3
+TK_IF
+k=3 folllow=4
+TK_READ
+k=3 folllow=5
+TK_WRITE
+k=3 folllow=6
+TK_CALL
+k=3 folllow=7
+TK_ID
+k=3 folllow=8
+TK_RECORDID
+k=3 folllow=9
+TK_SQLTK_RETURN
+k=3 folllow=10
+,
+COMMA
+no
+fielddefinitions
+k=0
+,
+COMMA
+TK_TYPE
+k=1 first = 47
+,
+COMMA
+TK_ENDRECORD
+k=3 folllow=1
+,
+COMMA
+no
+primitivedatatype
+k=0
+,
+COMMA
+TK_INT
+k=1 first = 37
+TK_REAL
+k=1 first = 43
+,
+COMMA
+TK_ID
+k=3 folllow=1
+TK_COLON
+k=3 folllow=2
+,
+COMMA
+no
+fielddefinition
+k=0
+,
+COMMA
+TK_TYPE
+k=1 first = 47
+,
+COMMA
+TK_TYPE
+k=3 folllow=1
+TK_ENDRECORD
+k=3 folllow=2
+,
+COMMA
+no
+morefields
+k=0
+,
+COMMA
+TK_TYPE
+k=1 first = 47
+,
+COMMA
+TK_ENDRECORD
+k=3 folllow=1
+,
+COMMA
+yes
+declarations
+k=0
+,
+COMMA
+TK_TYPE
+k=1 first = 47
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+,
+COMMA
+yes
+declaration
+k=0
+,
+COMMA
+TK_TYPE
+k=1 first = 47
+,
+COMMA
+TK_TYPE
+k=3 folllow=1
+TK_WHILE
+k=3 folllow=2
+TK_IF
+k=3 folllow=3
+TK_READ
+k=3 folllow=4
+TK_WRITE
+k=3 folllow=5
+TK_CALL
+k=3 folllow=6
+TK_ID
+k=3 folllow=7
+TK_RECORDID
+k=3 folllow=8
+TK_SQL
+k=3 folllow=9
+TK_RETURN
+k=3 folllow=10
+,
+COMMA
+no
+datatype
+k=0
+,
+COMMA
+TK_INT
+k=1 first = 37
+TK_REAL
+k=1 first = 43
+TK_RECORD
+k=1 first = 44
+,
+COMMA
+TK_ID
+k=3 folllow=1
+TK_COLON
+k=3 folllow=2
+,
+COMMA
+no
+global_or_not
+k=0
+,
+COMMA
+TK_COLON
+k=1 first = 10
+,
+COMMA
+TK_SEM
+k=3 folllow=1
+,
+COMMA
+yes
+assignmentstmt
+k=0
+,
+COMMA
+TK_ID
+k=1 first = 17
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+funcallstmt
+k=0
+,
+COMMA
+TK_CALL
+k=1 first = 28
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+outputparameters
+k=0
+,
+COMMA
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_CALL
+k=3 folllow=1
+,
+COMMA
+yes
+inputparameters
+k=0
+,
+COMMA
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+iterativestmt
+k=0
+,
+COMMA
+TK_WHILE
+k=1 first = 48
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+conditionalstmt
+k=0
+,
+COMMA
+TK_IF
+k=1 first = 35
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+elsepart
+k=0
+,
+COMMA
+TK_ELSE
+k=1 first = 29
+TK_ENDIF
+k=1 first = 31
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+stmt
+k=0
+,
+COMMA
+TK_WHILE
+k=1 first = 48
+TK_IF
+k=1 first = 35
+TK_READ
+k=1 first = 42
+TK_WRITE
+k=1 first = 50
+TK_CALL
+k=1 first = 28
+TK_ID
+k=1 first = 17
+TK_RECORDID
+k=1 first = 2
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+otherstmts
+k=0
+,
+COMMA
+TK_WHILE
+k=1 first = 48
+TK_IF
+k=1 first = 35
+TK_READ
+k=1 first = 42
+TK_WRITE
+k=1 first = 50
+TK_CALL
+k=1 first = 28
+TK_ID
+k=1 first = 17
+TK_RECORDID
+k=1 first = 2
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_RETURN
+k=3 folllow=1
+TK_ENDWHILE
+k=3 folllow=2
+TK_ELSE
+k=3 folllow=3
+TK_ENDIF
+k=3 folllow=4
+,
+COMMA
+yes
+iostmt
+k=0
+,
+COMMA
+TK_READ
+k=1 first = 42
+TK_WRITE
+k=1 first = 50
+,
+COMMA
+TK_WHILE
+k=3 folllow=1
+TK_IF
+k=3 folllow=2
+TK_READ
+k=3 folllow=3
+TK_WRITE
+k=3 folllow=4
+TK_CALL
+k=3 folllow=5
+TK_ID
+k=3 folllow=6
+TK_RECORDID
+k=3 folllow=7
+TK_SQL
+k=3 folllow=8
+TK_RETURN
+k=3 folllow=9
+TK_ENDWHILE
+k=3 folllow=10
+TK_ELSE
+k=3 folllow=11
+TK_ENDIF
+k=3 folllow=12
+,
+COMMA
+no
+singleorrecid
+k=0
+,
+COMMA
+TK_ID
+k=1 first = 17
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_ASSIGNOP
+k=3 folllow=1
+TK_CL
+k=3 folllow=2
+,
+COMMA
+no
+allvar
+k=0
+,
+COMMA
+TK_RECORDID
+k=1 first = 2
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+,
+COMMA
+TK_CL
+k=3 folllow=1
+,
+COMMA
+no
+expprime
+k=0
+,
+COMMA
+TK_PLUS
+k=1 first = 22
+TK_MINUS
+k=1 first = 0
+,
+COMMA
+TK_SEM
+k=3 folllow=1
+TK_CL
+k=3 folllow=2
+,
+COMMA
+yes
+term
+k=0
+,
+COMMA
+TK_OP
+k=1 first = 5
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_PLUS
+k=3 folllow=1
+TK_MINUS
+k=3 folllow=2
+TK_SEM
+k=3 folllow=3
+TK_CL
+k=3 folllow=4
+,
+COMMA
+no
+termprime
+k=0
+,
+COMMA
+TK_MUL
+k=1 first = 7
+TK_DIV
+k=1 first = 9
+,
+COMMA
+TK_PLUS
+k=3 folllow=1
+TK_MINUS
+k=3 folllow=2
+TK_SEM
+k=3 folllow=3
+TK_CL
+k=3 folllow=4
+,
+COMMA
+yes
+factor
+k=0
+,
+COMMA
+TK_OP
+k=1 first = 5
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_MUL
+k=3 folllow=1
+TK_DIV
+k=3 folllow=2
+TK_PLUS
+k=3 folllow=3
+TK_MINUS
+k=3 folllow=4
+TK_SEM
+k=3 folllow=5
+TK_CL
+k=3 folllow=6
+,
+COMMA
+no
+arithmeticexpression
+k=0
+,
+COMMA
+TK_OP
+k=1 first = 5
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_SEM
+k=3 folllow=1
+TK_CL
+k=3 folllow=2
+,
+COMMA
+no
+highprecedenceoperators
+k=0
+,
+COMMA
+TK_MUL
+k=1 first = 7
+TK_DIV
+k=1 first = 9
+,
+COMMA
+TK_OP
+k=3 folllow=1
+TK_ID
+k=3 folllow=2
+TK_NUM
+k=3 folllow=3
+TK_RNUM
+k=3 folllow=4
+TK_RECORDID
+k=3 folllow=5
+,
+COMMA
+no
+lowprecedenceoperators
+k=0
+,
+COMMA
+TK_PLUS
+k=1 first = 22
+TK_MINUS
+k=1 first = 0
+,
+COMMA
+TK_OP
+k=3 folllow=1
+TK_ID
+k=3 folllow=2
+TK_NUM
+k=3 folllow=3
+TK_RNUM
+k=3 folllow=4
+TK_RECORDID
+k=3 folllow=5
+,
+COMMA
+no
+all
+k=0
+,
+COMMA
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+TK_RECORDID
+k=1 first = 2
+,
+COMMA
+TK_MUL
+k=3 folllow=1
+TK_DIV
+k=3 folllow=2
+TK_PLUS
+k=3 folllow=3
+TK_MINUS
+k=3 folllow=4
+TK_SEM
+k=3 folllow=5
+TK_CL
+k=3 folllow=6
+,
+COMMA
+no
+temp
+k=0
+,
+COMMA
+TK_DOT
+k=1 first = 8
+,
+COMMA
+TK_MUL
+k=3 folllow=1
+TK_DIV
+k=3 folllow=2
+TK_PLUS
+k=3 folllow=3
+TK_MINUS
+k=3 folllow=4
+TK_SEM
+k=3 folllow=5
+TK_CL
+k=3 folllow=6
+,
+COMMA
+yes
+booleanexpression
+k=0
+,
+COMMA
+TK_OP
+k=1 first = 5
+TK_NOT
+k=1 first = 21
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+,
+COMMA
+TK_CL
+k=3 folllow=1
+,
+COMMA
+no
+var
+k=0
+,
+COMMA
+TK_ID
+k=1 first = 17
+TK_NUM
+k=1 first = 14
+TK_RNUM
+k=1 first = 15
+,
+COMMA
+TK_LT
+k=3 folllow=1
+TK_LE
+k=3 folllow=2
+TK_EQ
+k=3 folllow=3
+TK_GT
+k=3 folllow=4
+TK_GE
+k=3 folllow=5
+TK_NE
+k=3 folllow=6
+TK_CL
+k=3 folllow=7
+,
+COMMA
+no
+logicalop
+k=0
+,
+COMMA
+TK_AND
+k=1 first = 4
+TK_OR
+k=1 first = 12
+,
+COMMA
+TK_OP
+k=3 folllow=1
+,
+COMMA
+no
+relationalop
+k=0
+,
+COMMA
+TK_LT
+k=1 first = 23
+TK_LE
+k=1 first = 27
+TK_EQ
+k=1 first = 25
+TK_GT
+k=1 first = 26
+TK_GE
+k=1 first = 51
+TK_NE
+k=1 first = 1
+,
+COMMA
+TK_ID
+k=3 folllow=1
+TK_NUM
+k=3 folllow=2
+TK_RNUM
+k=3 folllow=3
+,
+COMMA
+no
+returnstmt
+k=0
+,
+COMMA
+TK_RETURN
+k=1 first = 45
+,
+COMMA
+TK_END
+k=3 folllow=1
+,
+COMMA
+no
+optionalreturn
+k=0
+,
+COMMA
+TK_SQL
+k=1 first = 13
+,
+COMMA
+TK_SEM
+k=3 folllow=1
+,
+COMMA
+yes
+more_ids
+k=0
+,
+COMMA
+TK_COMMA
+k=1 first = 53
+,
+COMMA
+TK_SQR
+k=3 folllow=1
+,
+COMMA
+yes
+idlist
+k=0
+,
+COMMA
+TK_ID
+k=1 first = 17
+,
+COMMA
+TK_SQR
+k=3 folllow=1
+,
+COMMA
+no
+
+0 0 program 0
+
+
+2 0 mainfunction 0
+TK_MAIN TK_MINUS 
+
+1 0 otherfunctions 1
+TK_FUNID 
+
+1 1 otherfunctions 0
+TK_FUNID 
+TK_FUNID 
+1 2 function 0
+TK_INPUT 
+TK_OUTPUT TK_SEM 
+1 2 input_par 1
+TK_OUTPUT 
+TK_SEM TK_MINUS 
+1 1 output_par 0
+TK_RECORD 
+TK_ID 
+1 2 output_par 1
+INVALID 
+TK_SQR TK_MINUS 
+1 1 parameter_list 0
+TK_INT 
+TK_SQR 
+3 1 datatype 0
+TK_RETURN TK_RECORD TK_TYPE 
+TK_END 
+10 1 datatype 1
+TK_RECORD TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+TK_TYPE 
+1 10 primitivedatatype 0
+TK_RECORD 
+TK_RECORD TK_TYPE TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID INVALID 
+1 10 primitivedatatype 0
+TK_TYPE 
+TK_ENDRECORD TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+1 1 constructeddatatype 0
+TK_INT 
+TK_ID 
+2 2 remaining_list 0
+TK_TYPE TK_MINUS 
+TK_TYPE TK_ENDRECORD 
+1 2 remaining_list 1
+TK_TYPE 
+TK_ENDRECORD TK_MINUS 
+1 1 stmts 1
+TK_TYPE 
+TK_WHILE 
+1 9 typedefinitions 0
+TK_TYPE 
+TK_TYPE TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL 
+1 10 typedefinitions 0
+TK_INT 
+TK_ID TK_COLON TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+3 2 typedefinition 1
+TK_COLON TK_MINUS TK_MINUS 
+TK_SEM TK_MINUS 
+1 1 fielddefinitions 0
+TK_ID 
+TK_WHILE 
+2 12 fielddefinition 0
+TK_CALL TK_SQL 
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF 
+2 12 morefields 1
+TK_SQL TK_MINUS 
+TK_CALL TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+1 1 morefields 0
+TK_SQL 
+TK_WHILE 
+1 12 declarations 0
+TK_WHILE 
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF 
+1 12 declarations 0
+TK_IF 
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF 
+1 12 declaration 0
+TK_ELSE 
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF 
+2 12 global_or_not 0
+TK_WHILE TK_IF 
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF 
+8 12 global_or_not 1
+TK_WHILE TK_IF TK_READ TK_WRITE TK_CALL TK_ID TK_RECORDID TK_SQL 
+TK_RETURN TK_ENDWHILE TK_ELSE TK_ENDIF TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+8 4 otherstmts 0
+TK_READ TK_WRITE TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+TK_WHILE TK_IF TK_READ TK_WRITE 
+2 12 otherstmts 0
+TK_ID TK_RECORDID 
+TK_ASSIGNOP TK_CL TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+2 2 stmt 0
+TK_RECORDID TK_ID 
+TK_CL TK_MINUS 
+4 1 stmt 1
+TK_PLUS TK_MINUS TK_MINUS TK_MINUS 
+TK_SEM 
+2 2 stmt 0
+TK_OP TK_ID 
+TK_PLUS TK_MINUS 
+5 4 stmt 1
+TK_MUL TK_DIV TK_MINUS TK_MINUS TK_MINUS 
+TK_PLUS TK_MINUS TK_SEM TK_CL 
+2 4 stmt 0
+TK_OP TK_ID 
+TK_MUL TK_DIV TK_PLUS TK_MINUS 
+5 6 assignmentstmt 0
+TK_OP TK_ID TK_NUM TK_RNUM TK_RECORDID 
+TK_SEM TK_CL TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+5 2 singleorrecid 0
+TK_MUL TK_DIV TK_MINUS TK_MINUS TK_MINUS 
+TK_OP TK_ID 
+2 5 singleorrecid 0
+TK_PLUS TK_MINUS 
+TK_OP TK_ID TK_NUM TK_RNUM TK_RECORDID 
+2 5 funcallstmt 0
+TK_ID TK_NUM 
+TK_MUL TK_DIV TK_PLUS TK_MINUS TK_SEM 
+4 6 outputparameters 1
+TK_DOT TK_MINUS TK_MINUS TK_MINUS 
+TK_MUL TK_DIV TK_PLUS TK_MINUS TK_SEM TK_CL 
+1 6 outputparameters 0
+TK_OP 
+TK_CL TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+5 1 inputparameters 0
+TK_ID TK_NUM TK_RNUM TK_MINUS TK_MINUS 
+TK_LT 
+3 7 iterativestmt 0
+TK_AND TK_OR TK_MINUS 
+TK_OP TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+2 1 conditionalstmt 0
+TK_LT TK_LE 
+TK_ID 
+6 3 elsepart 0
+TK_RETURN TK_MINUS TK_MINUS TK_MINUS TK_MINUS TK_MINUS 
+TK_END TK_MINUS TK_MINUS 
+1 1 elsepart 1
+TK_SQL 
+TK_SEM 
+1 1 iostmt 1
+INVALID 
+TK_SQR 
+1 1 iostmt 0
+TK_ID 
+TK_SQR 

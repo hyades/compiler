@@ -1127,6 +1127,8 @@ char* toStr ( symbol s )
         return "more_ids";
     case idlist :
         return "idlist";
+    case TK_EPS :
+        return "eps";
 
     default:
         return "INVALID";

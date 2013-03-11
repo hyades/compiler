@@ -21,7 +21,7 @@ parser.c
 
 symbol toSym(char *a, keywordTable nt)
 {
-    int hval,hashkey=200;
+    int hval,hashkey=1200;
     hval=hash(a,hashkey);
     symbol s;
     while(1)

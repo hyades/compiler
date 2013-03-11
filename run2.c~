@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     Gno = createGrammar(g,G,nt);
     
     Sno = createSets(s,S,nt);
-    
+    /*
     for(i=0;i<Sno;i++)
     {
     	printf("\n%d %d %s %d\n", S[i].firstno,S[i].followno, toStr(G[i].nt), S[i].eps);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     	for(j=0;j<S[i].followno;j++)
     		printf("%s ",toStr(S[i].follow[j] ));
     }
-    /*
+    
     initTable(T);
     createParseTable(G,T,S,Gno);
     printTable(fp, T);
