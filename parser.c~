@@ -244,7 +244,7 @@ int createGrammar(FILE * fp,grammar G[], keywordTable nt)
             G[ruleNumber].list[listno++] = toSym(a,nt);
         }
     }
-    printf("\n\n\n\nGno = %d\n\n\n\n", ruleNumber);
+    //printf("\n\n\n\nGno = %d\n\n\n\n", ruleNumber);
     return ruleNumber;
 }
 
@@ -255,6 +255,7 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
     {
         for(j=0; j<G[i].listno; j++)
         {
+        	
 			//printf("NT:%d no.:%d thing:%d ",G[i].nt,G[i].listno,G[i].list[j]);
 			if(G[i].list[j]==TK_EPS)
             {
@@ -267,6 +268,7 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
             {
             	//printf("Yes\n");
             	//T[(int)(G[i].nt-program)][(int)G[i].list[j]]=i;
+            	//printf("Symbol= %s Terminal found: %s\n",toStr(G[i].nt),toStr(G[i].list[j]));
                 addtoTable(G[i].nt, G[i].list[j], i, T);
                 break;
             }
@@ -277,26 +279,36 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
             	//printf("%d\n", S[G[i].list[j] - program].firstno);
             	inter=G[i].list[j];
                 fir=(G[i].list[j]- program);
+                //printf("Symbol %s Non terminal found:%s\t",toStr(G[i].nt),toStr(G[i].list[j]));
                 for(k=0;k<S[fir].firstno;k++)
                 {	//T[(int)(G[i].nt-program)][(int)(S[(int)(G[i].list[j]- program)]).first[k]]=i;
                 	
                 	//printf("%d %d %d    ", inter, fir,k);
                 	//printf("intermediate:%s , first=%s\n", toStr(inter), toStr(S[fir].first[k]));
-                    addtoTable(G[i].nt, S[(int)(G[i].list[j]- program)].first[k], i, T);
+                	//printf("\t Adding to table: %s",toStr(S[fir].first[k]));
+                    addtoTable(G[i].nt, S[fir].first[k], i, T);
                 }
                 if (S[G[i].list[j] - program].eps == 0)
+                {
+                	//printf("doesnt goes to eps\n");
                     break;
-       
+       			}
+       			//else printf("goes to eps\n");
             }
             
         }
+        //printf("j: %d list no :%d\t",j,G[i].listno);
         if(j==G[i].listno)
         {
+        		
                 for(k=0;k<S[G[i].nt - program].followno;k++)
-                	//T[(int)(G[i].nt-program)][(int)S[G[i].nt].follow[k]]=i;
+                {	//T[(int)(G[i].nt-program)][(int)S[G[i].nt].follow[k]]=i;
 		            addtoTable(G[i].nt, S[(int)(G[i].nt - program)].follow[k], i, T);
+		            //printf("Adding follow set :%s\n",toStr(S[(int)(G[i].nt - program)].follow[k]));
+		         }
         }
     }
+    //printf("\n\n\n\ni=%d\n\n\n\n", i);
 
 }
 
@@ -310,29 +322,31 @@ void initTable(Table T[][60])
 
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60])
 {
-	printf("nt= %s t=%s\n",toStr(nt),toStr(t));
+	//printf("nt= %s t=%s\n",toStr(nt),toStr(t));
     T[(int)(nt-program)][(int)t]=ruleno;
 }
 
 void printTable(FILE *fp, Table T[][60])
 {
     int i,j;
-        for(i=0;i<(int)program;i++)
-    	fprintf(fp, "%d,", i);
-    fprintf(fp, "\n");
-
     for(i=-1;i<(int)program;i++)
     	fprintf(fp, "%s,", toStr(i));
     fprintf(fp, "\n");
-    for(i=0;i<=60;i++)
+    for(i=0;i<(int)idlist - (int)program + 1 ;i++)
     {
     	fprintf(fp, "%s\t", toStr(i+program));
-        for(j=0;j<60;j++)
+        for(j=0;j<(int)program;j++)
         if(T[i][j]>=0)
             fprintf(fp, "%d,", T[i][j]+1);
         else
         	fprintf(fp, " ,");
         fprintf(fp, "\n");
+    }
+    for(i=0;i<=(int)idlist - (int)program;i++)
+   	{
+   		for(j=0;j<(int)program;j++)
+   			printf("%d ",T[i][j]+);
+   		printf("\n");
     }
 }
 
