@@ -30,7 +30,7 @@ struct parsetree
     symbol s;
     bool visited;
     struct parsetree * stacknext;
-    symbol ps; //parent symbol
+    struct parsetree *parent; //parent node
     struct parsetree * child[20]; //Assuming a node cannot have more than 20 children
 };
 

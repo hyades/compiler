@@ -24,12 +24,13 @@ int main(int argc, char *argv[])
     FILE *s=fopen("set.txt", "r");
     FILE *g=fopen("rules.txt", "r");
     FILE *fp=fopen("parsetable.csv", "w");
+    FILE *tree=fopen("tree.txt", "w");
     Table T[60][60];
     grammar G[100];
     sets S[60];
 
     keyword kn[2000];
-    int i,j,Gno,Sno;
+    int i,j,Gno,Sno,fd;
     for(i=0; i<2000; i++)
         kn[i].present=FALSE;
     keywordTable nt = kn;
@@ -48,7 +49,17 @@ int main(int argc, char *argv[])
     }
 */    initTable(T);
     createParseTable(G,T,S,Gno);
-    printTable(fp, T);
+    //printTable(fp, T);
+    fd = open("input.txt",O_RDONLY);
+     if(fd==-1)
+    {
+        printf("input file not found");
+        return 0;
+    }
+    keyword kt[48];
+    initkt(kt);
+    parseTree P = parseInputSourceCode(fd, T, kt, G);
+    printParseTree(P, tree);
 	fclose(fp);
 	
     return 0;

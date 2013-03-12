@@ -29,8 +29,9 @@ struct parsetree
     int lineno;
     symbol s;
     bool visited;
-    symbol ps; //parent symbol
-    struct parsetree * next[20]; //Assuming a node cannot have more than 20 children
+    struct parsetree * stacknext;
+    struct parsetree *parent; //parent symbol
+    struct parsetree * child[20]; //Assuming a node cannot have more than 20 children
 };
 
 typedef struct parsetree * parseTree;

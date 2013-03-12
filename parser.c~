@@ -369,6 +369,7 @@ Stack stack_push(Stack S,parseTree t)
         S.top=t;
     }
     S.size++;
+    
     return S;
 }
 
@@ -389,7 +390,7 @@ parseTree stack_top(Stack S)
 
 
 
-parseTree createParseNode(char * lexeme,int lineno,symbol s,symbol ps)
+parseTree createParseNode(char * lexeme,int lineno,symbol s,parseTree parent)
 {
 	parseTree temp;
 	int i;
@@ -398,34 +399,47 @@ parseTree createParseNode(char * lexeme,int lineno,symbol s,symbol ps)
     temp->lineno = lineno;
     temp->visited = 0;
     temp->s = s;
-    temp->ps = ps;
+    temp->parent = parent;
     temp->stacknext = NULL;
     for(i=0;i<20;i++)temp->child[i] = NULL;
+    printf("created new node with %s\n",toStr(temp->s));	
     return temp;
 }
 
-parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar G[])
+parseTree  parseInputSourceCode(int fd, Table T[][60], keywordTable kt, grammar G[])
 {
-	Stack S ;
-	S.top = NULL;
-	S.size = 0;
+	Stack ST;
+	parseTree q;
+	ST.top = NULL;
+	ST.size = 0;
 	parseTree temp,newnode;
-	parseTree PT = createParseNode("program",0,program,program);
-	S = stack_push(S,PT);
+	parseTree PT = createParseNode("program",0,program,NULL);
+	ST = stack_push(ST,PT);
 	tokenInfo t;
 	bool error = 0;
-	int linenumber = 0,rule,i,j;
-	t = getNextToken(fp, kt, &error, &linenumber);
-	while(!error && !S.size)
+	int linenumber=0,rule,i,j;
+	printf("stack top : %d size:%d\n",(ST.top->s),ST.size);
+	q = ST.top;
+	printf("stack q : %d \n",(q->s));
+	t = getNextToken(fd,kt,&error,&linenumber);
+	ST.top = q;
+	printf("stack q : %d t:%d \n",(q->s),&t);
+	printf("stack top : %d size:%d\n",(ST.top->s),ST.size);
+	printf("read: %s\n",toStr(t->s));
+	//printf("stack top : %s\n",toStr(S.top->s));
+	while(!error && ST.size)
 	
-	{
-		if(isTerminal(t->s))
+	{	
+		//printf("stack top : %s\n",toStr(S.top->s));
+		if(isTerminal(ST.top->s))
 		{
-			if(stack_top(S)->s == t->s)
+			printf("terminal %s\n",toStr(t->s));
+			if(stack_top(ST)->s == t->s)
 			{
-				stack_pop(S);
+				stack_pop(ST);
 				free(t);
-				t = getNextToken(fp, kt, &error, &linenumber);
+				t = getNextToken(fd, kt, &error, &linenumber);
+				printf("read: %s\n",toStr(t->s));
 				
 			}
 			else
@@ -436,21 +450,22 @@ parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar 
 		}
 		else
 		{	
-			i = (int)(S.top->s-program);
+			printf("NON-terminal %s\n",toStr(t->s));
+			i = (int)(ST.top->s-program);
 			j = (int)(t->s);
-			rule = T[1][3];
+			rule = T[i][j];
 			if(rule==-1)
 			{
 				error=1;
 				printf("%d: Unexpected %s.",linenumber,t->lexeme);
 				break;
 			}		
-			temp = stack_top(S);			
+			temp = stack_top(ST);			
 			for(i = G[rule].listno-1;i>=0;i--)
 			{				
-				newnode = createParseNode(t->lexeme,linenumber,t->s,temp->s);
+				newnode = createParseNode(t->lexeme,linenumber,t->s,temp);
 				temp->child[i] = newnode;
-				S = stack_push(S,newnode);
+				ST = stack_push(ST,newnode);
 			}
 			
 		}	
@@ -458,6 +473,31 @@ parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar 
 	return PT;
 }
 
+void printParseTree(parseTree  PT, FILE *outfile)
+{	
+	int j;
+	while(1)
+	{
+		printf("%s \n",toStr(PT->s));
+		PT->visited = 1;
+		for(j=0;j<20;j++)
+		{
+			if(PT->child[j])
+				if(PT->child[j]->visited==0)
+					{
+						PT = PT->child[j];
+						break;
+					}
+			
+		}
+		if(j==20)
+		{
+			if(PT->s == program)break;
+			else
+				PT = PT->parent;
+		}
+	}	
 
+}
 
 
