@@ -10,9 +10,7 @@ typedef struct
     symbol follow[60];
     bool eps;
 
-}sets;
-
-
+} sets;
 
 typedef struct
 {
@@ -21,12 +19,9 @@ typedef struct
     symbol list[20];
     int listno;
 
-}grammar;
-
+} grammar;
 
 typedef int Table;
-
-
 
 struct parsetree
 {
@@ -42,6 +37,18 @@ struct parsetree
 
 typedef struct parsetree * ParseTree;
 
+struct node
+{
+    ParseTree p;
+    bool visited;
+    struct node* next;
+};
+typedef struct node * Node;
 
+typedef struct
+{
+    Node top;
+    int size;
+} Stack;
 
 #endif // PARSERDEF_H_INCLUDED
