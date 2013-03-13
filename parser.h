@@ -2,7 +2,7 @@
 #define PARSER_H_INCLUDED
 
 void createParseTable(grammar G[], Table T[][60], sets S[], int Gno);
-parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar G[]);
+parseTree  parseInputSourceCode(tokenList list, Table T[][60], keywordTable kt, grammar G[]);
 void printParseTree(parseTree  PT, FILE *outfile);
 symbol toSym(char *a, keywordTable nt);//return Symbol for given string
 int createGrammar(FILE * fp,grammar G[], keywordTable nt);//load grammar from text file
