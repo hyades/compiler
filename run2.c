@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         return 0;
     }
     //tokenList list=createTokenList(fd, kt);
-    ParseTree P = parseInputSourceCode(fd, T, kt, G, &error);
+    parseTree P = parseInputSourceCode(fd, T, kt, G, &error);
     printParseTree(P, tree);
 	fclose(fp);
 

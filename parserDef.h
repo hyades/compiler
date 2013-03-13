@@ -23,27 +23,27 @@ typedef struct
 
 typedef int Table;
 
-
-
-
-struct tnode{
+struct parsetree
+{
     tokenInfo t;
     int ruleno;//used by AST to know which grammar rule was applied for the non-terminal,for terminals it is -1
     int lineno;
-    struct tnode* parent;
+    struct parsetree* parent;
     bool visited;
-    struct tnode* next[20];//assuming length of RHS of rules is bounded by 20 
+    struct parsetree* next[20];//assuming length of RHS of rules is bounded by 20 
 };
 
-typedef struct tnode* ParseTree;
+typedef struct parsetree* parseTree;
 
-struct snode{
-    ParseTree ref;//to Parse Tree 
-    struct snode* next;
+struct stackNode
+{
+    parseTree tree;//to Parse Tree 
+    struct stackNode* next;
 };
 
-typedef struct{
-    struct snode* top;
+typedef struct
+{
+    struct stackNode* top;
     int size;
 }Stack;
 

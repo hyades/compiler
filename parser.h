@@ -2,8 +2,8 @@
 #define PARSER_H_INCLUDED
 
 void createParseTable(grammar G[], Table T[][60], sets S[], int Gno);
-ParseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[], bool*error);
-void printParseTree(ParseTree  PT, FILE *outfile);
+parseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[], bool*error);
+void printParseTree(parseTree  PT, FILE *outfile);
 symbol toSym(char *a, keywordTable nt);//return Symbol for given string
 int createGrammar(FILE * fp,grammar G[], keywordTable nt);//load grammar from text file
 int createSets(FILE * fp,sets S[], keywordTable nt);
@@ -13,9 +13,9 @@ void initTable(Table T[][60]);//initialize parser table with no rule
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60]);//insert rule in table
 bool isTerminal(symbol s);//returns true if given symbol is terminal
 void printTable(FILE *fp, Table T[][60]);//print parser table
-
-
-Stack push(Stack S,ParseTree ref);
+parseTree createParseNode(symbol s);
+struct stackNode* createStackNode(parseTree tree);
+Stack push(Stack S,parseTree tree);
 Stack pop(Stack S);
 
 
