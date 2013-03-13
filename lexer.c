@@ -164,8 +164,8 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else if(isspace(c))
             {
                 state = 45;
-                if(c=='\n'||c=='\r')
-                    (*linenumber)++;
+               //if(c=='\n'||c=='\r')
+                    //(*linenumber)++;
             }
 
             else
@@ -1168,7 +1168,7 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
     return list;
 }
 
-void printTokenList(int fp, keywordTable kt, tokenList list)//print Token List
+void printTokenList(keywordTable kt, tokenList list)//print Token List
 {
     tokenInfo t;
     while(list!=NULL)

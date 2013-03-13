@@ -22,7 +22,7 @@ driver.c
 int main(int argc, char *argv[])
 {
     FILE *s=fopen("set.txt", "r");
-    FILE *g=fopen("rules.txt", "r");
+    FILE *g=fopen("grammar.txt", "r");
     FILE *fp=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
     int i,Gno, Sno,fd;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     keywordTable nt = kn;
     initNt(nt);
     Gno = createGrammar(g,G,nt);
-    Sno = createSets(s,S,nt);
+    createSets(s,S,nt);
 /*    for(i=0;i<Sno;i++)
     {
     	printf("\n%d %d %s %d\n", S[i].firstno,S[i].followno, toStr(S[i].nt), S[i].eps);

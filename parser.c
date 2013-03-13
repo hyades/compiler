@@ -21,7 +21,7 @@ parser.c
 
 symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 {
-    int hval,hashkey=2000;
+    int hval,hashkey=200;
     hval=hash(a,hashkey);
     symbol s;
     while(1)
@@ -43,7 +43,7 @@ symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 
 void addNt(keywordTable nt, char *keyword, symbol s)//recursively called to add keyword to keywordTable
 {
-    int hval,hashkey=2000;
+    int hval,hashkey=200;
     hval=hash(keyword,hashkey);
     while(nt[hval].present==TRUE)
         hval=(++hval)%hashkey;
@@ -161,7 +161,7 @@ void initNt(keywordTable nt)
     addNt(nt,"eps",TK_EPS );
 }
 
-int createSets(FILE * fp,sets S[],keywordTable nt)
+void createSets(FILE * fp,sets S[],keywordTable nt)
 {
     char a[30];
     int i = 0,k=0,firstcount=0,followcount=0;
@@ -169,17 +169,13 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
     {
         fscanf(fp,"%s",a);
         if(feof(fp))break;
-        //printf("%s\n",a);
         if(strcmp(a,",")==0)
         {
             k++;
-            //printf("COMMA\n");
         }
         else if(k==0)
         {
-            //printf("k=0\n");
             S[i].nt = toSym(a,nt);
-            //printf("a = %s value = %s\n",a,toStr(toSym(a,nt)));
             firstcount = 0;
             followcount = 0;
 
@@ -193,8 +189,6 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
         {
             S[i].follow[followcount] = toSym(a,nt);
             followcount++;
-            //printf("k=3 folllow=%d\n",follow);
-
         }
         else if(k==3)
         {
@@ -206,13 +200,8 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
             S[i].followno = followcount;
             i++;
             k=0;
-
         }
-
-
-
     }
-    return i;
 }
 
 int createGrammar(FILE * fp,grammar G[], keywordTable nt)//load grammar from text file
@@ -244,7 +233,6 @@ int createGrammar(FILE * fp,grammar G[], keywordTable nt)//load grammar from tex
             G[ruleNumber].list[listno++] = toSym(a,nt);
         }
     }
-    //printf("\n\n\n\nGno = %d\n\n\n\n", ruleNumber);
     return ruleNumber;
 }
 
@@ -428,9 +416,9 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
         t = getNextToken(fp, kt, error, &lineno);
         //printf("%d\n", TK_COMMENT==t->s);
         if(t==NULL || *error || t->s != TK_COMMENT)
-        {  
+        {
             if(*error)printf("%d: Unxpected %s.",lineno,toStr(t->s));
-                        //printf("break\n"); 
+                        //printf("break\n");
             break;
         }
     }
@@ -444,7 +432,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                 S.top->tree->ruleno=-1;
                 strcpy(S.top->tree->t->lexeme,t->lexeme);
                 free(t);
-                S.top->tree->lineno=lineno;          
+                S.top->tree->lineno=lineno;
                 S=pop(S);
                 //if(*error)printf("error\n");
                 while(1)
@@ -456,9 +444,9 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                     //if(t==NULL){printf("null");break;}
                     //if(*error)printf("error\n");
                     if(t==NULL || *error==1 || t->s != TK_COMMENT)
-                    {  
+                    {
                         if(*error)printf("%d: UnEXPECTED %s.",lineno,toStr(t->s));
-                        //printf("break\n"); 
+                        //printf("break\n");
                         break;
                     }
                 }
@@ -484,22 +472,22 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                 *error=1;
                 printf("%d: Unxpected %s.",lineno,toStr(t->s));
                 break;
-            }           
+            }
             parent=S.top->tree;
-            parent->ruleno=i;        
+            parent->ruleno=i;
             S=pop(S);
-            for(k=g[i].listno -1 ;k>=0;k--) 
+            for(k=g[i].listno -1 ;k>=0;k--)
             {
                 child=createParseNode(g[i].list[k]);
-                child->parent = parent;            
+                child->parent = parent;
                 S=push(S,child);
                 parent->next[k]=child;
             }
-        }   
+        }
     }
 
     if(!t && *error)
-        printf("%d: Unknown/invalid token.\n",lineno); 
+        printf("%d: Unknown/invalid token.\n",lineno);
     else if(t && !S.size)
         printf("%d: Program expected to end near %s",lineno,toStr(t->s));
     return P;
