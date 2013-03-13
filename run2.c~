@@ -25,18 +25,21 @@ int main(int argc, char *argv[])
     FILE *g=fopen("rules.txt", "r");
     FILE *fp=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
+    int i,Gno, Sno,fd;
     Table T[60][60];
     grammar G[100];
     sets S[60];
-
+    keyword kw[48];
+    for(i=0; i<48; i++)
+        kw[i].present=FALSE;
+    keywordTable kt = kw;
+    initkt(kt);
     keyword kn[2000];
-    int i,j,Gno,Sno,fd;
     for(i=0; i<2000; i++)
         kn[i].present=FALSE;
     keywordTable nt = kn;
     initNt(nt);
     Gno = createGrammar(g,G,nt);
-    
     Sno = createSets(s,S,nt);
 /*    for(i=0;i<Sno;i++)
     {
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
     	for(j=0;j<S[i].followno;j++)
     		printf("%s ",toStr(S[i].follow[j] ));
     }
-*/    initTable(T);
+*/  initTable(T);
     createParseTable(G,T,S,Gno);
     //printTable(fp, T);
     fd = open("input.txt",O_RDONLY);
@@ -56,11 +59,10 @@ int main(int argc, char *argv[])
         printf("input file not found");
         return 0;
     }
-    keyword kt[48];
-    initkt(kt);
+    tokenList list=createTokenList(fd, kt);
     parseTree P = parseInputSourceCode(fd, T, kt, G);
-    printParseTree(P, tree)
+    printParseTree(P, tree);
 	fclose(fp);
-	
+
     return 0;
 }

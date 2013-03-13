@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     for(i=0; i<200; i++)
         kn[i].present=FALSE;
     
-    //initNt(nt);
+    initNt(nt);
     fp = open(argv[1],O_RDONLY);
     if(fp==-1)
     {
