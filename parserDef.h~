@@ -23,24 +23,33 @@ typedef struct
 
 typedef int Table;
 
+
 struct parsetree
 {
-    char lexeme[100];
+	char lexeme[100];
     int lineno;
     symbol s;
-    bool visited;
-    struct parsetree * stacknext;
-    struct parsetree *parent; //parent symbol
+	bool visited;
+	struct parsetree * parent; //parent node
     struct parsetree * child[20]; //Assuming a node cannot have more than 20 children
 };
-
 typedef struct parsetree * parseTree;
 
-
-typedef struct
+struct stacknode
 {
-    parseTree top;
+    parseTree tree;
+    struct stacknode * next;
+    
+};
+typedef struct stacknode *stackNode;
+
+
+struct stack
+{
+    stackNode top;
     int size;
-} Stack;
+} ;
+
+typedef struct stack * Stack;
 
 #endif // PARSERDEF_H_INCLUDED
