@@ -30,6 +30,8 @@ struct tnode{
     tokenInfo t;
     int ruleno;//used by AST to know which grammar rule was applied for the non-terminal,for terminals it is -1
     int lineno;
+    struct tnode* parent;
+    bool visited;
     struct tnode* next[20];//assuming length of RHS of rules is bounded by 20 
 };
 
@@ -37,7 +39,6 @@ typedef struct tnode* ParseTree;
 
 struct snode{
     ParseTree ref;//to Parse Tree 
-    bool visit;
     struct snode* next;
 };
 

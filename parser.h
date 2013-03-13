@@ -3,7 +3,7 @@
 
 void createParseTable(grammar G[], Table T[][60], sets S[], int Gno);
 ParseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[], bool*error);
-void printParseTree(ParseTree  PT);
+void printParseTree(ParseTree  PT, FILE *outfile);
 symbol toSym(char *a, keywordTable nt);//return Symbol for given string
 int createGrammar(FILE * fp,grammar G[], keywordTable nt);//load grammar from text file
 int createSets(FILE * fp,sets S[], keywordTable nt);

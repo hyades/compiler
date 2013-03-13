@@ -377,6 +377,8 @@ ParseTree createtnode(symbol s)
     newnode=(ParseTree)malloc(sizeof(struct tnode));
     newnode->t=t;
     newnode->lineno=-1;
+    newnode->parent=NULL;
+    newnode->visited=0;
     for(i=0;i<20;i++)
         newnode->next[i]=NULL;
     return newnode;
@@ -462,7 +464,8 @@ while(*error==0 && t!=NULL && S.size!=0){
         parentPtr->ruleno=i;        
         S=pop(S);
         for(k=g[i].listno -1 ;k>=0;k--) {
-            childPtr=createtnode(g[i].list[k]);            
+            childPtr=createtnode(g[i].list[k]);
+            childPtr->parent = parentPtr;            
             S=push(S,childPtr);
             parentPtr->next[k]=childPtr;//need to preserve order
         }
@@ -475,23 +478,35 @@ else if(t!=NULL && S.size==0)
 return P;
 }
 
-void dfprint(ParseTree P,FILE*fp)
-{
-int i;
-if(isTerminal(P->t->s))
-    fprintf(fp,"\n<%s> => ",toStr(P->t->s));
-for(i=0;i<20;i++)
-    if(P->next[i]!=NULL)
-        fprintf(fp,"<%s> ",toStr(P->next[i]->t->s));
-for(i=0;i<20;i++)
-    if(P->next[i]!=NULL)
-        dfprint(P->next[i],fp);
-}
 
-void printParseTree(ParseTree P)
+void printParseTree(ParseTree  PT, FILE *outfile)
 {
-FILE*fpw=fopen("parsetree","w");
-fprintf(fpw,"PRINTING THE PARSE TREE\n\n\n");
-dfprint(P,fpw);
-fclose(fpw);
+    int j;
+    //printf("PT 0th child %s", toStr(PT->child[0]->s));
+    while(1)
+    {
+        if(PT->visited==0)
+                fprintf(outfile,"%s \n",toStr(PT->t->s));
+        PT->visited = 1;
+        for(j=0;j<20;j++)
+        {
+            if(PT->next[j] != NULL)
+                {
+                    //fprintf(outfile,"child encountered: %s\n",toStr(PT->next[j]->t->s));
+                    if(PT->next[j]->visited==0)
+                        {
+                            //fprintf(outfile,"child of %s is %s\n", toStr(PT->t->s),toStr(PT->next[j]->t->s));
+                            PT = PT->next[j];
+                            break;
+                        }
+                }
+        }
+        if(j==20)
+        {
+            if(PT->t->s == program)break;
+            else
+                PT = PT->parent;
+        }
+    }
+
 }
