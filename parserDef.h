@@ -24,32 +24,29 @@ typedef struct
 typedef int Table;
 
 
-struct parsetree
-{
-	char lexeme[100];
+
+
+struct tnode{
+    tokenInfo t;
+    int ruleno;//used by AST to know which grammar rule was applied for the non-terminal,for terminals it is -1
     int lineno;
-    symbol s;
-	bool visited;
-	struct parsetree * parent; //parent node
-    struct parsetree * child[20]; //Assuming a node cannot have more than 20 children
+    struct tnode* next[20];//assuming length of RHS of rules is bounded by 20 
 };
-typedef struct parsetree * parseTree;
 
-struct stacknode
-{
-    parseTree tree;
-    struct stacknode * next;
-    
+typedef struct tnode* ParseTree;
+
+struct snode{
+    ParseTree ref;//to Parse Tree 
+    bool visit;
+    struct snode* next;
 };
-typedef struct stacknode *stackNode;
 
-
-struct stack
-{
-    stackNode top;
+typedef struct{
+    struct snode* top;
     int size;
-};
+}Stack;
 
-typedef struct stack * Stack;
+
+
 
 #endif // PARSERDEF_H_INCLUDED

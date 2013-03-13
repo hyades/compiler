@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     FILE *fp=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
     int i,Gno, Sno,fd;
+    bool error = 0;
     Table T[60][60];
     grammar G[100];
     sets S[60];
@@ -60,8 +61,8 @@ int main(int argc, char *argv[])
         return 0;
     }
     //tokenList list=createTokenList(fd, kt);
-    parseTree P = parseInputSourceCode(fd, T, kt, G);
-    printParseTree(P, tree);
+    ParseTree P = parseInputSourceCode(fd, T, kt, G, &error);
+    printParseTree(P);
 	fclose(fp);
 
     return 0;
