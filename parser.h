@@ -28,6 +28,10 @@ parseTree createParseNode(symbol s);
 struct stackNode* createStackNode(parseTree tree);
 Stack push(Stack S,parseTree tree);
 Stack pop(Stack S);
+void initSets(sets S[],grammar G[], int Gno);
+void firstSets(sets S[], grammar G[],symbol s, int Gno);
+void printFirst(sets S[]);
+void followSets(sets S[], grammar G[],symbol s, int Gno);
 
 
 #endif // PARSER_H_INCLUDED

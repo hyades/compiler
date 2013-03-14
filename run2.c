@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     Table T[60][60];
     grammar G[100];
     sets S[60];
+
     keyword kw[48];
     for(i=0; i<48; i++)
         kw[i].present=FALSE;
@@ -41,7 +42,9 @@ int main(int argc, char *argv[])
     keywordTable nt = kn;
     initNt(nt);
     Gno = createGrammar(g,G,nt);
-    createSets(s,S,nt);
+    initSets(S,G,Gno);
+    printFirst(S);
+    //createSets(s,S,nt);
 /*    for(i=0;i<Sno;i++)
     {
     	printf("\n%d %d %s %d\n", S[i].firstno,S[i].followno, toStr(S[i].nt), S[i].eps);
@@ -51,9 +54,10 @@ int main(int argc, char *argv[])
     	for(j=0;j<S[i].followno;j++)
     		printf("%s ",toStr(S[i].follow[j] ));
     }
-*/  initTable(T);
+    
+  initTable(T);
     createParseTable(G,T,S,Gno);
-    //printTable(fp, T);
+    printTable(fp, T);
     fd = open("input.txt",O_RDONLY);
      if(fd==-1)
     {
@@ -64,6 +68,6 @@ int main(int argc, char *argv[])
     parseTree P = parseInputSourceCode(fd, T, kt, G, &error);
     printParseTree(P, tree);
 	fclose(fp);
-
+    */
     return 0;
 }

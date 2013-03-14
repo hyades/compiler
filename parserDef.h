@@ -19,6 +19,8 @@ typedef struct
     int firstno;
     int followno;
     symbol follow[60];
+    bool ft[60];
+    bool fw[60];
     bool eps;
 
 } sets;
