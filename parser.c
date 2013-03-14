@@ -284,7 +284,7 @@ void followSets(sets S[], grammar G[],symbol s, int Gno)
                 }
                 if(flag==0 && k==G[i].listno)
                 {
-                    if(G[i].nt < s)
+                    if(G[i].nt > s)
                         followSets(S,G,G[i].nt,Gno);
                     for(l=0;l<60;l++)
                         if(S[G[i].nt - program].fw[l]==1 && S[s-program].fw[l]==0)
