@@ -161,6 +161,152 @@ void initNt(keywordTable nt)
     addNt(nt,"eps",TK_EPS );
 }
 
+
+void initSets(sets S[],grammar G[], int Gno)
+{
+    //printf("initSets");
+    int i,j,x;
+    for(i=0;i<60;i++)
+    {
+        S[i].nt = i+program;
+        //S[i].first[60];
+        S[i].firstno=0;
+        S[i].followno=0;
+        //S[i].follow[60];
+        for(j=0;j<60;j++)S[i].ft[j]=0;
+        for(j=0;j<60;j++)S[i].fw[j]=0;
+        S[i].eps=0;
+    }
+    //printf("initSets");
+    for(i=0;i<(int)(idlist-program)+1;i++)
+    {    firstSets(S, G,(symbol)i+program,Gno);
+      //   printf("initSets");
+    }
+    for(i=2;i<(int)(idlist-program)+1;i++)
+    {    followSets(S, G,(symbol)i+program,Gno);
+         printf("-------------initSets %s", toStr(i+program));
+         //scanf("%d", &x);
+    }
+    // followSets(S, G,program,Gno);
+}
+void firstSets(sets S[], grammar G[],symbol s, int Gno)
+{
+
+    int i,j,k;
+    bool flag = 0;
+    //printf("HELLO");
+    if(S[s - program].firstno>0)return;
+    printf("%s\n", toStr(s));
+    for(i=0;i<Gno;i++)
+    {
+
+        if(s==G[i].nt)
+        {
+            flag = 0;
+            if(G[i].list[0]==TK_EPS)
+            {    
+                S[s-program].eps=1;
+                continue;
+            }
+            for(j=0;!isTerminal(G[i].list[j])&&j<G[i].listno;j++)
+            {
+                firstSets(S,G,G[i].list[j],Gno);
+                for(k=0;k<60;k++)
+                    if(S[G[i].list[j]-program].ft[k]==1 && S[s-program].ft[k]==0)
+                    {    
+                        S[s-program].ft[k] = 1;
+                        S[s-program].first[S[s-program].firstno++] = k;
+                        printf("");
+                    }
+                if(S[G[i].list[j]-program].eps==0)
+                    {
+                        flag =1;
+                        break;
+                    }
+
+            }
+            if(flag==0&&j<G[i].listno)
+            {
+                S[s-program].ft[G[i].list[j]] = 1;
+                S[s-program].first[S[s-program].firstno++] = G[i].list[j]; 
+            }
+        }   
+    }
+}
+
+
+void printFirst(sets S[])
+{
+    FILE *fp = fopen("firsts","w");
+    int i,j;
+    for(i=0;i<idlist-program+1;i++)
+    {
+        fprintf(fp,"%s ",toStr(S[i].nt));
+        for(j=0;j<S[i].firstno;j++)
+            fprintf(fp, "%s ", toStr(S[i].first[j]));
+        fprintf(fp, " , ");
+        for(j=0;j<S[i].followno;j++)
+            fprintf(fp, "%s ", toStr(S[i].follow[j]));
+        //fprintf(fp, " , ");
+        fprintf(fp,"\n");
+    }
+}
+
+
+void followSets(sets S[], grammar G[],symbol s, int Gno)
+{
+    int i,j,k,l;
+    bool flag = 0;
+    //printf("HELLO");
+    printf("%s\n", toStr(s));
+    for(i=0;i<Gno;i++)
+    {
+        for(j=0;j<G[i].listno;j++)
+            if(s==G[i].list[j])
+            {
+                
+                flag=0;
+                for(k=j+1;k<G[i].listno && !isTerminal(G[i].list[k]);k++)
+                {
+                    //add first of k here
+
+                    for(l=0;l<60;l++)
+                        if(S[G[i].list[k] - program].ft[l]==1 && S[s-program].fw[l]==0)
+                        {
+                            S[s-program].fw[l]=1;
+                            S[s-program].follow[S[s-program].followno++]=l;
+                        }
+                    if(S[G[i].list[k] - program].eps==0)
+                    {
+                        flag=1;
+                        break;
+                    }
+                }
+                if(flag==0 && k==G[i].listno)
+                {
+                    if(G[i].nt > s)
+                        followSets(S,G,G[i].nt,Gno);
+                    for(l=0;l<60;l++)
+                        if(S[G[i].nt - program].fw[l]==1 && S[s-program].fw[l]==0)
+                        {
+                            S[s-program].fw[l]=1;
+                            S[s-program].follow[S[s-program].followno++]=l;
+                        }
+                }
+                else if(flag==0 && k<G[i].listno && S[s-program].fw[G[i].list[k]]==0)
+                {
+                        S[s-program].fw[G[i].list[k]]=1;
+                        S[s-program].follow[S[s-program].followno++]=G[i].list[k];
+                }
+            }   
+    }
+}
+
+
+
+
+
+
 void createSets(FILE * fp,sets S[],keywordTable nt)
 {
     char a[30];
@@ -332,13 +478,8 @@ void printTable(FILE *fp, Table T[][60])//print parser table
                 fprintf(fp, " ,");
             fprintf(fp, "\n");
         }
-        for(i=0; i<=(int)idlist - (int)program; i++)
-        {
-            for(j=0; j<(int)program; j++)
-                printf("%d ",T[i][j]+1);
-            printf("\n");
-        }
-    }
+        
+}
 
 
 bool isTerminal(symbol s)//returns true if given symbol is terminal
