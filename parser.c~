@@ -336,7 +336,7 @@ void printTable(FILE *fp, Table T[][60])//print parser table
     fprintf(fp, "\n");
     for(i=0; i<(int)idlist - (int)program + 1 ; i++)
     {
-        fprintf(fp, "%s\t", toStr(i+program));
+        fprintf(fp, "%s,", toStr(i+program));
         for(j=0; j<(int)program; j++)
             if(T[i][j]>=0)
                 fprintf(fp, "%d,", T[i][j]+1);
@@ -359,105 +359,229 @@ bool isTerminal(symbol s)//returns true if given symbol is terminal
     return 0;
 }
 
-Stack stack_push(Stack S,parseTree t)
+void stack_push(Stack S,parseTree tree)
 {
-    if(S.top==NULL)
-        S.top=t;
-    else
+    if(S->top==NULL)
     {
-        t->stacknext = S.top;
-        S.top=t;
+    	printf("STACK NULL PUSHING NOW \n");
+        S->top=createStackNode(tree);
     }
-    S.size++;
-    return S;
+    else
+    {	
+    	printf("1 TOP: %s\n",toStr(S->top->tree->s));
+    	stackNode n = NULL;
+    	stackNode save = S->top;
+    	//parseTree t = S->top->tree;
+    	//printf("symbol: %s\n",toStr(tree->s));
+    	S->top = createStackNode(tree);
+    	S->top->next = save;
+    	//printf("symbol: %s\n",toStr(S->top->tree->s));
+    	//S->top->tree = t;
+    	//S->top->tree = t;
+    	//printf("symbol: %s\n",toStr(tree->s));
+    	printf("2 TOP: %s\n",toStr(S->top->tree->s));
+        //n->next = S->top;
+        //S->top=n;
+        //printf("3 TOP: %s\n",toStr(S->top->tree->s));
+    }
+    S->size++;
+
+    //return S;
 }
 
-Stack stack_pop(Stack S)
-{
-    parseTree p;
-    p=S.top;
-    S.top=S.top->stacknext;
-    free(p);
-    S.size--;
-    return S;
-}
-
-parseTree stack_top(Stack S)
-{
-    return S.top;
+void stack_pop(Stack  S)
+{	
+	stackNode p =S->top;
+    S->top=S->top->next;
+    p->next = NULL;
+    //free(p);
+    S->size--;
+    //return S;
 }
 
 
 
-parseTree createParseNode(char * lexeme,int lineno,symbol s,symbol ps)
+parseTree createParseNode(char * lexeme,int lineno,symbol s, parseTree parent)
 {
 	parseTree temp;
 	int i;
     temp = (parseTree)malloc(sizeof(parseTree));
     strcpy(temp->lexeme,lexeme);
-    temp->lineno = lineno;
-    temp->visited = 0;
-    temp->s = s;
-    temp->ps = ps;
-    temp->stacknext = NULL;
+	temp->lineno = lineno;
+	temp->s = s;
+	temp->visited = 0;
+    temp->parent = parent;
     for(i=0;i<20;i++)temp->child[i] = NULL;
+   // printf("created new node with %s\n",toStr(temp->s));
     return temp;
 }
-
-parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar G[])
+stackNode createStackNode(parseTree t)
 {
-	Stack S ;
-	S.top = NULL;
-	S.size = 0;
-	parseTree temp,newnode;
-	parseTree PT = createParseNode("program",0,program,program);
-	S = stack_push(S,PT);
-	tokenInfo t;
+	stackNode temp = NULL;
+	int i;
+	//printf("1   symbol: %s\n",toStr(t->s));
+	temp = (stackNode)malloc(sizeof(stackNode));
+	//printf("2   symbol: %s\n",toStr(t->s));
+	temp->tree = t;
+	printf("SYMBOL: %s\n",toStr(temp->tree->s));
+	temp->next = NULL;
+	//printf("4   symbol: %s\n",toStr(t->s));
+	return temp;
+}
+parseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[])
+{
+	Stack ST, AT;
+	ST = (Stack)malloc(sizeof(Stack));
 	bool error = 0;
-	int linenumber = 0,rule,i,j;
-	t = getNextToken(fp, kt, &error, &linenumber);
-	while(!error && !S.size)
+	int linenumber=0,rule,i,j;
+	//parseTree q;
+	printf("hello\n");
+	ST->top = NULL;
+	ST->size = 0;
+	parseTree newnode=NULL,PT=NULL;
+	stackNode save=NULL;
+	printf("hello\n");
+	PT = createParseNode("program",linenumber,program,NULL);
+	//stackNode node;
+	//node = createStackNode(PT);
+	stack_push(ST,PT);
+	tokenInfo t = NULL;
+
+	//printf("1. stack top : %s\n",toStr(ST.top->tree->s));
+	t = getNextToken(file,kt,&error,&linenumber);
+	//printf("2. stack top : %s\n",toStr(ST.top->s));
+	if(error==1)
+            {
+                printf("error!\n");
+                
+            }
+	printf("read: %s\n",toStr(t->s));
 	
+	while(!error && ST->size)
+
 	{
-		if(isTerminal(t->s))
+		//printf("stack top : %s\n",toStr(ST.top->s));
+		
+		if(isTerminal(ST->top->tree->s))
 		{
-			if(stack_top(S)->s == t->s)
+			printf("Terminal %s\n",toStr(t->s));
+			if(ST->top->tree->s == t->s)
 			{
-				stack_pop(S);
-				free(t);
-				t = getNextToken(fp, kt, &error, &linenumber);
+			    //printf("big error\n");
+			    	//printf("stack top : %s size:%d\n",toStr(ST.top->s),ST.size);
 				
+				stack_pop(ST);
+				
+				
+                	
+				t = getNextToken(file,kt,&error,&linenumber);
+				printf("read: %s\n",toStr(t->s));
+				
+                
+				if(error ==1)
+				{
+				    printf("ERROR!\n");
+				    break;
+				}
+                //printf("read: %s\n",toStr(t->s));
+                //if(ST.size==1&&(ST.top->s>idlist||ST.top->s<TK_MINUS))
+                //ST.top->s = TK_END; 
+			}
+			else if(ST->top->tree->s == TK_EPS)
+			{
+			    stack_pop(ST);
+			    //printf("stack size %d\n", ST.size);
 			}
 			else
 			{
 				error = 1;
-				printf("ERROR\n");
+				printf("ERROR!!\n");
+				break;
 			}
 		}
 		else
-		{	
-			i = (int)(S.top->s-program);
+		{
+			printf("NON-terminal %s\n",toStr(ST->top->tree->s));
+			i = (int)(ST->top->tree->s - program);
 			j = (int)(t->s);
-			rule = T[1][3];
+			rule = T[i][j];
 			if(rule==-1)
 			{
 				error=1;
-				printf("%d: Unexpected %s.",linenumber,t->lexeme);
+				printf("line:%d: UNEXPECTED %s.",linenumber,t->lexeme);
 				break;
-			}		
-			temp = stack_top(S);			
-			for(i = G[rule].listno-1;i>=0;i--)
-			{				
-				newnode = createParseNode(t->lexeme,linenumber,t->s,temp->s);
-				temp->child[i] = newnode;
-				S = stack_push(S,newnode);
 			}
-			
-		}	
+			save = ST->top;
+			//printf("ST top is %s\n", toStr(temp->s));
+			stack_pop(ST);
+			printf("POP:%s\n",toStr(save->tree->s));
+			for(i = G[rule].listno-1;i>=0;i--)
+			{	/*
+				AT = ST;
+				printf("STACK:");
+				while(AT.size!=0)
+				{
+					printf(" %s", toStr(AT.top->tree->s));
+					AT=stack_pop(AT);
+				}
+				*/
+				printf("\n");
+				printf("Adding child: %s\n",toStr(G[rule].list[i]));
+				newnode = createParseNode(t->lexeme,linenumber,G[rule].list[i],save->tree);
+				//printf("newnode:%s save tree child: %s\n",toStr(newnode->s),save->tree->child[i]);
+				save->tree->child[i] = newnode;
+				if(ST->top)
+				printf("TOP: %s newnode:%s save tree child: %s save tree:%s\n",toStr(ST->top->tree->s),toStr(newnode->s),toStr(save->tree->child[i]->s),toStr(save->tree->s));
+				//node = createStackNode(newnode);
+				stack_push(ST,newnode);
+				//temp->child[i] = newnode;
+				printf("Added child :%s\n",toStr(ST->top->tree->s));
+				//ST = stack_push(ST,node);
+				//printf(" PT has child %s\n", toStr(PT->child[i]->s));
+			}
+            //printf(" PT has child again %s\n", toStr(PT->child[0]->s));
+
+		}
+		//printf(" PT has child again again %s\n", toStr(PT->child[0]->s));
 	}
+    if(t==NULL)
+    {
+        printf("unexpected end\n");
+    }
+    //printf(" PT has child again again again %s\n", toStr(PT->child[0]->s));
+    //printf("PT 0th child %s", toStr(PT->child[0]->s));
 	return PT;
 }
 
+void printParseTree(parseTree  PT, FILE *outfile)
+{
+	int j;
+	//printf("PT 0th child %s", toStr(PT->child[0]->s));
+	while(1)
+	{
+		printf("%s \n",toStr(PT->s));
+		PT->visited = 1;
+		for(j=0;j<20;j++)
+		{
+			if(PT->child[j] != NULL)
+				{
+					printf("child encountered: %s\n",toStr(PT->child[j]->
+					if(PT->child[j]->visited==0)
+						{
+							printf("child of %s is %s\n", toStr(PT->s),toStr(PT->child[j]->s));
+							PT = PT->child[j];
+							break;
+						}
+				}
+		}
+		if(j==20)
+		{
+			if(PT->s == program)break;
+			else
+				PT = PT->parent;
+		}
+	}
 
+}
 
 

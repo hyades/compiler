@@ -164,8 +164,8 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else if(isspace(c))
             {
                 state = 45;
-                if(c=='\n'||c=='\r')
-                    (*linenumber)++;
+               //if(c=='\n'||c=='\r')
+                    //(*linenumber)++;
             }
 
             else
@@ -467,9 +467,9 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else
             {
                 back = 1;
-                t = (tokenInfo)malloc(sizeof(tokenInfo));
+                //t= (tokenInfo)malloc(sizeof(tokenInfo));
                 lexeme[i]='\0';
-                *t=keywordId(lexeme, kt);
+                t=keywordId(lexeme, kt);
                 return t;
             }
             break;
@@ -576,9 +576,9 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else
             {
                 back = 1;
-                t = (tokenInfo)malloc(sizeof(tokenInfo));
+                //t = (tokenInfo)malloc(sizeof(tokenInfo));
                 lexeme[i]='\0';
-                *t=mainFun(lexeme, kt);
+                t=mainFun(lexeme, kt);
                 return t;
             }
             break;
@@ -736,7 +736,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             c = getNextChar(fp,&back);
             if(c=='\n'||c=='\r')
             {
-                printf("newline\n");
+                //printf("newline\n");
                 (*linenumber)++;
                 state = 45;
             }
@@ -882,23 +882,23 @@ void initkt(keywordTable kt)//initialize keywordTable with keywords
     addKeyword(kt, "write", TK_WRITE);
 }
 
-token keywordId(char *lexeme, keywordTable kt)//returns token for lexeme if it is a keyword or fieldname
+tokenInfo keywordId(char *lexeme, keywordTable kt)//returns token for lexeme if it is a keyword or fieldname
 {
     int hval,hashkey=48;//twice the no. of keywords
-    token t;
-    strcpy(t.lexeme,lexeme);
+    tokenInfo t = (tokenInfo)malloc(sizeof(tokenInfo));
+    strcpy(t->lexeme,lexeme);
     hval=hash(lexeme,hashkey);
     //printf("%s\n", lexeme);
     while(1)
     {
         if(kt[hval].present==FALSE)
         {
-            t.s=TK_FIELDID;
+            t->s=TK_FIELDID;
             return t;
         }
         else if(!strcmp(lexeme,kt[hval].keyword))
         {
-            t.s=kt[hval].s;
+            t->s=kt[hval].s;
             return t;
         }
         hval++;
@@ -906,16 +906,16 @@ token keywordId(char *lexeme, keywordTable kt)//returns token for lexeme if it i
     }
 }
 
-token mainFun(char *lexeme, keywordTable kt)//returns token for lexeme if it is main or function
+tokenInfo mainFun(char *lexeme, keywordTable kt)//returns token for lexeme if it is main or function
 {
-    token t;
-    strcpy(t.lexeme,lexeme);
+    tokenInfo t = (tokenInfo)malloc(sizeof(tokenInfo));
+    strcpy(t->lexeme,lexeme);
     if(!strcmp(lexeme, "_main"))
     {
-        t.s=TK_MAIN;
+        t->s=TK_MAIN;
         return t;
     }
-    t.s=TK_FUNID;
+    t->s=TK_FUNID;
     return t;
 }
 
@@ -1168,7 +1168,7 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
     return list;
 }
 
-void printTokenList(int fp, keywordTable kt, tokenList list)//print Token List
+void printTokenList(keywordTable kt, tokenList list)//print Token List
 {
     tokenInfo t;
     while(list!=NULL)

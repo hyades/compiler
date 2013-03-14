@@ -21,7 +21,7 @@ parser.c
 
 symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 {
-    int hval,hashkey=2000;
+    int hval,hashkey=200;
     hval=hash(a,hashkey);
     symbol s;
     while(1)
@@ -43,7 +43,7 @@ symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 
 void addNt(keywordTable nt, char *keyword, symbol s)//recursively called to add keyword to keywordTable
 {
-    int hval,hashkey=2000;
+    int hval,hashkey=200;
     hval=hash(keyword,hashkey);
     while(nt[hval].present==TRUE)
         hval=(++hval)%hashkey;
@@ -161,7 +161,153 @@ void initNt(keywordTable nt)
     addNt(nt,"eps",TK_EPS );
 }
 
-int createSets(FILE * fp,sets S[],keywordTable nt)
+
+void initSets(sets S[],grammar G[], int Gno)
+{
+    //printf("initSets");
+    int i,j,x;
+    for(i=0;i<60;i++)
+    {
+        S[i].nt = i+program;
+        //S[i].first[60];
+        S[i].firstno=0;
+        S[i].followno=0;
+        //S[i].follow[60];
+        for(j=0;j<60;j++)S[i].ft[j]=0;
+        for(j=0;j<60;j++)S[i].fw[j]=0;
+        S[i].eps=0;
+    }
+    //printf("initSets");
+    for(i=0;i<(int)(idlist-program)+1;i++)
+    {    firstSets(S, G,(symbol)i+program,Gno);
+      //   printf("initSets");
+    }
+    for(i=2;i<(int)(idlist-program)+1;i++)
+    {    followSets(S, G,(symbol)i+program,Gno);
+         printf("-------------initSets %s", toStr(i+program));
+         //scanf("%d", &x);
+    }
+    // followSets(S, G,program,Gno);
+}
+void firstSets(sets S[], grammar G[],symbol s, int Gno)
+{
+
+    int i,j,k;
+    bool flag = 0;
+    //printf("HELLO");
+    if(S[s - program].firstno>0)return;
+    printf("%s\n", toStr(s));
+    for(i=0;i<Gno;i++)
+    {
+
+        if(s==G[i].nt)
+        {
+            flag = 0;
+            if(G[i].list[0]==TK_EPS)
+            {    
+                S[s-program].eps=1;
+                continue;
+            }
+            for(j=0;!isTerminal(G[i].list[j])&&j<G[i].listno;j++)
+            {
+                firstSets(S,G,G[i].list[j],Gno);
+                for(k=0;k<60;k++)
+                    if(S[G[i].list[j]-program].ft[k]==1 && S[s-program].ft[k]==0)
+                    {    
+                        S[s-program].ft[k] = 1;
+                        S[s-program].first[S[s-program].firstno++] = k;
+                        printf("");
+                    }
+                if(S[G[i].list[j]-program].eps==0)
+                    {
+                        flag =1;
+                        break;
+                    }
+
+            }
+            if(flag==0&&j<G[i].listno)
+            {
+                S[s-program].ft[G[i].list[j]] = 1;
+                S[s-program].first[S[s-program].firstno++] = G[i].list[j]; 
+            }
+        }   
+    }
+}
+
+
+void printFirst(sets S[])
+{
+    FILE *fp = fopen("firsts","w");
+    int i,j;
+    for(i=0;i<idlist-program+1;i++)
+    {
+        fprintf(fp,"%s ",toStr(S[i].nt));
+        for(j=0;j<S[i].firstno;j++)
+            fprintf(fp, "%s ", toStr(S[i].first[j]));
+        fprintf(fp, " , ");
+        for(j=0;j<S[i].followno;j++)
+            fprintf(fp, "%s ", toStr(S[i].follow[j]));
+        //fprintf(fp, " , ");
+        fprintf(fp,"\n");
+    }
+}
+
+
+void followSets(sets S[], grammar G[],symbol s, int Gno)
+{
+    int i,j,k,l;
+    bool flag = 0;
+    //printf("HELLO");
+    printf("%s\n", toStr(s));
+    for(i=0;i<Gno;i++)
+    {
+        for(j=0;j<G[i].listno;j++)
+            if(s==G[i].list[j])
+            {
+                
+                flag=0;
+                for(k=j+1;k<G[i].listno && !isTerminal(G[i].list[k]);k++)
+                {
+                    //add first of k here
+
+                    for(l=0;l<60;l++)
+                        if(S[G[i].list[k] - program].ft[l]==1 && S[s-program].fw[l]==0)
+                        {
+                            S[s-program].fw[l]=1;
+                            S[s-program].follow[S[s-program].followno++]=l;
+                        }
+                    if(S[G[i].list[k] - program].eps==0)
+                    {
+                        flag=1;
+                        break;
+                    }
+                }
+                if(flag==0 && k==G[i].listno)
+                {
+                    if(G[i].nt > s)
+                        followSets(S,G,G[i].nt,Gno);
+                    for(l=0;l<60;l++)
+                        if(S[G[i].nt - program].fw[l]==1 && S[s-program].fw[l]==0)
+                        {
+                            S[s-program].fw[l]=1;
+                            S[s-program].follow[S[s-program].followno++]=l;
+                        }
+                }
+                else if(flag==0 && k<G[i].listno && S[s-program].fw[G[i].list[k]]==0)
+                {
+                        S[s-program].fw[G[i].list[k]]=1;
+                        S[s-program].follow[S[s-program].followno++]=G[i].list[k];
+                }
+            }   
+    }
+}
+
+
+
+
+
+
+void createSets(FILE * fp,sets S[],keywordTable nt)
 {
     char a[30];
     int i = 0,k=0,firstcount=0,followcount=0;
@@ -169,17 +315,13 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
     {
         fscanf(fp,"%s",a);
         if(feof(fp))break;
-        //printf("%s\n",a);
         if(strcmp(a,",")==0)
         {
             k++;
-            //printf("COMMA\n");
         }
         else if(k==0)
         {
-            //printf("k=0\n");
             S[i].nt = toSym(a,nt);
-            //printf("a = %s value = %s\n",a,toStr(toSym(a,nt)));
             firstcount = 0;
             followcount = 0;
 
@@ -193,8 +335,6 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
         {
             S[i].follow[followcount] = toSym(a,nt);
             followcount++;
-            //printf("k=3 folllow=%d\n",follow);
-
         }
         else if(k==3)
         {
@@ -206,13 +346,8 @@ int createSets(FILE * fp,sets S[],keywordTable nt)
             S[i].followno = followcount;
             i++;
             k=0;
-
         }
-
-
-
     }
-    return i;
 }
 
 int createGrammar(FILE * fp,grammar G[], keywordTable nt)//load grammar from text file
@@ -244,7 +379,6 @@ int createGrammar(FILE * fp,grammar G[], keywordTable nt)//load grammar from tex
             G[ruleNumber].list[listno++] = toSym(a,nt);
         }
     }
-    //printf("\n\n\n\nGno = %d\n\n\n\n", ruleNumber);
     return ruleNumber;
 }
 
@@ -320,7 +454,7 @@ void initTable(Table T[][60])//initialize parser table with no rule
     for(i=0; i<60; i++)
         for(j=0; j<60; j++)
             T[i][j]=-1;
-}
+    }
 
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60])//insert rule in table
 {
@@ -336,21 +470,17 @@ void printTable(FILE *fp, Table T[][60])//print parser table
     fprintf(fp, "\n");
     for(i=0; i<(int)idlist - (int)program + 1 ; i++)
     {
-        fprintf(fp, "%s\t", toStr(i+program));
+        fprintf(fp, "%s,", toStr(i+program));
         for(j=0; j<(int)program; j++)
             if(T[i][j]>=0)
                 fprintf(fp, "%d,", T[i][j]+1);
             else
                 fprintf(fp, " ,");
-        fprintf(fp, "\n");
-    }
-    for(i=0; i<=(int)idlist - (int)program; i++)
-    {
-        for(j=0; j<(int)program; j++)
-            printf("%d ",T[i][j]+1);
-        printf("\n");
-    }
+            fprintf(fp, "\n");
+        }
+        
 }
+
 
 bool isTerminal(symbol s)//returns true if given symbol is terminal
 {
@@ -359,105 +489,180 @@ bool isTerminal(symbol s)//returns true if given symbol is terminal
     return 0;
 }
 
-Stack stack_push(Stack S,parseTree t)
+Stack push(Stack S,parseTree tree)
 {
     if(S.top==NULL)
-        S.top=t;
-    else
-    {
-        t->stacknext = S.top;
-        S.top=t;
+        S.top=createStackNode(tree);
+    else{
+        struct stackNode* newnode=createStackNode(tree);
+        newnode->next=S.top;
+        S.top=newnode;
     }
     S.size++;
     return S;
 }
 
-Stack stack_pop(Stack S)
+Stack pop(Stack S)
 {
-    parseTree p;
+    struct stackNode* p;
     p=S.top;
-    S.top=S.top->stacknext;
+    S.top=S.top->next;
     free(p);
     S.size--;
     return S;
 }
 
-parseTree stack_top(Stack S)
+struct stackNode* createStackNode(parseTree tree)
 {
-    return S.top;
+    struct stackNode* newnode;
+    newnode=(struct stackNode*)malloc(sizeof(struct stackNode));
+    newnode->tree=tree;
+    newnode->next=NULL;
+    return newnode;
 }
 
 
-
-parseTree createParseNode(char * lexeme,int lineno,symbol s,symbol ps)
+parseTree createParseNode(symbol s)
 {
-	parseTree temp;
-	int i;
-    temp = (parseTree)malloc(sizeof(parseTree));
-    strcpy(temp->lexeme,lexeme);
-    temp->lineno = lineno;
-    temp->visited = 0;
-    temp->s = s;
-    temp->ps = ps;
-    temp->stacknext = NULL;
-    for(i=0;i<20;i++)temp->child[i] = NULL;
-    return temp;
-}
-
-parseTree  parseInputSourceCode(int fp, Table T[][60], keywordTable kt, grammar G[])
-{
-	Stack S ;
-	S.top = NULL;
-	S.size = 0;
-	parseTree temp,newnode;
-	parseTree PT = createParseNode("program",0,program,program);
-	S = stack_push(S,PT);
-	tokenInfo t;
-	bool error = 0;
-	int linenumber = 0,rule,i,j;
-	t = getNextToken(fp, kt, &error, &linenumber);
-	while(!error && !S.size)
-	
-	{
-		if(isTerminal(t->s))
-		{
-			if(stack_top(S)->s == t->s)
-			{
-				stack_pop(S);
-				free(t);
-				t = getNextToken(fp, kt, &error, &linenumber);
-				
-			}
-			else
-			{
-				error = 1;
-				printf("ERROR\n");
-			}
-		}
-		else
-		{	
-			i = (int)(S.top->s-program);
-			j = (int)(t->s);
-			rule = T[i][j];
-			if(rule==-1)
-			{
-				error=1;
-				printf("%d: Unexpected %s.",linenumber,t->lexeme);
-				break;
-			}		
-			temp = stack_top(S);			
-			for(i = G[rule].listno-1;i>=0;i--)
-			{				
-				newnode = createParseNode(t->lexeme,linenumber,t->s,temp->s);
-				temp->child[i] = newnode;
-				S = stack_push(S,newnode);
-			}
-			
-		}	
-	}
-	return PT;
+    int i;
+    tokenInfo t;
+    t=(tokenInfo)malloc(sizeof(tokenInfo));
+    t->s=s;
+    parseTree newnode;
+    newnode=(parseTree)malloc(sizeof(struct parsetree));
+    newnode->t=t;
+    newnode->lineno=-1;
+    newnode->parent=NULL;
+    newnode->visited=0;
+    for(i=0;i<20;i++)
+        newnode->next[i]=NULL;
+    return newnode;
 }
 
 
+parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[], bool*error)
+{
+    tokenInfo t;
+    parseTree P;
+    parseTree parent,child;
+    int lineno=1 , i , k;
+    Stack S;
+    S.size=0;
+    S.top=NULL;
+
+    P=createParseNode(program);
+    S=push(S,P);
+    while(1)
+    {
+        t = getNextToken(fp, kt, error, &lineno);
+        //printf("%d\n", TK_COMMENT==t->s);
+        if(t==NULL || *error || t->s != TK_COMMENT)
+        {
+            if(*error)printf("%d: Unxpected %s.",lineno,toStr(t->s));
+                        //printf("break\n");
+            break;
+        }
+    }
+
+    while(!(*error) && S.size && t )
+    {
+        if(isTerminal(S.top->tree->t->s))
+        {
+            if(t->s==S.top->tree->t->s)
+            {
+                S.top->tree->ruleno=-1;
+                strcpy(S.top->tree->t->lexeme,t->lexeme);
+                free(t);
+                S.top->tree->lineno=lineno;
+                S=pop(S);
+                //if(*error)printf("error\n");
+                while(1)
+                {
+                    //printf("getting token \n");
+                    t = getNextToken(fp, kt, error, &lineno);
+                    //printf("%d error :%d\n", TK_COMMENT==t->s,*error);
+                    //printf("%s at lineno %d\n", toStr(t->s), lineno);
+                    //if(t==NULL){printf("null");break;}
+                    //if(*error)printf("error\n");
+                    if(t==NULL || *error==1 || t->s != TK_COMMENT)
+                    {
+                        if(*error)printf("%d: UnEXPECTED %s.",lineno,toStr(t->s));
+                        //printf("break\n");
+                        break;
+                    }
+                }
+            }
+            else if(S.top->tree->t->s==TK_EPS)
+            {
+                S.top->tree->ruleno=-1;
+                S=pop(S);
+            }
+            else
+            {
+                *error=1;
+                printf("%d: %s expected near %s.\n",lineno,toStr(S.top->tree->t->s),toStr(t->s));
+                free(t);
+                break;
+            }
+        }
+        else
+        {
+            i=M[S.top->tree->t->s-program][t->s];
+            if(i==-1)
+            {
+                *error=1;
+                printf("%d: Unxpected %s.",lineno,toStr(t->s));
+                break;
+            }
+            parent=S.top->tree;
+            parent->ruleno=i;
+            S=pop(S);
+            for(k=g[i].listno -1 ;k>=0;k--)
+            {
+                child=createParseNode(g[i].list[k]);
+                child->parent = parent;
+                S=push(S,child);
+                parent->next[k]=child;
+            }
+        }
+    }
+
+    if(!t && *error)
+        printf("%d: Unknown/invalid token.\n",lineno);
+    else if(t && !S.size)
+        printf("%d: Program expected to end near %s",lineno,toStr(t->s));
+    return P;
+}
 
 
+void printParseTree(parseTree  PT, FILE *outfile)
+{
+    int j;
+    //printf("PT 0th child %s", toStr(PT->child[0]->s));
+    while(1)
+    {
+        if(PT->visited==0)
+                fprintf(outfile,"%s \n",toStr(PT->t->s));
+        PT->visited = 1;
+        for(j=0;j<20;j++)
+        {
+            if(PT->next[j] != NULL)
+                {
+                    //fprintf(outfile,"child encountered: %s\n",toStr(PT->next[j]->t->s));
+                    if(PT->next[j]->visited==0)
+                        {
+                            //fprintf(outfile,"child of %s is %s\n", toStr(PT->t->s),toStr(PT->next[j]->t->s));
+                            PT = PT->next[j];
+                            break;
+                        }
+                }
+        }
+        if(j==20)
+        {
+            if(PT->t->s == program)break;
+            else
+                PT = PT->parent;
+        }
+    }
+
+}

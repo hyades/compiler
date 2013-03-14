@@ -1,3 +1,14 @@
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+BATCH 26
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+AAYUSH AHUJA 2010A7PS023P
+MAYANK GUPTA 2010A7PS022P
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+parserDef.h
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
+
 #ifndef PARSERDEF_H_INCLUDED
 #define PARSERDEF_H_INCLUDED
 
@@ -8,6 +19,8 @@ typedef struct
     int firstno;
     int followno;
     symbol follow[60];
+    bool ft[60];
+    bool fw[60];
     bool eps;
 
 } sets;
@@ -25,22 +38,29 @@ typedef int Table;
 
 struct parsetree
 {
-    char lexeme[100];
+    tokenInfo t;
+    int ruleno;//used by AST to know which grammar rule was applied for the non-terminal,for terminals it is -1
     int lineno;
-    symbol s;
+    struct parsetree* parent;
     bool visited;
-    struct parsetree * stacknext;
-    symbol ps; //parent symbol
-    struct parsetree * child[20]; //Assuming a node cannot have more than 20 children
+    struct parsetree* next[20];//assuming length of RHS of rules is bounded by 20 
 };
 
-typedef struct parsetree * parseTree;
+typedef struct parsetree* parseTree;
 
+struct stackNode
+{
+    parseTree tree;//to Parse Tree 
+    struct stackNode* next;
+};
 
 typedef struct
 {
-    parseTree top;
+    struct stackNode* top;
     int size;
-} Stack;
+}Stack;
+
+
+
 
 #endif // PARSERDEF_H_INCLUDED
