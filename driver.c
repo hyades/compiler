@@ -22,26 +22,58 @@ driver.c
 
 int main(int argc, char *argv[])
 {
-    int opt,fp,i;
-    keyword kw[48];
-    keyword kn[200];
-    for(i=0; i<48; i++)
-        kw[i].present=FALSE;
-    keywordTable kt = kw;
-    keywordTable nt = kn;
-    initkt(kt);
-    
-    for(i=0; i<200; i++)
-        kn[i].present=FALSE;
-    
-    //initNt(nt);
+    FILE *s=fopen("set.txt", "r");
+    FILE *g=fopen("grammar.txt", "r");
+    FILE *p=fopen("parsetable.csv", "w");
+    FILE *tree=fopen("tree.txt", "w");
+    if(s==NULL)
+    {
+        printf("Sets file not found\n");
+        return 0;
+    }    
+    if(g==NULL)
+    {
+        printf("Grammar file not found\n");
+        return 0;
+    }    
+    if(p==NULL)
+    {
+        printf("parsetable file can not be opened\n");
+        return 0;
+    }    
+    if(tree==NULL)
+    {
+        printf("tree file can not be opened\n");
+        return 0;
+    }
+    int opt,i,fp,Gno;
     fp = open(argv[1],O_RDONLY);
     if(fp==-1)
     {
-        printf("input file not found");
+        printf("input file not found\n");
         return 0;
     }
-    tokenList list=createTokenList(fp, kt);
+    bool error = 0;
+    Table T[60][60];
+    grammar G[100];
+    sets S[60];
+    keyword kw[48];
+    keyword kn[200];
+    parseTree P;
+    for(i=0; i<48; i++)
+        kw[i].present=FALSE;
+    keywordTable kt = kw;
+    initkt(kt);
+    for(i=0; i<200; i++)
+        kn[i].present=FALSE;
+    keywordTable nt = kn;
+    initNt(nt);
+    Gno=createGrammar(g,G,nt);
+    createSets(s,S,nt);
+    initTable(T);
+    createParseTable(G,T,S,Gno);
+    printTable(p, T);
+    tokenList list;
     do
     {
         printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4: Exit\n\nSelect option->");
@@ -49,29 +81,29 @@ int main(int argc, char *argv[])
         switch(opt)
         {
         case 1:
-            printTokenList(fp ,kt, list);
+            list=createTokenList(fp, kt);
+            printTokenList(kt, list);
             break;
-/*      case 2:
-            table T;
-            grammar G;
-            //load grammar here
-            createParseTable(G,T);
-            parseTree PT = parseInputSourceCode(argv[0],T);
-            printParseTree(PT, argv[1]);
+        case 2:
+            P = parseInputSourceCode(fp, T, kt, G, &error);
+            if(error)
+                printf("error\n");
+            printParseTree(P, tree);
             break;
-        case 3:
-            abstractSyntaxTree A;
-            createAbstractSyntaxtree(PT,A);
-            int *totalAllocatedMemory;
-            printAST(A, argv[2], totalAllocatedMemory);
-            break;
-*/
-        case 4:
-            break;
+            /*        case 3:
+                        abstractSyntaxTree A;
+                        createAbstractSyntaxtree(PT,A);
+                        int *totalAllocatedMemory;
+                        printAST(A, argv[2], totalAllocatedMemory);
+                        break;
+            */
         default:
             printf("\nPlease select a valid option\n");
         }
-    }
-    while(opt!=4);
+    }while(opt!=1 && opt!=2);
+    fclose(s);
+    fclose(g);
+    fclose(p);
+    fclose(tree);
     return 0;
 }
