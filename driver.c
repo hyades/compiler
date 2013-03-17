@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     FILE *g=fopen("grammar.txt", "r");
     FILE *p=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
+    FILE *ast=fopen("ast.txt", "w");
     if(s==NULL)
     {
         printf("Sets file not found\n");
@@ -89,6 +90,15 @@ int main(int argc, char *argv[])
             if(error)
                 printf("error\n");
             printParseTree(P, tree);
+
+            printf("parseTree done\n");
+            parseTree A;
+            createAbstractSyntaxtree(P, A);
+            printf("AST done\n");
+            printParseTree(A,ast);
+
+
+
             break;
             /*        case 3:
                         abstractSyntaxTree A;
@@ -101,6 +111,7 @@ int main(int argc, char *argv[])
             printf("\nPlease select a valid option\n");
         }
     }while(opt!=1 && opt!=2);
+
     fclose(s);
     fclose(g);
     fclose(p);

@@ -666,3 +666,74 @@ void printParseTree(parseTree  PT, FILE *outfile)
     }
 
 }
+
+
+
+
+void createAbstractSyntaxtree(parseTree T, parseTree A)
+{
+    parseTree node;
+    parseTree B,temp;
+    B = createParseNode(program);
+    A = B;
+    int c,i,j,k;
+    FILE *ast=fopen("asttest", "w");
+    while(1)
+    {
+        printf("hello %s\n", toStr(T->t->s));
+        T->visited = 0;
+        c=0;
+        i=0;
+        //if(IT->next[1]==NULL)
+        for(j=0;j<20 && T->next[j]!=NULL;j++)
+        {
+            //printf("next  ");
+            //printf("hello %s\n", toStr(B->next[i]->t->s));
+            //printParseTree(A,ast);
+            fprintf(ast, "\n\n");
+            if(T->next[j]->t->s == TK_PLUS || T->next[j]->t->s == TK_MINUS || T->next[j]->t->s == TK_MUL || T->next[j]->t->s == TK_DIV)
+            {
+                B->t=T->next[j]->t;
+            }
+            else if(T->next[j]->t->s == TK_SEM || T->next[j]->t->s == TK_COMMA || T->next[j]->t->s == TK_SQL || T->next[j]->t->s == TK_SQR || T->next[j]->t->s == TK_COLON)
+            {
+                //intentionally left blank
+            }
+            else
+            {
+                B->next[i] = createParseNode(T->next[j]->t->s);
+                B->next[i++]->parent=B;
+                printf("1 hello %s\n", toStr(B->next[i-1]->t->s));
+            }
+        }
+        printf("endloop");
+        if(j==1)
+        {
+            temp=B;
+            B->next[0]->parent=B->parent;
+            if(B->parent!=NULL)
+            {    
+                for(k=0;k<20 || B->parent->next[k]!=NULL;k++)
+                    if(B->parent->next[k]==B)
+                        break;
+                B->parent->next[k]=B->next[0];
+            }
+            if(B->t->s == program)
+                A=B->next[0];
+            B=B->next[0];
+            free(temp);
+            printf("2 hello %s\n", toStr(B->next[i]->t->s));
+        }
+        if(j==20)
+        {
+            if(T->t->s == program)break;
+            else
+                T = T->parent;
+        }
+        for(j=0;j<20;j++)
+        {
+            if(T->next[j]!=NULL && T->next[j]->visited==1)
+                T=T->next[j];
+        }
+    }
+}
