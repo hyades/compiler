@@ -20,7 +20,7 @@ typedef enum
     TK_OR ,TK_SQL ,TK_NUM ,TK_RNUM ,TK_FIELDID ,TK_ID ,TK_SQR ,TK_FUNID ,TK_MAIN ,TK_NOT ,TK_PLUS ,TK_LT ,
     TK_ASSIGNOP ,TK_EQ ,TK_GT ,TK_LE ,TK_CALL ,TK_ELSE ,TK_END ,TK_ENDIF ,TK_ENDRECORD ,TK_ENDWHILE ,
     TK_GLOBAL ,TK_IF ,TK_INPUT ,TK_INT ,TK_LIST ,TK_OUTPUT ,TK_PARAMETER ,TK_PARAMETERS ,TK_READ ,TK_REAL ,
-    TK_RECORD ,TK_RETURN ,TK_THEN ,TK_TYPE ,TK_WHILE ,TK_WITH ,TK_WRITE, TK_GE, TK_COMMA, TK_ERROR , TK_EPS,
+    TK_RECORD ,TK_RETURN ,TK_THEN ,TK_TYPE ,TK_WHILE ,TK_WITH ,TK_WRITE, TK_GE, TK_COMMA ,TK_ERROR ,TK_ERROR2, TK_EPS,
     program ,mainfunction ,otherfunctions ,function ,input_par ,output_par ,constructeddatatype ,remaining_list ,
     parameter_list ,stmts ,typedefinitions ,typedefinition ,fielddefinitions ,primitivedatatype ,fielddefinition ,
     morefields ,declarations ,declaration ,datatype ,global_or_not ,assignmentstmt ,funcallstmt ,outputparameters ,

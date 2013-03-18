@@ -89,13 +89,13 @@ int main(int argc, char *argv[])
             P = parseInputSourceCode(fp, T, kt, G, &error);
             if(error)
                 printf("error\n");
-            printParseTree(P, tree);
+            print2(P, tree);
 
             printf("parseTree done\n");
             parseTree A;
-            createAbstractSyntaxtree(P, A);
+            createAbstractSyntaxtree(P, &A);
             printf("AST done\n");
-            printParseTree(A,ast);
+            //printParseTree(*A,ast);
 
 
 

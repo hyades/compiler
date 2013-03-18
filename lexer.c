@@ -164,15 +164,16 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else if(isspace(c))
             {
                 state = 45;
-               //if(c=='\n'||c=='\r')
-                    //(*linenumber)++;
+               if(c=='\n'||c=='\r')
+                    (*linenumber)++;
             }
 
             else
             {
                 *error = 1;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_ERROR;
+                t->s = TK_ERROR2;
+                lexeme[i++] =c;
                 lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
@@ -643,10 +644,10 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             }
             else
             {
-                back = 2;
+                *error = TRUE;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_LT;
-                lexeme[i]='\0';
+                t->s = TK_ERROR;
+                lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
             }
@@ -661,10 +662,10 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             }
             else
             {
-                back = 3;
+                *error = TRUE;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_LT;
-                lexeme[i]='\0';
+                t->s = TK_ERROR;
+                lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
             }
@@ -768,7 +769,6 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             strcpy(t->lexeme,lexeme);
             return t;
             break;
-
 
 
 
@@ -1137,18 +1137,36 @@ char* toStr ( symbol s )
 
 tokenList createTokenList(int fp, keywordTable kt)//create Token List
 {
-    int linenumber = 1;
+    int linenumber = 1,q;
     bool error = 0;
     tokenInfo t;
     tokenList list,curr=NULL;
     while(1)
     {
         t = getNextToken(fp,kt,&error,&linenumber);
+        
         if(t==NULL)
         {
-            //if(error==1)printf("error!\n");
             break;
         }
+        if(error)
+        {
+            if(t->s==TK_ERROR)
+                printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+            else if(t->s==TK_ERROR2)
+                printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, linenumber);
+            break;
+        }
+        if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
+        {
+            q=20;
+            if(t->s==TK_FUNID)
+                q=30;
+            printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", linenumber,q);
+            break;
+        }
+
+        
         tokenList temp=(tokenList)malloc(sizeof(tokenList));
         if(curr==NULL)
         {

@@ -24,7 +24,7 @@ void initTable(Table T[][60]);//initialize parser table with no rule
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60]);//insert rule in table
 bool isTerminal(symbol s);//returns true if given symbol is terminal
 void printTable(FILE *fp, Table T[][60]);//print parser table
-parseTree createParseNode(symbol s);
+parseTree createParseNode(symbol s,int lineno);
 struct stackNode* createStackNode(parseTree tree);
 Stack push(Stack S,parseTree tree);
 Stack pop(Stack S);
@@ -33,6 +33,6 @@ void firstSets(sets S[], grammar G[],symbol s, int Gno);
 void printFirst(sets S[]);
 void followSets(sets S[], grammar G[],symbol s, int Gno);
 
-void createAbstractSyntaxtree(parseTree T, parseTree A);
+//void createAbstractSyntaxtree(parseTree T, parseTree *A);
 
 #endif // PARSER_H_INCLUDED

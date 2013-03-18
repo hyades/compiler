@@ -1,7 +1,7 @@
 lexeme: linenumber:1 parent: program leafnode:No Node:otherfunctions 
 lexeme: linenumber:1 token:eps parent: otherfunctions leafnode:Yes 
 lexeme: linenumber:1 parent: program leafnode:No Node:mainfunction 
-lexeme:_main linenumber:1 token:TK_MAIN parent: mainfunction leafnode:Yes 
+lexeme: linenumber:1 token:TK_MAIN parent: mainfunction leafnode:Yes 
 lexeme: linenumber:1 parent: mainfunction leafnode:No Node:stmts 
 lexeme: linenumber:2 parent: stmts leafnode:No Node:typedefinitions 
 lexeme: linenumber:2 token:eps parent: typedefinitions leafnode:Yes 
@@ -10,8 +10,7 @@ lexeme: linenumber:2 token:eps parent: declarations leafnode:Yes
 lexeme: linenumber:2 parent: stmts leafnode:No Node:otherstmts 
 lexeme: linenumber:2 token:eps parent: otherstmts leafnode:Yes 
 lexeme: linenumber:2 parent: stmts leafnode:No Node:returnstmt 
-lexeme:return linenumber:2 token:TK_RETURN parent: returnstmt leafnode:Yes 
+lexeme: linenumber:2 token:TK_RETURN parent: returnstmt leafnode:Yes 
 lexeme: linenumber:2 parent: returnstmt leafnode:No Node:optionalreturn 
 lexeme: linenumber:2 token:eps parent: optionalreturn leafnode:Yes 
-lexeme:; linenumber:2 token:TK_SEM parent: returnstmt leafnode:Yes 
-lexeme:end linenumber:3 token:TK_END parent: mainfunction leafnode:Yes 
+lexeme: linenumber:3 token:TK_END parent: mainfunction leafnode:Yes 
