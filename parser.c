@@ -680,7 +680,8 @@ void createAbstractSyntaxtree(parseTree T, parseTree A)
     FILE *ast=fopen("asttest", "w");
     while(1)
     {
-        printf("hello %s\n", toStr(T->t->s));
+        printf("node initial: %s\n", toStr(T->t->s));
+        printf("B=%s\n" ,toStr(B->t->s));
         T->visited = 0;
         c=0;
         i=0;
@@ -690,7 +691,7 @@ void createAbstractSyntaxtree(parseTree T, parseTree A)
             //printf("next  ");
             //printf("hello %s\n", toStr(B->next[i]->t->s));
             //printParseTree(A,ast);
-            fprintf(ast, "\n\n");
+            //fprintf(ast, "\n\n");
             if(T->next[j]->t->s == TK_PLUS || T->next[j]->t->s == TK_MINUS || T->next[j]->t->s == TK_MUL || T->next[j]->t->s == TK_DIV)
             {
                 B->t=T->next[j]->t;
@@ -703,14 +704,16 @@ void createAbstractSyntaxtree(parseTree T, parseTree A)
             {
                 B->next[i] = createParseNode(T->next[j]->t->s);
                 B->next[i++]->parent=B;
-                printf("1 hello %s\n", toStr(B->next[i-1]->t->s));
+                printf("B[next]= %s B=%s\n", toStr(B->next[i-1]->t->s),toStr(B->t->s));
             }
         }
-        printf("endloop");
+        
         if(j==1)
         {
+            printf("j==1::::B[next]= %s B=%s\n", toStr(B->next[i-1]->t->s),toStr(B->t->s));
             temp=B;
             B->next[0]->parent=B->parent;
+            //printf("hello\n");
             if(B->parent!=NULL)
             {    
                 for(k=0;k<20 || B->parent->next[k]!=NULL;k++)
@@ -722,9 +725,9 @@ void createAbstractSyntaxtree(parseTree T, parseTree A)
                 A=B->next[0];
             B=B->next[0];
             free(temp);
-            printf("2 hello %s\n", toStr(B->next[i]->t->s));
+            printf("node: %s parent=%s\n", toStr(B->t->s),toStr(B->parent->t->s));
         }
-        if(j==20)
+        else if(j==20)
         {
             if(T->t->s == program)break;
             else
@@ -732,8 +735,28 @@ void createAbstractSyntaxtree(parseTree T, parseTree A)
         }
         for(j=0;j<20;j++)
         {
-            if(T->next[j]!=NULL && T->next[j]->visited==1)
+            //printf("j=%d\n",j);
+            if(T->next[j]!=NULL && T->next[j]->visited==1 && T->next[j]->t->s!=(TK_PLUS||TK_MINUS||TK_MUL||TK_DIV||TK_SEM||TK_COLON||TK_SQR||TK_SQL))
+            {
+                printf("j=%d\n",j);
                 T=T->next[j];
+                break;
+
+            }
+            
         }
+        //printf("j=%d\n",j);
+        if(j==20)
+        {
+            if(T->t->s == program)break;
+            else
+                T = T->parent;
+        }
+        for(i=0;i<20;i++)
+            if(B->next[i]->t->s ==  T->t->s)
+            {
+                B = B->next[i];
+                break;
+            }
     }
 }
