@@ -1,4 +1,0 @@
-----                           1    mainfunction        ----                 ----                 no   mainfunction         
-_main                          1    TK_MAIN             ----                 mainfunction         yes  ----                 
-return                         2    TK_RETURN           ----                 mainfunction         yes  ----                 
-end                            3    TK_END              ----                 mainfunction         yes  ----                 

@@ -389,62 +389,42 @@ void createParseTable(grammar G[], Table T[][60], sets S[], int Gno)
     {
         for(j=0; j<G[i].listno; j++)
         {
-
-            //printf("NT:%d no.:%d thing:%d ",G[i].nt,G[i].listno,G[i].list[j]);
             if(G[i].list[j]==TK_EPS)
             {
                 for(k=0; k<S[G[i].nt - program].followno; k++)
-                    //T[(int)(G[i].nt-program)][(int)S[G[i].nt].follow[k]]=i;
                     addtoTable(G[i].nt, S[(int)(G[i].nt - program)].follow[k], i, T);
                 break;
             }
             else if(isTerminal(G[i].list[j]))
             {
-                //printf("Yes\n");
-                //T[(int)(G[i].nt-program)][(int)G[i].list[j]]=i;
-                //printf("Symbol= %s Terminal found: %s\n",toStr(G[i].nt),toStr(G[i].list[j]));
                 addtoTable(G[i].nt, G[i].list[j], i, T);
                 break;
             }
-            //printf("\n");
 
             else
             {
-                //printf("%d\n", S[G[i].list[j] - program].firstno);
                 inter=G[i].list[j];
                 fir=(G[i].list[j]- program);
-                //printf("Symbol %s Non terminal found:%s\t",toStr(G[i].nt),toStr(G[i].list[j]));
                 for(k=0; k<S[fir].firstno; k++)
                 {
-                    //T[(int)(G[i].nt-program)][(int)(S[(int)(G[i].list[j]- program)]).first[k]]=i;
-
-                    //printf("%d %d %d    ", inter, fir,k);
-                    //printf("intermediate:%s , first=%s\n", toStr(inter), toStr(S[fir].first[k]));
-                    //printf("\t Adding to table: %s",toStr(S[fir].first[k]));
                     addtoTable(G[i].nt, S[fir].first[k], i, T);
                 }
                 if (S[G[i].list[j] - program].eps == 0)
                 {
-                    //printf("doesnt goes to eps\n");
                     break;
                 }
-                //else printf("goes to eps\n");
             }
 
         }
-        //printf("j: %d list no :%d\t",j,G[i].listno);
         if(j==G[i].listno)
         {
 
             for(k=0; k<S[G[i].nt - program].followno; k++)
             {
-                //T[(int)(G[i].nt-program)][(int)S[G[i].nt].follow[k]]=i;
                 addtoTable(G[i].nt, S[(int)(G[i].nt - program)].follow[k], i, T);
-                //printf("Adding follow set :%s\n",toStr(S[(int)(G[i].nt - program)].follow[k]));
             }
         }
     }
-    //printf("\n\n\n\ni=%d\n\n\n\n", i);
 
 }
 
@@ -458,7 +438,6 @@ void initTable(Table T[][60])//initialize parser table with no rule
 
 void addtoTable(symbol nt, symbol t, int ruleno, Table T[][60])//insert rule in table
 {
-    //printf("nt= %s t=%s\n",toStr(nt),toStr(t));
     T[(int)(nt-program)][(int)t]=ruleno;
 }
 
@@ -484,7 +463,6 @@ void printTable(FILE *fp, Table T[][60])//print parser table
 
 bool isTerminal(symbol s)//returns true if given symbol is terminal
 {
-    //printf("value:%d\n",s-program);
     if((int)(s-program)<0) return 1;
     return 0;
 }
@@ -533,7 +511,6 @@ parseTree createParseNode(symbol s,int lineno)
     newnode->t=t;
     newnode->lineno=lineno;
     newnode->parent=NULL;
-    newnode->visited=0;
     newnode->pull=0;
     for(i=0;i<20;i++)
         newnode->next[i]=NULL;
@@ -541,7 +518,7 @@ parseTree createParseNode(symbol s,int lineno)
 }
 
 
-parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[], bool*error)
+parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[], bool*error, sets Set[])
 {
     tokenInfo t;
     parseTree P;
@@ -556,11 +533,15 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
     while(1)
     {
         t = getNextToken(fp, kt, error, &lineno);
-        //printf("%d\n", TK_COMMENT==t->s);
         if(t==NULL || *error || t->s != TK_COMMENT)
         {
-            if(*error)printf("%d: Unxpected %s.",lineno,toStr(t->s));
-                        //printf("break\n");
+            if(*error)
+            {
+                printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
+                for(k=0;k<Set[t->s].firstno-1;k++)
+                    printf("%s or ", toStr(Set[t->s].first[k]));
+                printf("%s\n", toStr(Set[t->s].first[k]));
+            }
             break;
         }
     }
@@ -576,19 +557,18 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                 free(t);
                 S.top->tree->lineno=lineno;
                 S=pop(S);
-                //if(*error)printf("error\n");
                 while(1)
                 {
-                    //printf("getting token \n");
                     t = getNextToken(fp, kt, error, &lineno);
-                    //printf("%d error :%d\n", TK_COMMENT==t->s,*error);
-                    //printf("%s at lineno %d\n", toStr(t->s), lineno);
-                    //if(t==NULL){printf("null");break;}
-                    //if(*error)printf("error\n");
                     if(t==NULL || *error==1 || t->s != TK_COMMENT)
                     {
-                        if(*error)printf("%d: UnEXPECTED %s.",lineno,toStr(t->s));
-                        //printf("break\n");
+                        if(*error)
+                        {
+                            printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
+                            for(k=0;k<Set[t->s].firstno-1;k++)
+                                printf("%s or ", toStr(Set[t->s].first[k]));
+                            printf("%s\n", toStr(Set[t->s].first[k]));
+                        }
                         break;
                     }
                 }
@@ -601,7 +581,13 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             else
             {
                 *error=1;
-                printf("%d: %s expected near %s.\n",lineno,toStr(S.top->tree->t->s),toStr(t->s));
+                if(*error)
+                {
+                    printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
+                    for(k=0;k<Set[t->s].firstno-1;k++)
+                        printf("%s or ", toStr(Set[t->s].first[k]));
+                    printf("%s\n", toStr(Set[t->s].first[k]));
+                }
                 free(t);
                 break;
             }
@@ -612,7 +598,13 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             if(i==-1)
             {
                 *error=1;
-                printf("%d: Unxpected %s.",lineno,toStr(t->s));
+                if(*error)
+                {
+                    printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
+                    for(k=0;k<Set[t->s].firstno-1;k++)
+                        printf("%s or ", toStr(Set[t->s].first[k]));
+                    printf("%s\n", toStr(Set[t->s].first[k]));
+                }
                 break;
             }
             parent=S.top->tree;
@@ -629,120 +621,22 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
     }
 
     if(!t && *error)
-        printf("%d: Unknown/invalid token.\n",lineno);
+    {
+        if(t->s==TK_ERROR)
+            printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+        else if(t->s==TK_ERROR2)
+            printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
+        return NULL;
+    }
     else if(t && !S.size)
-        printf("%d: Program expected to end near %s",lineno,toStr(t->s));
+        printf("ERROR_6: %d: Program did not end prperly. It expected to end near %s\n",lineno,toStr(t->s));
     return P;
 }
 
 
 void printParseTree(parseTree  PT, FILE *outfile)
 {
-    int j;
-    //printf("PT 0th child %s", toStr(PT->child[0]->s));
-    while(1)
-    {
-        if(PT->visited==0)
-        {
-            if(isTerminal(PT->t->s))
-                if(PT->t->s==TK_NUM||PT->t->s==TK_RNUM)                
-                fprintf(outfile,"lexeme:%s linenumber:%d token:%s value:%s parent: %s leafnode:%d \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),PT->t->lexeme,toStr(PT->parent->t->s),1);
-                else
-                    fprintf(outfile,"lexeme:%s linenumber:%d token:%s parent: %s leafnode:%d \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),toStr(PT->parent->t->s),1);
-            else
-                fprintf(outfile,"lexeme:%s linenumber:%d parent: %s leafnode:%d Node:%s \n",PT->t->lexeme,PT->lineno,toStr(PT->parent->t->s),0,toStr(PT->t->s));
-
-        }
-        PT->visited = 1;
-        for(j=0;j<20;j++)
-        {
-            if(PT->next[j] != NULL)
-                {
-                    //fprintf(outfile,"child encountered: %s\n",toStr(PT->next[j]->t->s));
-                    if(PT->next[j]->visited==0)
-                        {
-                            //fprintf(outfile,"child of %s is %s\n", toStr(PT->t->s),toStr(PT->next[j]->t->s));
-                            PT = PT->next[j];
-                            break;
-                        }
-                }
-        }
-        if(j==20)
-        {
-            if(PT->t->s == program)break;
-            else
-                PT = PT->parent;
-        }
-    }
-
-}
-
-void dfs2(parseTree T,parseTree *A)
-{
-    *A=createParseNode(T->t->s,T->lineno);
-    parseTree *temp = NULL;
-    printf("lite %s\n",toStr((*A)->t->s));
-    (*A)->parent=T->parent;
-    int i,j,k;
-    for(i=0,j=0;i<20 && T->next[i]!=NULL;i++)
-    {
-        if(T->next[i]->t->s == TK_SEM || T->next[i]->t->s == TK_COMMA || T->next[i]->t->s == TK_SQL || T->next[i]->t->s == TK_SQR || T->next[i]->t->s == TK_COLON)
-        {
-             printf("; found\n");
-             continue;
-         }
-        else if(T->next[i]->t->s == TK_PLUS || T->next[i]->t->s == TK_MINUS || T->next[i]->t->s == TK_MUL || T->next[i]->t->s == TK_DIV)
-        {
-           (*A)->t=T->next[i]->t;
-        }
-        else
-        {
-            dfs2(T->next[i],&((*A)->next[j++]));
-        }
-    }
-/*    if(j==1)
-    {
-        printf("SINGLE PRODUCTION FOR :%s\n",toStr((*A)->next[0]->t->s));
-        if((*A)->next[0]->t->s==TK_EPS)
-        {
-            //printf("SINGLE PRODUCTION FOR :%s",(*A)->next[0]->t->s)
-            //temp = *A;
-            for(k=0;k<20 && (*A)->parent->next[k]!=NULL && (*A)->parent->next[k]!=(*A);k++);
-            (*A)->parent->next[k]=NULL;
-            printf("EPS\n");
-            printf("k=%d\n",k);
-            for(k--;k<19;k++)
-            {   
-                printf("k=%d\n",k);
-                if((*A)->parent->next[k]==NULL)break;
-                (*A)->parent->next[k]=(*A)->parent->next[k+1];
-            }
-
-            (*A)->parent->next[19]==NULL;
-            printf("EPS\n");
-        }
-        else if((*A)->next[0])
-        {
-            if((*A)->t->s==program)
-            {
-                (*A) = (*A)->next[0];
-                (*A)->parent = NULL;
-            }
-            else
-            {
-                (*A)->next[0]->parent=(*A)->parent;
-                for(k=0;k<20 && (*A)->parent->next[k]!=NULL && (*A)->parent->next[k]!=(*A);k++);
-                printf("k=%d\n",k);
-                (*A)->parent->next[k]=(*A)->next[0];
-
-            }
-        }
-    }*/
-}
-
-void print2(parseTree PT, FILE *outfile)
-{
-     //lexemeCurrentNode     lineno   token   valueIfNumber   parentNodeSymbol   isLeafNode(yes/no)    NodeSymbol
+    int i;
     char empty[10], yes[20], no[20];
     strcpy(empty,"----");
     strcpy(yes, "yes");
@@ -768,16 +662,7 @@ void print2(parseTree PT, FILE *outfile)
         fprintf(outfile, "%-21s\n", toStr(PT->t->s));
     else
         fprintf(outfile, "%-21s\n", empty);
-/*    if(isTerminal(PT->t->s))
-        if(PT->t->s==TK_NUM||PT->t->s==TK_RNUM)                
-            fprintf(outfile,"lexeme:%s linenumber:%d token:%s value:%s parent: %s leafnode:Yes \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),PT->t->lexeme,toStr(PT->parent->t->s));
-        else
-            fprintf(outfile,"lexeme:%s linenumber:%d token:%s parent: %s leafnode:Yes \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),toStr(PT->parent->t->s));
-    else if(PT->parent!=NULL)
-        fprintf(outfile,"lexeme:%s linenumber:%d parent: %s leafnode:No Node:%s \n",PT->t->lexeme,PT->lineno,toStr(PT->parent->t->s),toStr(PT->t->s));
-*/
-        int i;
-    for(i=0;i<20 && PT->next[i]!=NULL;i++)   print2(PT->next[i],outfile);
+    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printParseTree(PT->next[i],outfile);
 }
 
 void copyTree(parseTree A , parseTree B)
@@ -891,4 +776,37 @@ parseTree createAbstractSyntaxTree(parseTree T)
         }
         return A;
     }
+}
+
+
+void printAST(parseTree PT, FILE *outfile, int *totalAllocatedMemory)
+{
+    int i;
+    char empty[10], yes[20], no[20];
+    strcpy(empty,"----");
+    strcpy(yes, "yes");
+    strcpy(no, "no");
+    *totalAllocatedMemory+=sizeof(PT);
+    if(PT->next[0]==NULL)
+        fprintf(outfile, "%-31s", PT->t->lexeme);
+    else
+        fprintf(outfile, "%-31s", empty);
+    fprintf(outfile, "%-5d%-20s", PT->lineno, toStr(PT->t->s));
+    if(PT->t->s==TK_NUM || PT->t->s==TK_RNUM)
+        fprintf(outfile, "%-21s", PT->t->lexeme);
+    else
+        fprintf(outfile, "%-21s", empty);
+    if(PT->parent!=NULL)
+        fprintf(outfile, "%-21s", toStr(PT->parent->t->s));
+    else
+        fprintf(outfile, "%-21s", empty);
+    if(PT->next[0]==NULL)
+        fprintf(outfile, "%-5s", yes);
+    else
+        fprintf(outfile, "%-5s", no);
+    if(!isTerminal(PT->t->s))
+        fprintf(outfile, "%-21s\n", toStr(PT->t->s));
+    else
+        fprintf(outfile, "%-21s\n", empty);
+    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printParseTree(PT->next[i],outfile);
 }

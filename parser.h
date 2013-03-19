@@ -13,7 +13,7 @@ parser.h
 #define PARSER_H_INCLUDED
 
 void createParseTable(grammar G[], Table T[][60], sets S[], int Gno);
-parseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[], bool*error);
+parseTree  parseInputSourceCode(int file, Table T[][60], keywordTable kt, grammar G[], bool*error, sets Set[]);
 void printParseTree(parseTree  PT, FILE *outfile);
 symbol toSym(char *a, keywordTable nt);//return Symbol for given string
 int createGrammar(FILE * fp,grammar G[], keywordTable nt);//load grammar from text file
@@ -34,5 +34,5 @@ void printFirst(sets S[]);
 void followSets(sets S[], grammar G[],symbol s, int Gno);
 void copyTree(parseTree A , parseTree B);
 parseTree createAbstractSyntaxTree(parseTree T);
-
+void printAST(parseTree A, FILE *outFile, int *totalAllocatedMemory);
 #endif // PARSER_H_INCLUDED
