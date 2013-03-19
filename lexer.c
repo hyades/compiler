@@ -735,7 +735,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             break;
         case 45:			//WHITESPACE STATE
             c = getNextChar(fp,&back);
-            if(c=='\n'||c=='\r')
+            if(c=='\n')
             {
                 //printf("newline\n");
                 (*linenumber)++;
@@ -1145,27 +1145,10 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
     {
         t = getNextToken(fp,kt,&error,&linenumber);
         
-        if(t==NULL)
+        if(t==NULL || strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
         {
             break;
         }
-        if(error)
-        {
-            if(t->s==TK_ERROR)
-                printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
-            else if(t->s==TK_ERROR2)
-                printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, linenumber);
-            break;
-        }
-        if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
-        {
-            q=20;
-            if(t->s==TK_FUNID)
-                q=30;
-            printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", linenumber,q);
-            break;
-        }
-
         
         tokenList temp=(tokenList)malloc(sizeof(tokenList));
         if(curr==NULL)
@@ -1182,15 +1165,36 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
         if(t->s==TK_COMMENT)curr->linenumber=linenumber-1;
         else curr->linenumber=linenumber;
         curr->next=NULL;
+        if(error)
+            break;
     }
     return list;
 }
 
 void printTokenList(keywordTable kt, tokenList list)//print Token List
 {
-    tokenInfo t;
+    int q;
     while(list!=NULL)
     {
+            if(list->t->s==TK_ERROR)
+            {
+                printf("ERROR_3: Unknown pattern %s\n", list->t->lexeme);
+                break;
+            }
+            else if(list->t->s==TK_ERROR2)
+            {
+                printf("ERROR_2: Unknown Symbol %s at line %d\n", list->t->lexeme, list->linenumber);
+                break;
+            }
+            else if(strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID || strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID)
+            {
+                q=20;
+                if(list->t->s==TK_FUNID)
+                    q=30;
+                printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", list->linenumber,q);
+                break;
+            }
+
         printf("%s %s %d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
         list=list->next;
     }

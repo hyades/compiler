@@ -523,7 +523,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
     tokenInfo t;
     parseTree P;
     parseTree parent,child;
-    int lineno=1 , i , k;
+    int lineno=1 , i , k,q;
     Stack S;
     S.size=0;
     S.top=NULL;
@@ -564,10 +564,19 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                     {
                         if(*error)
                         {
-                            printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
-                            for(k=0;k<Set[t->s].firstno-1;k++)
-                                printf("%s or ", toStr(Set[t->s].first[k]));
-                            printf("%s\n", toStr(Set[t->s].first[k]));
+                            if(t->s==TK_ERROR)
+                                printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                            else if(t->s==TK_ERROR2)
+                                printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
+                            else if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
+                            {
+                                q=20;
+                                if(t->s==TK_FUNID)
+                                    q=30;
+                                printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
+                                break;
+                            }
+                            return NULL;
                         }
                         break;
                     }
