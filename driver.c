@@ -90,7 +90,8 @@ int main(int argc, char *argv[])
                 if(!error)
                 {
                     printParseTree(P, tree);
-                    printf("\nParse Tree generated and printed in file tree.txt\n");
+                    if(P!=NULL)
+                        printf("\nParse Tree generated and printed in file tree.txt\n");
                 }
                 break;
             case 3:
@@ -102,7 +103,8 @@ int main(int argc, char *argv[])
                 if(!error)
                 {
                     printAST(A, ast, &totalAllocatedMemory);
-                    printf("\nAST generated and printed in file ast.txt\n");
+                    if(A!=NULL)
+                        printf("\nAST generated and printed in file ast.txt\n");
                 }
                 break;
             case 4:

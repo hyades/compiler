@@ -164,7 +164,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else if(isspace(c))
             {
                 state = 45;
-               if(c=='\n'||c=='\r')
+               if(c=='\n')
                     (*linenumber)++;
             }
 
@@ -1144,8 +1144,8 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
     while(1)
     {
         t = getNextToken(fp,kt,&error,&linenumber);
-        
-        if(t==NULL || strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
+        //printf("LEXEME:%s\n",t->lexeme);
+        if(t==NULL)
         {
             break;
         }
@@ -1176,6 +1176,7 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
     int q;
     while(list!=NULL)
     {
+            //printf("LEXEME:%s\n",list->t->lexeme);
             if(list->t->s==TK_ERROR)
             {
                 printf("ERROR_3: Unknown pattern %s\n", list->t->lexeme);
@@ -1186,14 +1187,17 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
                 printf("ERROR_2: Unknown Symbol %s at line %d\n", list->t->lexeme, list->linenumber);
                 break;
             }
-            else if(strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID || strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID)
+            else if((strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID) || (strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID) || list->t->lexeme[strlen(list->t->lexeme)-1] =='!')
             {
                 q=20;
+                printf("sdgdg\n");
                 if(list->t->s==TK_FUNID)
                     q=30;
                 printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", list->linenumber,q);
                 break;
             }
+            else
+                printf("%s\n",list->t->lexeme);
 
         printf("%s %s %d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
         list=list->next;

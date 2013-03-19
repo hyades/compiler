@@ -1,7 +1,7 @@
 %comment here
 
-_aayush
-
+%type int aaaaaaaaaaaaaaaaaaaaaaaaaa
+_sdsdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 _main
 return    ;
 %comment here

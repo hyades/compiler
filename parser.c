@@ -537,11 +537,20 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
         {
             if(*error)
             {
-                printf("ERROR_5: The token %s for lexeme %s does not match at line %d. The expected token here is ",toStr(t->s), t->lexeme, lineno);
-                for(k=0;k<Set[t->s].firstno-1;k++)
-                    printf("%s or ", toStr(Set[t->s].first[k]));
-                printf("%s\n", toStr(Set[t->s].first[k]));
+                if(t->s==TK_ERROR)
+                    printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                else if(t->s==TK_ERROR2)
+                    printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
+                return NULL;
             }
+            else if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID  || t->lexeme[strlen(t->lexeme)-1] =='!')
+                {
+                    q=20;
+                    if(t->s==TK_FUNID)
+                        q=30;
+                    printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
+                    return NULL;
+                }
             break;
         }
     }
@@ -554,7 +563,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             {
                 S.top->tree->ruleno=-1;
                 strcpy(S.top->tree->t->lexeme,t->lexeme);
-                free(t);
+                //free(t);
                 S.top->tree->lineno=lineno;
                 S=pop(S);
                 while(1)
@@ -568,18 +577,18 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                                 printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
                             else if(t->s==TK_ERROR2)
                                 printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
-                            else if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID)
-                            {
-                                q=20;
-                                if(t->s==TK_FUNID)
-                                    q=30;
-                                printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
-                                break;
-                            }
                             return NULL;
                         }
                         break;
                     }
+                    if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID  || t->lexeme[strlen(t->lexeme)-1] =='!')
+                        {
+                            q=20;
+                            if(t->s==TK_FUNID)
+                                q=30;
+                            printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
+                            return NULL;
+                        }
                 }
             }
             else if(S.top->tree->t->s==TK_EPS)
@@ -597,7 +606,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                         printf("%s or ", toStr(Set[t->s].first[k]));
                     printf("%s\n", toStr(Set[t->s].first[k]));
                 }
-                free(t);
+                //free(t);
                 break;
             }
         }
@@ -650,6 +659,11 @@ void printParseTree(parseTree  PT, FILE *outfile)
     strcpy(empty,"----");
     strcpy(yes, "yes");
     strcpy(no, "no");
+    if(PT==NULL)
+    {
+        printf("Parse tree is invalid\n");
+        return;
+    }
     if(PT->next[0]==NULL)
         fprintf(outfile, "%-31s", PT->t->lexeme);
     else
@@ -790,6 +804,11 @@ parseTree createAbstractSyntaxTree(parseTree T)
 
 void printAST(parseTree PT, FILE *outfile, int *totalAllocatedMemory)
 {
+    if(PT==NULL)
+    {
+        printf("AST is invalid\n");
+        return;
+    }
     int i;
     char empty[10], yes[20], no[20];
     strcpy(empty,"----");
