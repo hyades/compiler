@@ -1,17 +1,18 @@
-lexeme: linenumber:1 parent: program leafnode:No Node:otherfunctions 
-lexeme: linenumber:1 token:eps parent: otherfunctions leafnode:Yes 
-lexeme: linenumber:1 parent: program leafnode:No Node:mainfunction 
-lexeme:_main linenumber:1 token:TK_MAIN parent: mainfunction leafnode:Yes 
-lexeme: linenumber:1 parent: mainfunction leafnode:No Node:stmts 
-lexeme: linenumber:2 parent: stmts leafnode:No Node:typedefinitions 
-lexeme: linenumber:2 token:eps parent: typedefinitions leafnode:Yes 
-lexeme: linenumber:2 parent: stmts leafnode:No Node:declarations 
-lexeme: linenumber:2 token:eps parent: declarations leafnode:Yes 
-lexeme: linenumber:2 parent: stmts leafnode:No Node:otherstmts 
-lexeme: linenumber:2 token:eps parent: otherstmts leafnode:Yes 
-lexeme: linenumber:2 parent: stmts leafnode:No Node:returnstmt 
-lexeme:return linenumber:2 token:TK_RETURN parent: returnstmt leafnode:Yes 
-lexeme: linenumber:2 parent: returnstmt leafnode:No Node:optionalreturn 
-lexeme: linenumber:2 token:eps parent: optionalreturn leafnode:Yes 
-lexeme:; linenumber:2 token:TK_SEM parent: returnstmt leafnode:Yes 
-lexeme:end linenumber:3 token:TK_END parent: mainfunction leafnode:Yes 
+----                           1    program             ----                 ----                 no   program              
+----                           1    otherfunctions      ----                 program              no   otherfunctions       
+                               1    eps                 ----                 otherfunctions       yes  ----                 
+----                           1    mainfunction        ----                 program              no   mainfunction         
+_main                          1    TK_MAIN             ----                 mainfunction         yes  ----                 
+----                           1    stmts               ----                 mainfunction         no   stmts                
+----                           2    typedefinitions     ----                 stmts                no   typedefinitions      
+                               2    eps                 ----                 typedefinitions      yes  ----                 
+----                           2    declarations        ----                 stmts                no   declarations         
+                               2    eps                 ----                 declarations         yes  ----                 
+----                           2    otherstmts          ----                 stmts                no   otherstmts           
+                               2    eps                 ----                 otherstmts           yes  ----                 
+----                           2    returnstmt          ----                 stmts                no   returnstmt           
+return                         2    TK_RETURN           ----                 returnstmt           yes  ----                 
+----                           2    optionalreturn      ----                 returnstmt           no   optionalreturn       
+                               2    eps                 ----                 optionalreturn       yes  ----                 
+;                              2    TK_SEM              ----                 returnstmt           yes  ----                 
+end                            3    TK_END              ----                 mainfunction         yes  ----                 

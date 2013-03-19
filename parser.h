@@ -32,7 +32,7 @@ void initSets(sets S[],grammar G[], int Gno);
 void firstSets(sets S[], grammar G[],symbol s, int Gno);
 void printFirst(sets S[]);
 void followSets(sets S[], grammar G[],symbol s, int Gno);
-
-//void createAbstractSyntaxtree(parseTree T, parseTree *A);
+void copyTree(parseTree A , parseTree B);
+parseTree createAbstractSyntaxTree(parseTree T);
 
 #endif // PARSER_H_INCLUDED

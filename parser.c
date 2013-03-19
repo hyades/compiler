@@ -534,6 +534,7 @@ parseTree createParseNode(symbol s,int lineno)
     newnode->lineno=lineno;
     newnode->parent=NULL;
     newnode->visited=0;
+    newnode->pull=0;
     for(i=0;i<20;i++)
         newnode->next[i]=NULL;
     return newnode;
@@ -679,6 +680,7 @@ void printParseTree(parseTree  PT, FILE *outfile)
 void dfs2(parseTree T,parseTree *A)
 {
     *A=createParseNode(T->t->s,T->lineno);
+    parseTree *temp = NULL;
     printf("lite %s\n",toStr((*A)->t->s));
     (*A)->parent=T->parent;
     int i,j,k;
@@ -698,141 +700,195 @@ void dfs2(parseTree T,parseTree *A)
             dfs2(T->next[i],&((*A)->next[j++]));
         }
     }
-    // if(j==1)
-    // {
-    //     if((*A)->next[0]->t->s==TK_EPS)
-    //     {
-    //         for(k=0;k<20 && (*A)->next[k]!=NULL && (*A)->next[k]!=(*A);k++);
-    //             (*A)->parent->next[k]=NULL;
-    //         for(;k<19;k++)
-    //             (*A)->parent->next[k]=(*A)->parent->next[k+1];
-    //     }
-    //     else
-    //     {
-    //         (*A)->next[0]->parent=(*A)->parent;
-    //         for(k=0;k<20 && (*A)->next[k]!=NULL && (*A)->next[k]!=(*A);k++);
-    //         (*A)->parent->next[k]=(*A)->next[0];
-    //     }
-    // }
+/*    if(j==1)
+    {
+        printf("SINGLE PRODUCTION FOR :%s\n",toStr((*A)->next[0]->t->s));
+        if((*A)->next[0]->t->s==TK_EPS)
+        {
+            //printf("SINGLE PRODUCTION FOR :%s",(*A)->next[0]->t->s)
+            //temp = *A;
+            for(k=0;k<20 && (*A)->parent->next[k]!=NULL && (*A)->parent->next[k]!=(*A);k++);
+            (*A)->parent->next[k]=NULL;
+            printf("EPS\n");
+            printf("k=%d\n",k);
+            for(k--;k<19;k++)
+            {   
+                printf("k=%d\n",k);
+                if((*A)->parent->next[k]==NULL)break;
+                (*A)->parent->next[k]=(*A)->parent->next[k+1];
+            }
+
+            (*A)->parent->next[19]==NULL;
+            printf("EPS\n");
+        }
+        else if((*A)->next[0])
+        {
+            if((*A)->t->s==program)
+            {
+                (*A) = (*A)->next[0];
+                (*A)->parent = NULL;
+            }
+            else
+            {
+                (*A)->next[0]->parent=(*A)->parent;
+                for(k=0;k<20 && (*A)->parent->next[k]!=NULL && (*A)->parent->next[k]!=(*A);k++);
+                printf("k=%d\n",k);
+                (*A)->parent->next[k]=(*A)->next[0];
+
+            }
+        }
+    }*/
 }
 
 void print2(parseTree PT, FILE *outfile)
 {
-    if(isTerminal(PT->t->s))
+     //lexemeCurrentNode     lineno   token   valueIfNumber   parentNodeSymbol   isLeafNode(yes/no)    NodeSymbol
+    char empty[10], yes[20], no[20];
+    strcpy(empty,"----");
+    strcpy(yes, "yes");
+    strcpy(no, "no");
+    if(PT->next[0]==NULL)
+        fprintf(outfile, "%-31s", PT->t->lexeme);
+    else
+        fprintf(outfile, "%-31s", empty);
+    fprintf(outfile, "%-5d%-20s", PT->lineno, toStr(PT->t->s));
+    if(PT->t->s==TK_NUM || PT->t->s==TK_RNUM)
+        fprintf(outfile, "%-21s", PT->t->lexeme);
+    else
+        fprintf(outfile, "%-21s", empty);
+    if(PT->parent!=NULL)
+        fprintf(outfile, "%-21s", toStr(PT->parent->t->s));
+    else
+        fprintf(outfile, "%-21s", empty);
+    if(PT->next[0]==NULL)
+        fprintf(outfile, "%-5s", yes);
+    else
+        fprintf(outfile, "%-5s", no);
+    if(!isTerminal(PT->t->s))
+        fprintf(outfile, "%-21s\n", toStr(PT->t->s));
+    else
+        fprintf(outfile, "%-21s\n", empty);
+/*    if(isTerminal(PT->t->s))
         if(PT->t->s==TK_NUM||PT->t->s==TK_RNUM)                
             fprintf(outfile,"lexeme:%s linenumber:%d token:%s value:%s parent: %s leafnode:Yes \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),PT->t->lexeme,toStr(PT->parent->t->s));
         else
             fprintf(outfile,"lexeme:%s linenumber:%d token:%s parent: %s leafnode:Yes \n",PT->t->lexeme,PT->lineno,toStr(PT->t->s),toStr(PT->parent->t->s));
     else if(PT->parent!=NULL)
         fprintf(outfile,"lexeme:%s linenumber:%d parent: %s leafnode:No Node:%s \n",PT->t->lexeme,PT->lineno,toStr(PT->parent->t->s),toStr(PT->t->s));
-
+*/
         int i;
     for(i=0;i<20 && PT->next[i]!=NULL;i++)   print2(PT->next[i],outfile);
 }
 
-void createAbstractSyntaxtree(parseTree T, parseTree *A)
+void copyTree(parseTree A , parseTree B)
 {
-    dfs2(T,A);
-    printf("lite1 %s\n",toStr((*A)->t->s));
-    FILE *ast;
-    ast=fopen("temp.txt","w");
-    print2(*A,ast);
-    //parseTree node;
-    // parseTree B,temp;
-    // B = createParseNode(program);
-    // A = B;
-    // int c,i,j,k;
-    // FILE *ast=fopen("asttest", "w");
-    // while(1)
-    // {
-    //     printf("node initial: %s\n", toStr(T->t->s));
-    //     printf("B=%s\n" ,toStr(B->t->s));
-    //     printf("A=%s\n" ,toStr(A->t->s));
-    //     T->visited = 0;
-    //     c=0;
-    //     i=0;
-    //     //if(IT->next[1]==NULL)
-    //     for(j=0;j<20 && T->next[j]!=NULL;j++)
-    //     {
-    //         //printf("next  ");
-    //         //printf("hello %s\n", toStr(B->next[i]->t->s));
-    //         //printParseTree(A,ast);
-    //        S //fprintf(ast, "\n\n");
-    //         /*if(T->next[j]->t->s == TK_PLUS || T->next[j]->t->s == TK_MINUS || T->next[j]->t->s == TK_MUL || T->next[j]->t->s == TK_DIV)
-    //         {
-    //             B->t=T->next[j]->t;
-    //         }
-    //         else if(T->next[j]->t->s == TK_SEM || T->next[j]->t->s == TK_COMMA || T->next[j]->t->s == TK_SQL || T->next[j]->t->s == TK_SQR || T->next[j]->t->s == TK_COLON || T->next[j]->t->s == TK_EPS)
-    //         {
-    //             //intentionally left blank
-    //         }
-    //         else*/
-    //         {
-    //             B->next[i] = createParseNode(T->next[j]->t->s);
-    //             B->next[i++]->parent=B;
-    //             printf("B[next]= %s B=%s\n", toStr(B->next[i-1]->t->s),toStr(B->t->s));
-    //         }
-    //     }
-    //     printf("endloog\n");
-    //     /*if(j==0)
-    //     {
-    //         B=B->parent;
-    //         printf("helo EPS\n");
-    //         continue;
-    //     }*/
-    //     if(j==1)
-    //     {
-    //         printf("j==1::::B[next]= %s B=%s\n", toStr(B->next[i-1]->t->s),toStr(B->t->s));
-    //         temp=B;
-    //         B->next[0]->parent=B->parent;
-    //         //printf("hello\n");
-    //         if(B->parent!=NULL)
-    //         {    
-    //             for(k=0;k<20 || B->parent->next[k]!=NULL;k++)
-    //                 if(B->parent->next[k]==B)
-    //                     break;
-    //             B->parent->next[k]=B->next[0];
-    //         }
-    //         if(B->t->s == program)
-    //             A=B->next[0];
-    //         B=B->next[0];
-    //         free(temp);
-    //         printf("node: %s parent=%s\n", toStr(B->t->s),toStr(B->parent->t->s));
-    //         continue;
-    //     }
-    //     /*else if(j==20)
-    //     {
-    //         if(T->t->s == program)break;
-    //         else
-    //             T = T->parent;
-    //     }*/
-    //     printf("T= %s",toStr(T->t->s));
-    //     for(j=0;j<20;j++)
-    //     {
-    //         printf("j=%d\n",j);
-    //         if(T->next[j]!=NULL && T->next[j]->visited==1 && T->next[j]->t->s!=TK_PLUS && T->next[j]->t->s!=TK_SEM && T->next[j]->t->s!=TK_EPS)
-    //         {
-    //             printf("j=%d\n",j);
-    //             printf("T->next[j] = %s",toStr(T->next[j]->t->s));
-    //             T=T->next[j];
-    //             break;
-
-    //         }
+    int i=0;
+    A->t->s = B->t->s;
+    A->lineno = B->lineno;
+    if(isTerminal(B->t->s))
+    {
+        strcpy(A->t->lexeme,B->t->lexeme);
+    }
+    while(B->next[i]!=NULL)
+    {
+        A->next[i] = B->next[i];
+        i++;
+    }
+    A->next[i] = NULL;
+}
+parseTree createAbstractSyntaxTree(parseTree T)
+{
+    int n = 0;
+    parseTree A = NULL;
+    while(T->next[n] != NULL)
+        n++;
+    if(n==1)
+    {
+        return createAbstractSyntaxTree(T->next[0]);
+    }
+    else if(n==0)
+    {
+        if(T->t->s == TK_EPS || T->t->s == TK_OP || T->t->s == TK_CL || T->t->s == TK_COLON || 
+            T->t->s == TK_SEM || T->t->s == TK_SQR || T->t->s == TK_SQL || T->t->s == TK_COMMA || 
+            T->t->s==TK_DOT || T->t->s==TK_CALL || T->t->s==TK_WITH || T->t->s==TK_PARAMETERS ||  
+            T->t->s==TK_PARAMETER || T->t->s==TK_INPUT || T->t->s==TK_OUTPUT || T->t->s==TK_LIST)
+            return NULL;
+        if(isTerminal(T->t->s))
+        {
+            A = createParseNode(T->t->s,T->lineno);
+            A->parent=T->parent;
+            copyTree(A,T);
+        }
+        return A;
+    }
+    else
+    {
+        int j=0,k=0;
+        A = createParseNode(T->t->s,T->lineno);
+        A->parent=T->parent;
+        parseTree temp;
+        while(T->next[j]!=NULL)
+        {
+            if(T->next[j]->t->s == TK_OP || T->next[j]->t->s==TK_CL || T->next[j]->t->s==TK_COLON || T->next[j]->t->s==TK_SEM || 
+                T->next[j]->t->s==TK_SQR || T->next[j]->t->s==TK_SQL || T->next[j]->t->s==TK_COMMA || T->next[j]->t->s==TK_DOT || 
+                T->next[j]->t->s==TK_CALL || T->next[j]->t->s==TK_WITH || T->next[j]->t->s==TK_PARAMETERS || T->next[j]->t->s==TK_PARAMETER || 
+                T->next[j]->t->s==TK_INPUT || T->next[j]->t->s==TK_OUTPUT || T->next[j]->t->s==TK_LIST)
+            {
+                j++;
+                continue;
+            }
+            temp = createAbstractSyntaxTree(T->next[j]);
+            if(temp != NULL)
+            {
+                A->next[k] = temp;
+                temp->parent = A;
+                k++;
+            }
+            j++;
+        }
+        j = 0;
+        int m = 0, f=0;
+        while(A->next[j] != NULL)
+        {
+            if((A->next[j]->t->s == TK_PLUS || A->next[j]->t->s==TK_MINUS || A->next[j]->t->s == TK_MUL || A->next[j]->t->s==TK_DIV || 
+                A->next[j]->t->s==TK_LE || A->next[j]->t->s==TK_LT || A->next[j]->t->s==TK_GT || A->next[j]->t->s==TK_GE || 
+                A->next[j]->t->s==TK_NE || A->next[j]->t->s==TK_IF) && (!A->next[j]->pull))
+            {
+                f = 1;
+                m = j;
+            }
+            j++;
+        }
+        if(j==1)
+        {
+            if(!isTerminal(A->t->s))
+            {
+                copyTree(A,A->next[0]); 
+            }
+        }
+        else if(j==0)
+        {
+            free(A);
+            return NULL;
             
-    //     }
-    //     //printf("j=%d\n",j);
-    //     if(j==20)
-    //     {
-    //         if(T->t->s != program);
-    //             T = T->parent;
-    //     }
-    //     printf("NEW T=%s",toStr(T->t->s));
-    //     for(i=0;i<20;i++)
-    //         if(B->next[i]->t->s ==  T->t->s)
-    //         {
-    //             B = B->next[i];
-    //             break;
-    //         }
-
-    // }
+        }
+        else if(f)
+        {
+            A->t->s = A->next[m]->t->s;
+            A->lineno = A->next[m]->lineno;
+            if(isTerminal(A->next[m]->t->s))
+            {
+                strcpy(A->t->lexeme,A->next[m]->t->lexeme);
+            }
+            A->pull = 1;
+            m++;
+            while(A->next[m] != NULL)
+            {
+                A->next[m-1] = A->next[m];
+                m++;
+            }
+            A->next[m-1] = NULL;
+        }
+        return A;
+    }
 }

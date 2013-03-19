@@ -26,7 +26,7 @@ typedef enum
     morefields ,declarations ,declaration ,datatype ,global_or_not ,assignmentstmt ,funcallstmt ,outputparameters ,
     inputparameters ,iterativestmt ,conditionalstmt ,elsepart ,stmt ,otherstmts ,iostmt ,singleorrecid ,allvar ,
     expprime ,term ,termprime ,factor ,arithmeticexpression ,highprecedenceoperators ,lowprecedenceoperators ,
-    all ,temp ,booleanexpression ,var ,logicalop ,relationalop ,returnstmt ,optionalreturn ,more_ids ,idlist
+    all ,temp ,booleanexpression ,var ,logicalop ,relationalop ,returnstmt ,optionalreturn ,more_ids ,newstate, idlist
 } symbol;
 
 typedef enum {FALSE,TRUE} bool;

@@ -43,6 +43,7 @@ struct parsetree
     int lineno;
     struct parsetree* parent;
     bool visited;
+    int pull;
     struct parsetree* next[20];//assuming length of RHS of rules is bounded by 20 
 };
 

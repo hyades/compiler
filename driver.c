@@ -93,8 +93,9 @@ int main(int argc, char *argv[])
 
             printf("parseTree done\n");
             parseTree A;
-            createAbstractSyntaxtree(P, &A);
+            A = createAbstractSyntaxTree(P);
             printf("AST done\n");
+            print2(A, ast);
             //printParseTree(*A,ast);
 
 
