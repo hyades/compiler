@@ -18,7 +18,7 @@ driver.c
 #include "lexer.h"
 #include "parserDef.h"
 #include "parser.h"
-
+#include "symbolTable.h"
 
 int main(int argc, char *argv[])
 {
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     sets S[60];
     keyword kw[48];
     keyword kn[200];
-    parseTree P;
+    parseTree P,A;
     for(i=0; i<48; i++)
         kw[i].present=FALSE;
     keywordTable kt = kw;
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
                 P = parseInputSourceCode(fp, T, kt, G, &error, S);
                 if(error)
                     printf("error\n");
-                parseTree A;
+                //parseTree A;
                 A = createAbstractSyntaxTree(P);
                 if(!error)
                 {
@@ -108,7 +108,31 @@ int main(int argc, char *argv[])
                 }
                 break;
             case 4:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(error)
+                    printf("error\n");
+                
+                A = createAbstractSyntaxTree(P);
+                if(!error)
+                {
+                    printAST(A, ast, &totalAllocatedMemory);
+                    if(A!=NULL)
+                        printf("\nAST generated and printed in file ast.txt\n");
+                }
+                variable GT[100]; //max 100 globals possible 
+                funTable FT[100];
+                recTable RT[100];
+
+
+                initSymbolTable(GT,FT,RT);
+
+                createSymbolTable( GT, FT, RT, A);
+                printGT(GT);
+                printRT(RT);
+                printFT(FT);
                 break;
+
+
             default:
                 printf("\nPlease select a valid option\n");
         }

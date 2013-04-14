@@ -30,6 +30,7 @@ typedef struct
 
 	char fname[35];
 	variable table[100]; //assumming function can contain max 100 variables
+	bool filled;
 
 }funTable;
 
@@ -37,12 +38,10 @@ typedef struct
 {
 	char rname[35];
 	variable table[100];
+	bool filled;
 
 }recTable;
 
-variable GT[100]; //max 100 globals possible *********ADD TO DRIVER***********
-funTable FT[100];
-recTable RT[100];
 
 
 

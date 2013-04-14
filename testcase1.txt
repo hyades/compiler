@@ -1,17 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 _sumN  input parameter list [int d5cc34]  
 output parameter list[real d3];
+type int :  b3b444 : global;
+type int :  b3b443 ;
 type int : b5b567;
-b5b567 <--- 1;
-while ( b5b567 <= d5cc34)
-read( c3bd);
-d3 <--- d3 + c3bd;
-b5b567 <--- b5b567 + 1;
-endwhile
 return [d3];
 end
 _main
-type int :b3;
-b3 <--- 7;
-write(c4bd56);
 return;
 end
