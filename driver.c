@@ -18,7 +18,7 @@ driver.c
 #include "lexer.h"
 #include "parserDef.h"
 #include "parser.h"
-
+#include "symbolTable.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     FILE *g=fopen("grammar.txt", "r");
     FILE *p=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
+    FILE *ast=fopen("ast.txt", "w");
     if(s==NULL)
     {
         printf("Sets file not found\n");
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
         printf("tree file can not be opened\n");
         return 0;
     }
-    int opt,i,fp,Gno;
+    int opt,i,fp,Gno, totalAllocatedMemory=0;
     fp = open(argv[1],O_RDONLY);
     if(fp==-1)
     {
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
     sets S[60];
     keyword kw[48];
     keyword kn[200];
-    parseTree P;
+    parseTree P,A;
     for(i=0; i<48; i++)
         kw[i].present=FALSE;
     keywordTable kt = kw;
@@ -80,30 +81,66 @@ int main(int argc, char *argv[])
         scanf("%d", &opt);
         switch(opt)
         {
-        case 1:
-            list=createTokenList(fp, kt);
-            printTokenList(kt, list);
-            break;
-        case 2:
-            P = parseInputSourceCode(fp, T, kt, G, &error);
-            if(error)
-                printf("error\n");
-            printParseTree(P, tree);
-            break;
-            /*        case 3:
-                        abstractSyntaxTree A;
-                        createAbstractSyntaxtree(PT,A);
-                        int *totalAllocatedMemory;
-                        printAST(A, argv[2], totalAllocatedMemory);
-                        break;
-            */
-        default:
-            printf("\nPlease select a valid option\n");
+            case 1:
+                list=createTokenList(fp, kt);
+                printTokenList(kt, list);
+                break;
+            case 2:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(!error)
+                {
+                    printParseTree(P, tree);
+                    if(P!=NULL)
+                        printf("\nParse Tree generated and printed in file tree.txt\n");
+                }
+                break;
+            case 3:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(error)
+                    printf("error\n");
+                //parseTree A;
+                A = createAbstractSyntaxTree(P);
+                if(!error)
+                {
+                    printAST(A, ast, &totalAllocatedMemory);
+                    if(A!=NULL)
+                        printf("\nAST generated and printed in file ast.txt\n");
+                }
+                break;
+            case 4:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(error)
+                    printf("error\n");
+                
+                A = createAbstractSyntaxTree(P);
+                if(!error)
+                {
+                    printAST(A, ast, &totalAllocatedMemory);
+                    if(A!=NULL)
+                        printf("\nAST generated and printed in file ast.txt\n");
+                }
+                variable GT[100]; //max 100 globals possible 
+                funTable FT[100];
+                recTable RT[100];
+
+
+                initSymbolTable(GT,FT,RT);
+
+                createSymbolTable( GT, FT, RT, A);
+                printGT(GT);
+                printRT(RT);
+                printFT(FT);
+                break;
+
+
+            default:
+                printf("\nPlease select a valid option\n");
         }
-    }while(opt!=1 && opt!=2);
+    }while(opt<1 || opt>4);
     fclose(s);
     fclose(g);
     fclose(p);
     fclose(tree);
+    fclose(ast);
     return 0;
 }

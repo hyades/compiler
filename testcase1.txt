@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_sumN  input parameter list [int d5cc34]  
+output parameter list[real d3];
+type int :  b3b444 : global;
+type int :  b3b443 ;
+type int : b5b567;
+return [d3];
+end
+_main
+return;
+end
