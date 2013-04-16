@@ -1,0 +1,18 @@
+
+ 1 : Print the token list.
+ 2 : Verify the syntactic correctness
+ 3 : Print abstract syntax tree
+ 4: Exit
+
+Select option->
+AST generated and printed in file ast.txt
+b3b3                          int                           global                        -    
+d3                             int int int                  global                        -    
+d5cb34567                     int                           _main                         14   
+b5                            real                          _main                         16   
+d4                             int int int                  _main                         0    
+b5c6                           int int int                  _main                         20   
+b3c45                          int int int                  _addRecords                   26   
+b3b4                          int                           _addRecords                   52   
+c3b5                           int int int                  _addRecords                   0    
+c3b6                           int int int                  _addRecords                   12   

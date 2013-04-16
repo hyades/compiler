@@ -1125,8 +1125,6 @@ char* toStr ( symbol s )
         return "optionalreturn";
     case more_ids :
         return "more_ids";
-    case newstate :
-        return "newstate";
     case idlist :
         return "idlist";
     case TK_EPS :

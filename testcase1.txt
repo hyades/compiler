@@ -51,14 +51,45 @@
 
 
 
-_main
-record #marks
+
+
+
+%Test Case 2
+%Following program computes the average marks obtained by students in three subjects
+
+%Following function reads marks of a student in all subjects and returns as a record variable
+% Note that the variable b7 is not used anywhere but it is the syntactic requirement to have 
+% atleast one input parameter
+
+_addRecords input parameter list[record #marks c3b5, record #marks c3b6, int b3b4]
+output parameter list [ record #marks b3c45, int b3b4];
+	type record #marks:d3 : global;
+	type int : b3b4;
+	type int : b3b3 : global;
+	b3c45 <--- c3b5 + c3b6;
+	return [b3c45];
+end
+
+
+%The following program computes the average of marks of total d5cb34567  students
+_main 
+	record #marks
 		type real : maths; 
 		type real: physics; 
 		type real: chemistry;
 	endrecord;
-type int : b3b434 :global;
-type int : b3b433;
-d4 <--- b5c6 / d5cb34567;
-return;
+	% each field above represents the marks obtained in corresponding subject
+
+	type record #marks : d4;
+	% The variable d4 stores the marks of one student
+
+	type int : b5;
+	type int : d5cb34567;
+	type real : b5;
+	type record #marks : b5c6;
+	%The identifier b5c6 stores the sum of marks
+
+	b5 <--- 1;
+	read(d5cb34567);
+	return;
 end
