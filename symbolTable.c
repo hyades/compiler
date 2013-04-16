@@ -433,7 +433,7 @@ void createRecordTable(recTable RT[],parseTree A)
 }
 
 
-void createFunctionDeclareTable(variable GT[],funTable FT[],parseTree A,char * fname,int *offset)
+void createFunctionDeclareTable(variable GT[],funTable FT[],recTable RT[],parseTree A,char * fname,int *offset)
 {
 
 	parseTree temp;
@@ -441,20 +441,19 @@ void createFunctionDeclareTable(variable GT[],funTable FT[],parseTree A,char * f
 	printf("FUNCTION DECLARE A = %s\n",toStr(A->t->s));
 	if(A->t->s == TK_TYPE)
 	{
-		temp = A->parent;
+		temp = A->parent; //parent = declaration
 		if(temp->next[3]==NULL)
 		{
 
 			//void insertft(funTable FT[],char *fname, symbol type, char *rec_name,char *name,int ion , int offset)
 			insertft(FT,fname,temp->next[1]->t->s,"",temp->next[2]->t->lexeme,2,offset);
-			*offset = *offset + 1;
+			if(temp->next[1]->t->s == TK_INT)
+				*offset = *offset + 2;
+			if(temp->next[1]->t->s == TK_REAL)
+				*offset = *offset + 4;
 
 		}
-		else if(temp->next[3]->t->s ==TK_GLOBAL)
-		{
-			//void insertgt(variable GT[],symbol type, char *name)
-			insertgt(GT,temp->next[1]->t->s,temp->next[2]->t->lexeme);
-		}
+		
 
 
 	}
@@ -503,7 +502,7 @@ void createFunctionTable(variable GT[], funTable FT[], recTable RT[],parseTree A
 	}
 	if(A->t->s == TK_RECORDID)
 	{
-		A = 
+		A = A->parent
 	}
 	else if(A->t->s == TK_TYPE)
 	{
@@ -528,23 +527,11 @@ void createMainFunctionTable(variable GT[], funTable FT[], recTable RT[], parseT
 	printf("MAIN FUNCTION TABLE A = %s\n",toStr(A->t->s));
 	char fname[] = "_main";
 	//int offset;
-	if(A->t->s == TK_RECORD)
+	
+	if(A->t->s == declaration)
 	{
-
-		temp = A->parent; //parent of record = typedefination
-		if(temp->next[3]->t->s == TK_ENDRECORD)
-			createRecordTable(RT,temp);
-		else
-			for(i=0;A->next[i]!=NULL;i++)
-			{
-				temp = A->next[i];
-				createMainFunctionTable(GT,FT,RT,temp,offset);
-			}
-	}
-	else if(A->t->s == TK_TYPE)
-	{
-		temp = A->parent; //parent of tk_type = declaration
-		createFunctionDeclareTable(GT,FT,temp,fname,offset);
+		temp = A; // declaration
+		createFunctionDeclareTable(GT,FT,RT,temp,fname,offset);
 	}
 	else
 	{
@@ -574,14 +561,14 @@ void createSymbolTable(variable GT[], funTable FT[], recTable RT[],parseTree A)
 	{
 
 		temp = A->parent; //parent of funid = function
-		int offset = 1;
+		int offset = 0;
 		createFunctionTable(GT,FT,RT,temp,A->t->lexeme,&offset);
 	}
 
 	else if(A->t->s == TK_MAIN)
 	{
 		temp = A->parent;
-		int offset = 1;
+		int offset = 0;
 		createMainFunctionTable(GT,FT,RT,temp,&offset);
 	}
 	else
@@ -597,6 +584,45 @@ void createSymbolTable(variable GT[], funTable FT[], recTable RT[],parseTree A)
 
 
 
+
+createRecordTable(recTable RT[], parseTree A)
+{
+	parseTree temp;
+	int i,j;
+	if(A->t->s == typedefinition)
+	{
+		temp  = A;
+		createFieldRecordsTable(RT,temp,temp->next[1]->t->lexeme);
+	}
+	else
+		for(i=0;A[i]!=NULL;i++)
+		{
+			temp = A->next[i];
+			createRecordTable(GT,temp);
+		}
+
+
+}
+
+
+createGlobalTable(variable GT[],parseTree A)
+{
+	parseTree temp;
+	int i,j;
+
+
+	if(A->t->s == TK_GLOBAL)
+	{
+		temp = A->parent;
+		insertgt(GT,temp->next[1]->t->s,temp->next[2]->t->lexeme);
+	}
+	else
+		for(i=0;A[i]!=NULL;i++)
+		{
+			temp = A->next[i];
+			createGlobalTable(GT,temp);
+		}
+}
 
 
 

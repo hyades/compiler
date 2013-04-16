@@ -1,4 +1,49 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 _sumN  input parameter list [int d5cc34,int d5cc33, record #marks d4]  
 output parameter list[real d3];
 
@@ -16,5 +61,6 @@ record #marks
 	endrecord;
 type int : b3b434 :global;
 type int : b3b433;
+d4 <--- b5c6 / d5cb34567;
 return;
 end
