@@ -166,9 +166,8 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == booleanexpression)
 	{
-
-if(A->next[0]->t->s==singleorrecid)
-		s1=getRecType(RT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);
+		if(A->next[0]->t->s==singleorrecid)
+			s1=getRecType(RT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else

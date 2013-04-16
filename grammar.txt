@@ -36,8 +36,8 @@ stmt iostmt .
 stmt funcallstmt .
 assignmentstmt singleorrecid TK_ASSIGNOP arithmeticexpression TK_SEM .
 singleorrecid TK_ID .
-singleorrecid TK_ID TK_DOT TK_FIELDID .
-funcallstmt outputparameters TK_CALL TK_FUNID TK_WITH TK_PARAMETERS inputparameters TK_SEM .
+singleorrecid TK_RECORDID TK_DOT TK_FIELDID .
+funcallstmt outputparameters TK_CALL TK_FUNID TK_WITH TK_PARAMETERS inputparameters .
 outputparameters TK_SQL idlist TK_SQR TK_ASSIGNOP .
 outputparameters eps .
 inputparameters TK_SQL idlist TK_SQR .
@@ -48,7 +48,7 @@ elsepart TK_ENDIF .
 iostmt TK_READ TK_OP singleorrecid TK_CL TK_SEM .
 iostmt TK_WRITE TK_OP allvar TK_CL TK_SEM .
 allvar var .
-allvar TK_RECORDID TK_DOT TK_FIELDID .
+allvar TK_RECORDID .
 arithmeticexpression term expprime .
 expprime lowprecedenceoperators term expprime .
 expprime eps .

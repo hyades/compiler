@@ -1,11 +1,64 @@
-_sumN  input parameter list [int d5cc34]  
-output parameter list[real d3];
-type int :  b3b444 : global;
-type int :  b3b443 ;
-type int : b5b567;
-%d4 <--- b5c6 / d5cb34567;
-return [d3];
-end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 _main
+record #marks
+		type real : maths; 
+		type real: physics; 
+		type real: chemistry;
+	endrecord;
+type int : b3b434 :global;
+type int : b3b433;
+d4 <--- b5c6 / d5cb34567;
 return;
 end
