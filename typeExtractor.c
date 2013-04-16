@@ -141,35 +141,53 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == arithmeticexpression)
 	{
-		arithmeticexpression term expprime .
-		expprime lowprecedenceoperators term expprime .
-		expprime eps .
-		term factor termprime .
-		termprime highprecedenceoperators factor termprime .
-		termprime eps .
-		factor TK_OP arithmeticexpression TK_CL .
-		factor all .
-		highprecedenceoperators TK_MUL .
-		highprecedenceoperators TK_DIV .
-		lowprecedenceoperators TK_PLUS .
-		lowprecedenceoperators TK_MINUS .
+		if(A->next[0]->t->s==singleorrecid)
+			s1=getRecType(RT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);
+		else if(A->next[0]->t->s==TK_ID)
+			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
+		else
+			s2=typeCheck(A->next[0],GT,FT,RT);
+
+		if(A->next[2]->t->s==singleorrecid)
+			s2=getRecType(RT,A->next[2]->next[0]->t->lexeme,A->next[2]->next[1]->t->lexeme);
+		else if(A->next[2]->t->s==TK_ID)
+			s2=getVarType(GT,FT,A->next[2]->t->lexeme,funname);
+		else
+			s2=typeCheck(A->next[1],GT,FT,RT);
+
+		if(s1==TK_ERROR || s2==TK_ERROR)
+			return TK_ERROR;//unknown datatype
+		else if(s1!=s2)
+			return TK_ERROR2;//mismatched datatype
+		else
+		{
+			return s1;
+		}
 	}
 	else if(A->t->s == booleanexpression)
 	{
-booleanexpression TK_OP booleanexpression TK_CL logicalop TK_OP booleanexpression TK_CL .
-booleanexpression var relationalop var .
-booleanexpression TK_NOT booleanexpression .
-var TK_ID .
-var TK_NUM .
-var TK_RNUM .
-logicalop TK_AND .
-logicalop TK_OR .
-relationalop TK_LT .
-relationalop TK_LE .
-relationalop TK_EQ .
-relationalop TK_GT .
-relationalop TK_GE .
-relationalop TK_NE .
 
+if(A->next[0]->t->s==singleorrecid)
+		s1=getRecType(RT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);
+		else if(A->next[0]->t->s==TK_ID)
+			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
+		else
+			s2=typeCheck(A->next[0],GT,FT,RT);
+
+		if(A->next[2]->t->s==singleorrecid)
+			s2=getRecType(RT,A->next[2]->next[0]->t->lexeme,A->next[2]->next[1]->t->lexeme);
+		else if(A->next[2]->t->s==TK_ID)
+			s2=getVarType(GT,FT,A->next[2]->t->lexeme,funname);
+		else
+			s2=typeCheck(A->next[1],GT,FT,RT);
+		
+		if(s1==TK_ERROR || s2==TK_ERROR)
+			return TK_ERROR;//unknown datatype
+		else if(s1!=s2)
+			return TK_ERROR2;//mismatched datatype
+		else
+		{
+			return s1;
+		}
 	}
 }

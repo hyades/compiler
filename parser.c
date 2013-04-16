@@ -102,6 +102,7 @@ void initNt(keywordTable nt)
     addNt(nt,"returnstmt",returnstmt);
     addNt(nt,"optionalreturn",optionalreturn);
     addNt(nt,"more_ids",more_ids);
+    addNt(nt,"newstate",newstate);
     addNt(nt,"idlist",idlist);
     addNt(nt,"TK_MINUS",TK_MINUS );
     addNt(nt,"TK_NE",TK_NE );
