@@ -1,40 +1,20 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-_sumN  input parameter list [int d5cc34]  
+_sumN  input parameter list [int d5cc34,int d5cc33, record #marks d4]  
 output parameter list[real d3];
+
 type int :  b3b444 : global;
-type int :  b3b443 ;
-type int : b5b567;
+type real : b3b333;
+
 return [d3];
 end
+
 _main
+record #marks
+		type real : maths; 
+		type real: physics; 
+		type real: chemistry;
+	endrecord;
+type int : b3b434 :global;
+type int : b3b433;
 return;
 end

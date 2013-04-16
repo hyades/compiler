@@ -19,6 +19,7 @@ typedef struct
 
 	symbol type;
 	char name[30];
+	char rec_name[30];
 	int offset;
 	int ion;
 	bool filled;

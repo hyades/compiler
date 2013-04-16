@@ -719,7 +719,7 @@ parseTree createAbstractSyntaxTree(parseTree T)
         if(T->t->s == TK_EPS || T->t->s == TK_OP || T->t->s == TK_CL || T->t->s == TK_COLON || 
             T->t->s == TK_SEM || T->t->s == TK_SQR || T->t->s == TK_SQL || T->t->s == TK_COMMA || 
             T->t->s==TK_DOT || T->t->s==TK_CALL || T->t->s==TK_WITH || T->t->s==TK_PARAMETERS ||  
-            T->t->s==TK_PARAMETER || T->t->s==TK_INPUT || T->t->s==TK_OUTPUT || T->t->s==TK_LIST)
+            T->t->s==TK_PARAMETER || T->t->s==TK_LIST)
             return NULL;
         if(isTerminal(T->t->s))
         {
@@ -740,7 +740,7 @@ parseTree createAbstractSyntaxTree(parseTree T)
             if(T->next[j]->t->s == TK_OP || T->next[j]->t->s==TK_CL || T->next[j]->t->s==TK_COLON || T->next[j]->t->s==TK_SEM || 
                 T->next[j]->t->s==TK_SQR || T->next[j]->t->s==TK_SQL || T->next[j]->t->s==TK_COMMA || T->next[j]->t->s==TK_DOT || 
                 T->next[j]->t->s==TK_CALL || T->next[j]->t->s==TK_WITH || T->next[j]->t->s==TK_PARAMETERS || T->next[j]->t->s==TK_PARAMETER || 
-                T->next[j]->t->s==TK_INPUT || T->next[j]->t->s==TK_OUTPUT || T->next[j]->t->s==TK_LIST)
+                T->next[j]->t->s==TK_LIST)
             {
                 j++;
                 continue;

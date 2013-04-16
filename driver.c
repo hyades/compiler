@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
                 printGT(GT);
                 printRT(RT);
                 printFT(FT);
+
                 break;
 
 
