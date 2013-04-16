@@ -13,25 +13,35 @@ symbolTable.h
 #define SYMBOL_H_INCLUDED
 
 
-
 typedef struct
 {
 
 	symbol type;
 	char name[30];
-	char rec_name[30];
+	int recindex;
 	int offset;
 	int ion;
 	bool filled;
 
+
 } variable;
+
+
+struct paralist
+{
+	variable item;
+	struct paralist *next;
+};
+
 
 typedef struct
 {
 
 	char fname[35];
-	variable table[100]; //assumming function can contain max 100 variables
+	variable table[50]; //assumming function can contain max 100 variables
 	bool filled;
+	struct paralist *inputList;
+	struct paralist *outputList;
 
 }funTable;
 
@@ -40,6 +50,8 @@ typedef struct
 	char rname[35];
 	variable table[100];
 	bool filled;
+	char str[100];
+	int size;
 
 }recTable;
 

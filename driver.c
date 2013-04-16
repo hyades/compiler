@@ -126,10 +126,12 @@ int main(int argc, char *argv[])
 
                 initSymbolTable(GT,FT,RT);
 
+                createGlobalTable(GT,A);
+                createRecordTable(RT,A);
                 createSymbolTable( GT, FT, RT, A);
-                printGT(GT);
-                printRT(RT);
-                printFT(FT);
+                printGT(GT,RT);
+                //printRT(RT);
+                printFT(FT,RT);
 
                 break;
 
