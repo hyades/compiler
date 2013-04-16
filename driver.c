@@ -74,10 +74,13 @@ int main(int argc, char *argv[])
     initTable(T);
     createParseTable(G,T,S,Gno);
     printTable(p, T);
+    variable GT[100]; //max 100 globals possible 
+    funTable FT[100];
+    recTable RT[100];
     tokenList list;
     do
     {
-        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4: Exit\n\nSelect option->");
+        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4: Print Symbol Table\n 5: Do Type Checking\n\nSelect option->");
         scanf("%d", &opt);
         switch(opt)
         {
@@ -119,10 +122,6 @@ int main(int argc, char *argv[])
                     if(A!=NULL)
                         printf("\nAST generated and printed in file ast.txt\n");
                 }
-                variable GT[100]; //max 100 globals possible 
-                funTable FT[100];
-                recTable RT[100];
-
 
                 initSymbolTable(GT,FT,RT);
 
@@ -134,12 +133,34 @@ int main(int argc, char *argv[])
                 printFT(FT,RT);
 
                 break;
+            case 5:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(error)
+                    printf("error\n");
+                
+                A = createAbstractSyntaxTree(P);
+                if(!error)
+                {
+                    printAST(A, ast, &totalAllocatedMemory);
+                    if(A!=NULL)
+                        printf("\nAST generated and printed in file ast.txt\n");
+                }
+                initSymbolTable(GT,FT,RT);
 
-
+                createGlobalTable(GT,A);
+                createRecordTable(RT,A);
+                createSymbolTable( GT, FT, RT, A);
+                printGT(GT,RT);
+                //printRT(RT);
+                printFT(FT,RT);
+                char funname[50];
+                strcpy(funname," ");
+                typeParse(A,GT, FT,RT,funname);
+                break;
             default:
                 printf("\nPlease select a valid option\n");
         }
-    }while(opt<1 || opt>4);
+    }while(opt<1 || opt>5);
     fclose(s);
     fclose(g);
     fclose(p);
