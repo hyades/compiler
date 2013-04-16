@@ -112,5 +112,4 @@ b5                             92   TK_ID               ----                 ass
 ----                           93   iostmt              ----                 otherstmts           no   iostmt               
 read                           93   TK_READ             ----                 iostmt               yes  ----                 
 d5cb34567                      93   TK_ID               ----                 iostmt               yes  ----                 
-return                         94   TK_RETURN           ----                 stmts                yes  ----                 
-end                            95   TK_END              ----                 mainfunction         yes  ----                 
+return                         94   TK_RETURN           ----                 stmts    
