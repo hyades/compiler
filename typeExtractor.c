@@ -146,7 +146,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else
-			s2=typeCheck(A->next[0],GT,FT,RT);
+			s1=typeCheck(A->next[0],GT,FT,RT);
 
 		if(A->next[2]->t->s==singleorrecid)
 			s2=getRecType(RT,A->next[2]->next[0]->t->lexeme,A->next[2]->next[1]->t->lexeme);
@@ -186,7 +186,31 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 			return TK_ERROR2;//mismatched datatype
 		else
 		{
-			return s1;
+			return TK_BOOL;
 		}
 	}
 }
+
+
+
+An identifier cannot be declared multiple times in the same scope.
+An identifier must be declared before its use.
+An identifier declared globally cannot be declared anywhere else in function definitions.
+The types and  the number of parameters returned by a function must be the same as that of the parameters used in invoking the function.
+The parameters being returned by a function must be assigned a value. If a parameter does not get a value assigned within the function 
+	definition, it should be reported as an error.
+The function that does not return any value, must be invoked appropriately.
+Function input parameters passed while invoking it should be of the same type as those used in the function definition. 
+	Number of input parameters must be same as that of those used in the function definition.
+An if statement must have the expression of boolean type.
+Function overloading is not allowed.
+The function cannot be invoked recursively.
+An identifier used beyond its scope must be viewed as undefined
+A record type definition is visible anywhere in the program.
+The right hand side expression of an assignment statement must be of the same type as that of the left hand side identifier.
+A function definition for a function being used (say F1) by another (say F2) must precede the definition of the function using it(i.e. F2).
+A  while statement  must redefine the variable that participates in the iterations. As an instance, consider the following example
+                while(c3<=c5)
+                        write(c3);
+                       c3<---c3+2.34;
+                end
