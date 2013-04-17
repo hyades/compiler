@@ -62,10 +62,9 @@ highprecedenceoperators TK_MUL .
 highprecedenceoperators TK_DIV .
 lowprecedenceoperators TK_PLUS .
 lowprecedenceoperators TK_MINUS .
-all TK_ID .
 all TK_NUM .
 all TK_RNUM .
-all TK_RECORDID temp .
+all TK_ID temp .
 temp eps .
 temp TK_DOT TK_FIELDID .
 booleanexpression TK_OP booleanexpression TK_CL logicalop TK_OP booleanexpression TK_CL .

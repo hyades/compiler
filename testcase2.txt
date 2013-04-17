@@ -5,6 +5,7 @@ type real: physics;
 type real: chemistry;
 endrecord;
 type record #marks : d4;
+type int : d3;
 type real : d5;
 type int : d3;
 d5 <--- 1.50;
