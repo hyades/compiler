@@ -22,16 +22,10 @@ driver.c
 
 int main(int argc, char *argv[])
 {
-    FILE *s=fopen("set.txt", "r");
     FILE *g=fopen("grammar.txt", "r");
     FILE *p=fopen("parsetable.csv", "w");
     FILE *tree=fopen("tree.txt", "w");
     FILE *ast=fopen("ast.txt", "w");
-    if(s==NULL)
-    {
-        printf("Sets file not found\n");
-        return 0;
-    }    
     if(g==NULL)
     {
         printf("Grammar file not found\n");
@@ -70,7 +64,8 @@ int main(int argc, char *argv[])
     keywordTable nt = kn;
     initNt(nt);
     Gno=createGrammar(g,G,nt);
-    createSets(s,S,nt);
+    initSets(S,G,Gno);
+//    createSets(s,S,nt);
     initTable(T);
     createParseTable(G,T,S,Gno);
     printTable(p, T);
@@ -107,7 +102,7 @@ int main(int argc, char *argv[])
                 {
                     printAST(A, ast, &totalAllocatedMemory);
                     if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\n");
+                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
                 break;
             case 4:
@@ -120,7 +115,7 @@ int main(int argc, char *argv[])
                 {
                     printAST(A, ast, &totalAllocatedMemory);
                     if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\n");
+                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
 
                 initSymbolTable(GT,FT,RT);
@@ -143,7 +138,7 @@ int main(int argc, char *argv[])
                 {
                     printAST(A, ast, &totalAllocatedMemory);
                     if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\n");
+                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
                 initSymbolTable(GT,FT,RT);
 
@@ -161,7 +156,6 @@ int main(int argc, char *argv[])
                 printf("\nPlease select a valid option\n");
         }
     }while(opt<1 || opt>5);
-    fclose(s);
     fclose(g);
     fclose(p);
     fclose(tree);

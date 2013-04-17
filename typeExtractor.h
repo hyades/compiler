@@ -13,7 +13,7 @@ typeExtractor.h
 #define EXTRACTOR_H_INCLUDED
 
 symbol getVarType(variable GT[], funTable FT[],char *varname,char *funname);//return type of variable varname
-symbol getRecType(recTable RT[],char *recname, char *varname);//return type of variable varname part of record recname
+symbol getRecType(recTable RT[],variable GT[], funTable FT[],char *recname, char *varname,char *funname);//return type of variable varname part of record recname
 
 symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *funname);//checks if types are compatible
 #endif 
