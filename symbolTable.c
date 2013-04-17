@@ -13,6 +13,11 @@
 
 void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 {
+	if(checkMultift(FT,fname,recindex,name))
+	{
+		printf("Multiple Declaration\n");
+		return;
+	}
 	int hval,hval2,hkey=100;
 	struct paralist *curr;
 
@@ -75,6 +80,11 @@ void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,in
 
 void insertrt(recTable RT[],char *rname, symbol type, char *name)
 {
+	if(checkMultirt(RT,rname,name))
+	{
+		printf("Multiple Declaration\n");
+		return;
+	}
 	int hval,hval2,hkey=100;
 
 	//printf("adding to record %s:%s\n",rname,name);
@@ -102,6 +112,11 @@ void insertrt(recTable RT[],char *rname, symbol type, char *name)
 
 void insertgt(variable GT[],symbol type, int recindex, char *name)
 {
+	if(checkMultigt(GT,recindex.name))
+	{
+		printf("Multiple Declaration\n");
+		return;
+	}
 	int hval,hkey=100;
 
 	//printf("adding to global %s\n",name);
