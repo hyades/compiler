@@ -760,7 +760,7 @@ parseTree createAbstractSyntaxTree(parseTree T)
         {
             if((A->next[j]->t->s == TK_PLUS || A->next[j]->t->s==TK_MINUS || A->next[j]->t->s == TK_MUL || A->next[j]->t->s==TK_DIV || 
                 A->next[j]->t->s==TK_LE || A->next[j]->t->s==TK_LT || A->next[j]->t->s==TK_GT || A->next[j]->t->s==TK_GE || 
-                A->next[j]->t->s==TK_NE || A->next[j]->t->s==TK_IF || A->next[j]->t->s==TK_AND || A->next[j]->t->s==TK_OR) && (!A->next[j]->pull))
+                A->next[j]->t->s==TK_NE || A->next[j]->t->s==TK_IF || A->next[j]->t->s==TK_AND || A->next[j]->t->s==TK_OR|| A->next[j]->t->s==TK_ASSIGNOP) && (!A->next[j]->pull))
             {
                 f = 1;
                 m = j;
