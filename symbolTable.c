@@ -10,12 +10,13 @@
 #include"parserDef.h"
 #include"parser.h"
 #include"symbolTable.h"
+#include"semantic.h"
 
 void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 {
 	if(checkMultift(FT,fname,recindex,name))
 	{
-		printf("Multiple Declaration\n");
+		
 		return;
 	}
 	int hval,hval2,hkey=100;
@@ -82,7 +83,6 @@ void insertrt(recTable RT[],char *rname, symbol type, char *name)
 {
 	if(checkMultirt(RT,rname,name))
 	{
-		printf("Multiple Declaration\n");
 		return;
 	}
 	int hval,hval2,hkey=100;
@@ -112,9 +112,8 @@ void insertrt(recTable RT[],char *rname, symbol type, char *name)
 
 void insertgt(variable GT[],symbol type, int recindex, char *name)
 {
-	if(checkMultigt(GT,recindex.name))
+	if(checkMultigt(GT,recindex,name))
 	{
-		printf("Multiple Declaration\n");
 		return;
 	}
 	int hval,hkey=100;
