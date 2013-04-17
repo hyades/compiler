@@ -48,6 +48,15 @@ int checkMultigt(variable GT[],int recindex,char* name)
 	int hval,hkey=100;
 	hval = hash(name,hkey);
 	if(GT[hval].filled)
-		printf("ERROR: Variable %s has been declared multiple times globally\n",name);
+		printf("ERROR: Variable %s has been already globally declared\n",name);
 	return GT[hval].filled;
+}
+
+int checkMultiFun(funTable FT[], char* fname)
+{
+	int hval,hkey=100;
+	hval=hash(fname,hkey);
+	if(FT[hval].filled)
+		printf("ERROR: Function overloading is not allowed. Function %s has been overloaded\n", fname);
+	return FT[hval].filled;
 }

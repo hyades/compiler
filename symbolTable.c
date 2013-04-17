@@ -1,3 +1,13 @@
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+BATCH 26
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+AAYUSH AHUJA 2010A7PS023P
+MAYANK GUPTA 2010A7PS022P
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+symbolTable.c
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
 
 #include<stdio.h>
 #include<ctype.h>
@@ -12,11 +22,14 @@
 #include"symbolTable.h"
 #include"semantic.h"
 
-void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+void insertft(variable GT[],funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 {
+	// if(checkMultigt(GT,recindex,name))
+	// {
+	// 	return;
+	// }
 	if(checkMultift(FT,fname,recindex,name))
 	{
-		
 		return;
 	}
 	int hval,hval2,hkey=100;
@@ -216,7 +229,7 @@ void printGT(variable GT[],recTable RT[])
 
 
 
-void createInputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fname, int *offset)
+void createInputParameterTable(variable GT[],funTable FT[],recTable RT[],parseTree A,char *fname, int *offset)
 {
 
 	parseTree temp;
@@ -228,15 +241,15 @@ void createInputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fna
 		temp = A->parent; //temp = parameter_list
 		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,0,offset);
+		insertft(GT,FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,0,offset);
 		*offset = *offset + 2;
 	}
 	else if(A->t->s == TK_REAL)
 	{
 		temp = A->parent; //temp = parameter_list
-		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+		//void insertft(GT,funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,0,offset);
+		insertft(GT,FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,0,offset);
 		*offset = *offset + 4;
 	}	
 	else if(A->t->s == TK_RECORD)
@@ -245,7 +258,7 @@ void createInputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fna
 		temp = A->parent->parent; //parameter_list>(constructed_datatypes>(record id & tk_record) == tk_id)
 		int hkey = 100,recindex;
 		recindex = hash(temp->next[0]->next[1]->t->lexeme,hkey); // = tk_recordid
-		insertft(FT,fname,temp->next[0]->next[0]->t->s,recindex,temp->next[1]->t->lexeme,0,offset);
+		insertft(GT,FT,fname,temp->next[0]->next[0]->t->s,recindex,temp->next[1]->t->lexeme,0,offset);
 		*offset = *offset + RT[recindex].size;
 	}
 	else 
@@ -253,13 +266,13 @@ void createInputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fna
 		for(i=0;A->next[i]!=NULL;i++)
 		{
 			temp = A->next[i];
-			createInputParameterTable(FT,RT,temp,fname,offset);
+			createInputParameterTable(GT,FT,RT,temp,fname,offset);
 		}
 	}
 
 }
 
-void createOutputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fname, int *offset)
+void createOutputParameterTable(variable GT[],funTable FT[],recTable RT[],parseTree A,char *fname, int *offset)
 {
 
 	parseTree temp;
@@ -269,17 +282,17 @@ void createOutputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fn
 	if(A->t->s == TK_INT)
 	{
 		temp = A->parent; //temp = parameter_list
-		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+		//void insertft(GT,funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,1,offset);
+		insertft(GT,FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,1,offset);
 		*offset = *offset + 2;
 	}
 	else if(A->t->s == TK_REAL)
 	{
 		temp = A->parent; //temp = parameter_list
-		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+		//void insertft(GT,funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,1,offset);
+		insertft(GT,FT,fname,temp->next[0]->t->s,-1,temp->next[1]->t->lexeme,1,offset);
 		*offset = *offset + 4;
 	}	
 	else if(A->t->s == TK_RECORD)
@@ -288,7 +301,7 @@ void createOutputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fn
 		temp = A->parent->parent; //parameter_list>(constructed_datatypes>(record id & tk_record) == tk_id)
 		int hkey = 100,recindex;
 		recindex = hash(temp->next[0]->next[1]->t->lexeme,hkey); // = tk_recordid
-		insertft(FT,fname,temp->next[0]->next[0]->t->s,recindex,temp->next[1]->t->lexeme,1,offset);
+		insertft(GT,FT,fname,temp->next[0]->next[0]->t->s,recindex,temp->next[1]->t->lexeme,1,offset);
 		*offset = *offset + RT[recindex].size;
 	}
 	else 
@@ -296,7 +309,7 @@ void createOutputParameterTable(funTable FT[],recTable RT[],parseTree A,char *fn
 		for(i=0;A->next[i]!=NULL;i++)
 		{
 			temp = A->next[i];
-			createOutputParameterTable(FT,RT,temp,fname,offset);
+			createOutputParameterTable(GT,FT,RT,temp,fname,offset);
 		}
 	}
 
@@ -335,17 +348,17 @@ void createFunctionDeclareTable(variable GT[],funTable FT[],recTable RT[],parseT
 	if(A->t->s == TK_INT)
 	{
 		temp = A->parent; //temp = declaration
-		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+		//void insertft(GT,funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[1]->t->s,-1,temp->next[2]->t->lexeme,2,offset);
+		insertft(GT,FT,fname,temp->next[1]->t->s,-1,temp->next[2]->t->lexeme,2,offset);
 		*offset = *offset + 2;
 	}
 	else if(A->t->s == TK_REAL)
 	{
 		temp = A->parent; //temp = declaration
-		//void insertft(funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
+		//void insertft(GT,funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 
-		insertft(FT,fname,temp->next[1]->t->s,-1,temp->next[2]->t->lexeme,2,offset);
+		insertft(GT,FT,fname,temp->next[1]->t->s,-1,temp->next[2]->t->lexeme,2,offset);
 		*offset = *offset + 4;
 	}	
 	else if(A->t->s == TK_RECORD)
@@ -354,7 +367,7 @@ void createFunctionDeclareTable(variable GT[],funTable FT[],recTable RT[],parseT
 		temp = A->parent->parent; //declarartion>tk_type == (constructed_datatypes>(record id & tk_record) == tk_id)
 		int hkey = 100,recindex;
 		recindex = hash(temp->next[1]->next[1]->t->lexeme,hkey); // = tk_recordid
-		insertft(FT,fname,temp->next[1]->next[0]->t->s,recindex,temp->next[2]->t->lexeme,2,offset);
+		insertft(GT,FT,fname,temp->next[1]->next[0]->t->s,recindex,temp->next[2]->t->lexeme,2,offset);
 		*offset = *offset + RT[recindex].size;
 	}
 	else 
@@ -371,7 +384,8 @@ void createFunctionDeclareTable(variable GT[],funTable FT[],recTable RT[],parseT
 
 void createFunctionTable(variable GT[], funTable FT[], recTable RT[],parseTree A, char * fname, int *offset)
 {
-
+	if(checkMultiFun(FT, fname))
+		return;
 	parseTree temp;
 	int i,j;
 	//int offset = 1;
@@ -380,12 +394,12 @@ void createFunctionTable(variable GT[], funTable FT[], recTable RT[],parseTree A
 	{
 		//printf("INPUT = %s\n",toStr(A->t->s));
 		temp = A->parent; //parent of tk_ input = input_par
-		createInputParameterTable(FT,RT,temp,fname,offset);
+		createInputParameterTable(GT,FT,RT,temp,fname,offset);
 	}
 	else if(A->t->s == TK_OUTPUT) ////parent of tk_output = output_par
 	{
 		temp = A->parent;
-		createOutputParameterTable(FT,RT,temp,fname,offset);
+		createOutputParameterTable(GT,FT,RT,temp,fname,offset);
 	}
 	
 	else if(A->t->s == declaration)
