@@ -48,8 +48,11 @@ symbol getRecType(recTable RT[],char *recname, char *varname)//return type of va
 {
 	int hashkey=100;
 	int rval=hash(recname, hashkey);
+	if(RT[rval].filled)
+		printf("filled\n");
 	if(RT[rval].filled && !strcmp(RT[rval].rname,recname))
 	{
+		printf("rname found%s\n", RT[rval].rname);
 		int hval=hash(varname, hashkey);
 		if(RT[rval].table[hval].filled && !strcmp(RT[rval].table[hval].name,varname))
 			return RT[rval].table[hval].type;
@@ -62,7 +65,10 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	if(A->t->s == assignmentstmt)
 	{
 		if(A->next[0]->t->s==singleorrecid)
+		{
+			printf("singleorrecid %s %s\n", A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);	
 			s1=getRecType(RT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);
+		}
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		s2=typeCheck(A->next[2],GT,FT,RT,funname);

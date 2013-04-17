@@ -1,42 +1,12 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 _main
 record #marks
-type real : maths;
-type real : physics;
+type real : maths; 
+type real: physics; 
+type real: chemistry;
 endrecord;
 type record #marks : d4;
+type real : d5;
+d5 <--- 1.50;
 d4.maths <--- 1.50;
 return;
 end

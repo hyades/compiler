@@ -87,7 +87,7 @@ void insertrt(recTable RT[],char *rname, symbol type, char *name)
 	}
 	if(type == TK_REAL)
 	{
-		strcat(RT[hval].str,(" int"));
+		strcat(RT[hval].str,(" real"));
 		RT[hval].size+=4;
 	}
 	hval2 = hash(name,hkey);

@@ -102,6 +102,7 @@ void initNt(keywordTable nt)
     addNt(nt,"returnstmt",returnstmt);
     addNt(nt,"optionalreturn",optionalreturn);
     addNt(nt,"more_ids",more_ids);
+    addNt(nt,"newstate",newstate);
     addNt(nt,"idlist",idlist);
     addNt(nt,"TK_MINUS",TK_MINUS );
     addNt(nt,"TK_NE",TK_NE );
@@ -184,7 +185,7 @@ void initSets(sets S[],grammar G[], int Gno)
     }
     for(i=2;i<(int)(idlist-program)+1;i++)
     {    followSets(S, G,(symbol)i+program,Gno);
-         printf("-------------initSets %s", toStr(i+program));
+         //printf("-------------initSets %s", toStr(i+program));
          //scanf("%d", &x);
     }
     // followSets(S, G,program,Gno);
@@ -196,7 +197,7 @@ void firstSets(sets S[], grammar G[],symbol s, int Gno)
     bool flag = 0;
     //printf("HELLO");
     if(S[s - program].firstno>0)return;
-    printf("%s\n", toStr(s));
+    //printf("%s\n", toStr(s));
     for(i=0;i<Gno;i++)
     {
 
@@ -258,7 +259,7 @@ void followSets(sets S[], grammar G[],symbol s, int Gno)
     int i,j,k,l;
     bool flag = 0;
     //printf("HELLO");
-    printf("%s\n", toStr(s));
+    //printf("%s\n", toStr(s));
     for(i=0;i<Gno;i++)
     {
         for(j=0;j<G[i].listno;j++)

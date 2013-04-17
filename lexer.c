@@ -798,9 +798,9 @@ int getStream(int fp, buffer B, buffersize k)//reads k characters from source fi
 
 char getNextChar(int fp, int *back)//gets next character from source file at position x
 {
-    static int x=0,k=100,y;
-    static char cb1[100];
-    static char cb2[100];
+    static int x=0,k=1000,y;
+    static char cb1[1000];
+    static char cb2[1000];
     buffer b1=cb1;
     buffer b2=cb2;
     int flag=0;
@@ -1125,6 +1125,8 @@ char* toStr ( symbol s )
         return "optionalreturn";
     case more_ids :
         return "more_ids";
+    case newstate :
+        return "newstate";
     case idlist :
         return "idlist";
     case TK_EPS :
