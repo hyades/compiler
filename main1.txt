@@ -1,0 +1,18 @@
+
+%The following program maximum of two integers. Inputs should be made after pressing Enter key.
+_main
+    type int : b3;
+    type int : b4;
+	
+
+	read(b3);
+    read(b4);
+	
+
+    if(b3 > b4)
+    then write(b3);
+    else
+        write(b4);
+    endif
+	return;
+end

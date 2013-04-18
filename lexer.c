@@ -17,7 +17,7 @@ lexer.c
 #include"lexerDef.h"
 #include"lexer.h"
 
-
+extern bool any_error;
 tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//get next token
 {
 
@@ -164,15 +164,16 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             else if(isspace(c))
             {
                 state = 45;
-               //if(c=='\n'||c=='\r')
-                    //(*linenumber)++;
+               if(c=='\n')
+                    (*linenumber)++;
             }
 
             else
             {
                 *error = 1;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_ERROR;
+                t->s = TK_ERROR2;
+                lexeme[i++] =c;
                 lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
@@ -643,10 +644,10 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             }
             else
             {
-                back = 2;
+                *error = TRUE;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_LT;
-                lexeme[i]='\0';
+                t->s = TK_ERROR;
+                lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
             }
@@ -661,10 +662,10 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             }
             else
             {
-                back = 3;
+                *error = TRUE;
                 t = (tokenInfo)malloc(sizeof(tokenInfo));
-                t->s = TK_LT;
-                lexeme[i]='\0';
+                t->s = TK_ERROR;
+                lexeme[i] = '\0';
                 strcpy(t->lexeme,lexeme);
                 return t;
             }
@@ -734,7 +735,7 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
             break;
         case 45:			//WHITESPACE STATE
             c = getNextChar(fp,&back);
-            if(c=='\n'||c=='\r')
+            if(c=='\n')
             {
                 //printf("newline\n");
                 (*linenumber)++;
@@ -774,7 +775,6 @@ tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//g
 
 
 
-
         }
         //printf("State = %d   c = %c	line=%d\n", state,c,*linenumber);
     }
@@ -798,9 +798,9 @@ int getStream(int fp, buffer B, buffersize k)//reads k characters from source fi
 
 char getNextChar(int fp, int *back)//gets next character from source file at position x
 {
-    static int x=0,k=100,y;
-    static char cb1[100];
-    static char cb2[100];
+    static int x=0,k=2000,y;
+    static char cb1[2000];
+    static char cb2[2000];
     buffer b1=cb1;
     buffer b2=cb2;
     int flag=0;
@@ -1125,6 +1125,8 @@ char* toStr ( symbol s )
         return "optionalreturn";
     case more_ids :
         return "more_ids";
+    case newstate :
+        return "newstate";
     case idlist :
         return "idlist";
     case TK_EPS :
@@ -1137,18 +1139,19 @@ char* toStr ( symbol s )
 
 tokenList createTokenList(int fp, keywordTable kt)//create Token List
 {
-    int linenumber = 1;
+    int linenumber = 1,q;
     bool error = 0;
     tokenInfo t;
     tokenList list,curr=NULL;
     while(1)
     {
         t = getNextToken(fp,kt,&error,&linenumber);
+        //printf("LEXEME:%s\n",t->lexeme);
         if(t==NULL)
         {
-            //if(error==1)printf("error!\n");
             break;
         }
+        
         tokenList temp=(tokenList)malloc(sizeof(tokenList));
         if(curr==NULL)
         {
@@ -1164,16 +1167,44 @@ tokenList createTokenList(int fp, keywordTable kt)//create Token List
         if(t->s==TK_COMMENT)curr->linenumber=linenumber-1;
         else curr->linenumber=linenumber;
         curr->next=NULL;
+        if(error)
+            break;
     }
     return list;
 }
 
 void printTokenList(keywordTable kt, tokenList list)//print Token List
 {
-    tokenInfo t;
+    int q;
     while(list!=NULL)
     {
-        printf("%s %s %d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
+            //printf("LEXEME:%s\n",list->t->lexeme);
+            if(list->t->s==TK_ERROR)
+            {
+                printf("ERROR_3: Unknown pattern %s at line %d\n", list->t->lexeme, list->linenumber);
+                any_error=1;
+                break;
+            }
+            else if(list->t->s==TK_ERROR2)
+            {
+                printf("ERROR_2: Unknown Symbol %s at line %d\n", list->t->lexeme, list->linenumber);
+                any_error=1;
+                break;
+            }
+            else if((strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID) || (strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID) || list->t->lexeme[strlen(list->t->lexeme)-1] =='!')
+            {
+                q=20;
+                //printf("sdgdg\n");
+                if(list->t->s==TK_FUNID)
+                    q=30;
+                printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", list->linenumber,q);
+                any_error=1;
+                break;
+            }
+            //else
+            //    printf("%s\n",list->t->lexeme);
+
+        printf("%-20s%-30s%-10d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
         list=list->next;
     }
 }

@@ -35,9 +35,10 @@ stmt conditionalstmt .
 stmt iostmt .
 stmt funcallstmt .
 assignmentstmt singleorrecid TK_ASSIGNOP arithmeticexpression TK_SEM .
-singleorrecid TK_ID .
-singleorrecid TK_RECORDID TK_DOT TK_FIELDID .
-funcallstmt outputparameters TK_CALL TK_FUNID TK_WITH TK_PARAMETERS inputparameters .
+singleorrecid TK_ID newstate .
+newstate TK_DOT TK_FIELDID .
+newstate eps .
+funcallstmt outputparameters TK_CALL TK_FUNID TK_WITH TK_PARAMETERS inputparameters TK_SEM.
 outputparameters TK_SQL idlist TK_SQR TK_ASSIGNOP .
 outputparameters eps .
 inputparameters TK_SQL idlist TK_SQR .
@@ -61,10 +62,9 @@ highprecedenceoperators TK_MUL .
 highprecedenceoperators TK_DIV .
 lowprecedenceoperators TK_PLUS .
 lowprecedenceoperators TK_MINUS .
-all TK_ID .
 all TK_NUM .
 all TK_RNUM .
-all TK_RECORDID temp .
+all TK_ID temp .
 temp eps .
 temp TK_DOT TK_FIELDID .
 booleanexpression TK_OP booleanexpression TK_CL logicalop TK_OP booleanexpression TK_CL .
