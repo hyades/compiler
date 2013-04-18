@@ -17,7 +17,7 @@ lexer.c
 #include"lexerDef.h"
 #include"lexer.h"
 
-
+extern bool any_error;
 tokenInfo getNextToken(int fp ,keywordTable kt, bool *error, int *linenumber)//get next token
 {
 
@@ -1182,11 +1182,13 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
             if(list->t->s==TK_ERROR)
             {
                 printf("ERROR_3: Unknown pattern %s\n", list->t->lexeme);
+                any_error=1;
                 break;
             }
             else if(list->t->s==TK_ERROR2)
             {
                 printf("ERROR_2: Unknown Symbol %s at line %d\n", list->t->lexeme, list->linenumber);
+                any_error=1;
                 break;
             }
             else if((strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID) || (strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID) || list->t->lexeme[strlen(list->t->lexeme)-1] =='!')
@@ -1196,6 +1198,7 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
                 if(list->t->s==TK_FUNID)
                     q=30;
                 printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", list->linenumber,q);
+                any_error=1;
                 break;
             }
             else

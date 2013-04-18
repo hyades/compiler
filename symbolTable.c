@@ -22,14 +22,14 @@ symbolTable.c
 #include"symbolTable.h"
 #include"semantic.h"
 
+extern bool any_error;
+
 void insertft(variable GT[],funTable FT[],char *fname, symbol type, int recindex,char *name,int ion , int *offset)
 {
-	// if(checkMultigt(GT,recindex,name))
-	// {
-	// 	return;
-	// }
-	if(checkMultift(FT,fname,recindex,name))
+	 if(checkMultigtN(GT,recindex,name) && checkMultiftN(FT,fname,recindex,name))
 	{
+		printf("ERROR: Variable %s being a global variable, cannot be declared more than once\n", name);
+		any_error=1;
 		return;
 	}
 	int hval,hval2,hkey=100;
@@ -183,15 +183,15 @@ void printFT(funTable FT[], recTable RT[])
 					if(FT[i].table[j].type == TK_RECORD)
 					{
 						//RT[FT[i].table[j].recindex].str
-						printf("%-30s%-30s%-30s%-5d\n",FT[i].table[j].name,RT[FT[i].table[j].recindex].str,FT[i].fname,FT[i].table[j].offset);
+						printf("%-20s%-30s%-20s%-5d\n",FT[i].table[j].name,RT[FT[i].table[j].recindex].str,FT[i].fname,FT[i].table[j].offset);
 					}
 					else if (FT[i].table[j].type == TK_INT)
 					{	
-						printf("%-30s%-30s%-30s%-5d\n",FT[i].table[j].name,"int",FT[i].fname,FT[i].table[j].offset);
+						printf("%-20s%-30s%-20s%-5d\n",FT[i].table[j].name,"int",FT[i].fname,FT[i].table[j].offset);
 					}
 					else if (FT[i].table[j].type == TK_REAL)
 					{	
-						printf("%-30s%-30s%-30s%-5d\n",FT[i].table[j].name,"real",FT[i].fname,FT[i].table[j].offset);
+						printf("%-20s%-30s%-20s%-5d\n",FT[i].table[j].name,"real",FT[i].fname,FT[i].table[j].offset);
 					}
 					//printf("%-30s %-30s %d %d\n",toStr(FT[i].table[j].type),FT[i].table[j].name,FT[i].table[j].offset,FT[i].table[j].ion);
 				}
@@ -211,15 +211,15 @@ void printGT(variable GT[],recTable RT[])
 			if(GT[i].type == TK_RECORD)
 					{
 						//RT[GT[i].table[j].recindex].str
-						printf("%-30s%-30s%-30s%-5s\n",GT[i].name,RT[GT[i].recindex].str,"global","-");
+						printf("%-20s%-30s%-20s%-5s\n",GT[i].name,RT[GT[i].recindex].str,"global","-");
 					}
 					else if (GT[i].type == TK_INT)
 					{	
-						printf("%-30s%-30s%-30s%-5s\n",GT[i].name,"int","global","-");
+						printf("%-20s%-30s%-20s%-5s\n",GT[i].name,"int","global","-");
 					}
 					else if (GT[i].type == TK_REAL)
 					{	
-						printf("%-30s%-30s%-30s%-5s\n",GT[i].name,"real","global","-");
+						printf("%-20s%-30s%-20s%-5s\n",GT[i].name,"real","global","-");
 					}
 		}
 	}
@@ -384,8 +384,9 @@ void createFunctionDeclareTable(variable GT[],funTable FT[],recTable RT[],parseT
 
 void createFunctionTable(variable GT[], funTable FT[], recTable RT[],parseTree A, char * fname, int *offset)
 {
-	if(checkMultiFun(FT, fname))
-		return;
+	if(A->t->s == TK_FUNID)
+		if(checkMultiFun(FT, fname))
+			return;
 	parseTree temp;
 	int i,j;
 	//int offset = 1;

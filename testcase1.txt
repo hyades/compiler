@@ -1,95 +1,45 @@
+_swpints
+input parameter list [int b2b, int b2c]   
+output parameter list[int c2b, int c2c]; 
+	c2b<---b2c;
+	c2c<---b2b;
+	return [c2b, c2c]; 
+end 
 
 
+_swprecs
+input parameter list [record #rec d5b, record #rec d2c]   
+output parameter list[record #rec d5d, record #rec d2]; 
+ type int : d3c2;
+ type int : d3c3;
+ type int : d3c4;
+ type int : d3c5;
+ d3c2<---d5b.len;
+ d3c3<---d2c.len;
 
+ %[d3c4,d3c5]<--- call _swpints with parameters [d3c2, d3c3];
+ d3c2<---d5b.height;
+ d3c3<---d2c.height;
+ %[d5d,d2]<--- call _swpints with parameters [d3c2, d3c3];
+ d5d.len <--- d3c4;
+ d2.len<---d3c5;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%Test Case 2
-%Following program computes the average marks obtained by students in three subjects
-
-%Following function reads marks of a student in all subjects and returns as a record variable
-% Note that the variable b7 is not used anywhere but it is the syntactic requirement to have 
-% atleast one input parameter
-
-_addRecords input parameter list[record #marks c3b5, record #marks c3b6, int b3b4]
-output parameter list [ record #marks b3c45, int b3b4];
-	type record #marks:d3 : global;
-	type int : b3b4;
-	type int : b3b3 : global;
-	b3c45 <--- c3b5 + c3b6;
-	return [b3c45];
+return [d2d, d2];
 end
 
-
-%The following program computes the average of marks of total d5cb34567  students
 _main 
-	record #marks
-		type real : maths; 
-		type real: physics; 
-		type real: chemistry;
-	endrecord;
-	% each field above represents the marks obtained in corresponding subject
+  record  #rec 
+    type int : len; 
+    type int : height; 
+  endrecord; 
+type record #rec : b2; 
+type record #rec : d5b: global; 
 
-	type record #marks : d4;
-	% The variable d4 stores the marks of one student
-
-	type int : b5;
-	type int : d5cb34567;
-	type real : b5;
-	type record #marks : b5c6;
-	%The identifier b5c6 stores the sum of marks
-
-	b5 <--- 1;
-	read(d5cb34567);
-	return;
+b2.len<---5;
+b2.height <---7;
+d5b.len <---10.56;
+d5b.height <---20;
+%[b2, c2]<--- call _swprecs with parameters [b2,d5b]; 
+write(b2);
+write(c2);
 end

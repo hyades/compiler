@@ -19,6 +19,8 @@ parser.c
 #include"parserDef.h"
 #include"parser.h"
 
+extern bool any_error;
+
 symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 {
     int hval,hashkey=200;
@@ -539,9 +541,15 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             if(*error)
             {
                 if(t->s==TK_ERROR)
+                {
                     printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                    any_error=1;
+                }
                 else if(t->s==TK_ERROR2)
+                {
                     printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
+                    any_error=1;
+                }
                 return NULL;
             }
             else if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID  || t->lexeme[strlen(t->lexeme)-1] =='!')
@@ -550,6 +558,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                     if(t->s==TK_FUNID)
                         q=30;
                     printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
+                    any_error=1;
                     return NULL;
                 }
             break;
@@ -837,5 +846,5 @@ void printAST(parseTree PT, FILE *outfile, int *totalAllocatedMemory)
         fprintf(outfile, "%-21s\n", toStr(PT->t->s));
     else
         fprintf(outfile, "%-21s\n", empty);
-    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printParseTree(PT->next[i],outfile);
+    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printAST(PT->next[i],outfile,totalAllocatedMemory);
 }

@@ -20,6 +20,8 @@ driver.c
 #include "parser.h"
 #include "symbolTable.h"
 
+bool any_error =0;
+
 int main(int argc, char *argv[])
 {
     FILE *g=fopen("grammar.txt", "r");
@@ -73,9 +75,10 @@ int main(int argc, char *argv[])
     funTable FT[100];
     recTable RT[100];
     tokenList list;
+    printf("LEVEL 4: AST, Symbol table, Type Checking, Semantic Rules modules work\n");
     do
     {
-        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4: Print Symbol Table\n 5: Do Type Checking\n\nSelect option->");
+        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4 : Print Symbol Table\n 5 : Verify Semantic correctness\n\nSelect option->");
         scanf("%d", &opt);
         switch(opt)
         {
@@ -114,8 +117,8 @@ int main(int argc, char *argv[])
                 if(!error)
                 {
                     printAST(A, ast, &totalAllocatedMemory);
-                    if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                    // if(A!=NULL)
+                    //     printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
 
                 initSymbolTable(GT,FT,RT);
@@ -137,20 +140,22 @@ int main(int argc, char *argv[])
                 if(!error)
                 {
                     printAST(A, ast, &totalAllocatedMemory);
-                    if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                //    if(A!=NULL)
+                //        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
                 initSymbolTable(GT,FT,RT);
 
                 createGlobalTable(GT,A);
                 createRecordTable(RT,A);
                 createSymbolTable( GT, FT, RT, A);
-                printGT(GT,RT);
+                //printGT(GT,RT);
                 //printRT(RT);
-                printFT(FT,RT);
+                //printFT(FT,RT);
                 char funname[50];
                 strcpy(funname," ");
                 typeParse(A,GT, FT,RT,funname);
+                if(any_error==0)
+                    printf("Code compiles successfully..........\n");
                 break;
             default:
                 printf("\nPlease select a valid option\n");
