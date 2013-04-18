@@ -22,4 +22,5 @@ void initkt(keywordTable kt);//initialize keyword table
 char* toStr ( symbol s );//return Symbol as string
 tokenList createTokenList(int fp, keywordTable kt);//create Token List
 void printTokenList(keywordTable kt, tokenList list);//print Token List
+
 #endif // LEXER_H_INCLUDED

@@ -23,8 +23,7 @@ typeExtractor.c
 #include"semantic.h"
 #include"typeExtractor.h"
 
-//arithmetic operator	int/real on both sides
-//assignment	int/real/record on both sides
+extern bool any_error;
 
 symbol getVarType(variable GT[], funTable FT[],char *varname,char *funname)//return type of variable varname
 {
@@ -63,7 +62,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	int i;
 	if(A->t->s == assignmentstmt)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 		{
 			//printf("singleorrecid %s %s\n", A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);	
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
@@ -71,15 +70,28 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		s2=typeCheck(A->next[2],GT,FT,RT,funname);
-		printf("%s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[2]->t->s),toStr(s2));
+		//printf("%s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[2]->t->s),toStr(s2));
 		if(s1==TK_ERROR || s2==TK_ERROR)
 		{
-			printf("unknown datatype\n");
-			return TK_ERROR;//unknown datatype
+			if(s1==TK_ERROR)
+			{
+				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
+				{
+					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+					any_error=1;
+				}
+				else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
+				{
+					printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+					any_error=1;
+				}
+				return TK_ERROR;
+			}
 		}
 		else if(s1!=s2)
 		{
-			printf("mismatched datatype\n");
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}
 		else
@@ -97,7 +109,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == iostmt)
 	{
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			return getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			return getVarType(GT,FT,A->next[1]->t->lexeme,funname);
@@ -131,28 +143,40 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	// }
 	else if(A->t->s == arithmeticexpression)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else
 			s1=typeCheck(A->next[0],GT,FT,RT,funname);
 
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			s2=getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			s2=getVarType(GT,FT,A->next[1]->t->lexeme,funname);
 		else
 			s2=typeCheck(A->next[1],GT,FT,RT,funname);
-		printf("ae %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
+		//printf("ae %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
 		if(s1==TK_ERROR || s2==TK_ERROR)
 		{
-			printf("unknown datatype\n");
-			return TK_ERROR;//unknown datatype
+			if(s1==TK_ERROR)
+			{
+				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
+				{
+					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+					any_error=1;
+				}
+				else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
+				s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
+					printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+					any_error=1;
+				return TK_ERROR;
+			}
 		}
 		else if(s1!=s2)
 		{
-			printf("mismatched datatype\n");
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}
 		else
@@ -162,28 +186,38 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == booleanexpression || A->t->s == TK_EQ || A->t->s == TK_LE || A->t->s == TK_LT || A->t->s == TK_GE || A->t->s == TK_GT || A->t->s == TK_AND || A->t->s == TK_OR)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else
 			s1=typeCheck(A->next[0],GT,FT,RT,funname);
 
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			s2=getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			s2=getVarType(GT,FT,A->next[1]->t->lexeme,funname);
 		else
 			s2=typeCheck(A->next[1],GT,FT,RT,funname);
-		printf("be %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
-		if(s1==TK_ERROR || s2==TK_ERROR)
+		//printf("be %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
+		if(s1==TK_ERROR)
 		{
-			printf("unknown datatype\n");
-			return TK_ERROR;//unknown datatype
+			if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
+			{
+				printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+				any_error=1;
+			}
+			else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
+			{
+				printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+				any_error=1;
+			}
+			return TK_ERROR;
 		}
 		else if(s1!=s2)
 		{
-			printf("mismatched datatype\n");
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}
 		else
@@ -202,6 +236,12 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	else if(A->t->s==TK_NOT)
 	{
 		return TK_INT;
+	}
+	else if(A->t->s==TK_FUNID && A->t->lexeme==funname)
+	{
+		printf("ERROR: Function %s can't be called recursively\n", funname);
+		any_error=1;
+		return TK_ERROR;
 	}
 	else
 	{
@@ -227,11 +267,7 @@ void typeParse(parseTree A,variable GT[], funTable FT[],recTable RT[],char *funn
 	{
 		s1=typeCheck(A,GT,FT,RT,funname);
 		if(s1==TK_ERROR)
-			printf("TK_ERROR\n");
-		else if(s1==TK_ERROR2)
-			printf("TK_ERROR2\n");
-		else
-			printf("%s\n", toStr(s1));
+			any_error=1;
 	 	return;
 	}
 	if(A->t->s==function || A->t->s==mainfunction)
@@ -239,25 +275,3 @@ void typeParse(parseTree A,variable GT[], funTable FT[],recTable RT[],char *funn
 	for(i=0;A->next[i]!=NULL && i<20;i++)
 		typeParse(A->next[i],GT,FT,RT,funname);
 }
-
-	// An identifier cannot be declared multiple times in the same scope.
-	// An identifier must be declared before its use.
-	// An identifier declared globally cannot be declared anywhere else in function definitions.
-	// The types and  the number of parameters returned by a function must be the same as that of the parameters used in invoking the function.
-	// The parameters being returned by a function must be assigned a value. If a parameter does not get a value assigned within the function 
-	// 	definition, it should be reported as an error.
-	// The function that does not return any value, must be invoked appropriately.
-	// Function input parameters passed while invoking it should be of the same type as those used in the function definition. 
-	// 	Number of input parameters must be same as that of those used in the function definition.
-	// An if statement must have the expression of boolean type.
-	// Function overloading is not allowed.
-	// The function cannot be invoked recursively.
-	// An identifier used beyond its scope must be viewed as undefined
-	// A record type definition is visible anywhere in the program.
-	// The right hand side expression of an assignment statement must be of the same type as that of the left hand side identifier.
-	// A function definition for a function being used (say F1) by another (say F2) must precede the definition of the function using it(i.e. F2).
-	// A  while statement  must redefine the variable that participates in the iterations. As an instance, consider the following example
-	//                 while(c3<=c5)
-	//                         write(c3);
-	//                        c3<---c3+2.34;
-	//                 end

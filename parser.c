@@ -19,6 +19,8 @@ parser.c
 #include"parserDef.h"
 #include"parser.h"
 
+extern bool any_error;
+
 symbol toSym(char *a, keywordTable nt)//return Symbol for given string
 {
     int hval,hashkey=200;
@@ -539,9 +541,15 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             if(*error)
             {
                 if(t->s==TK_ERROR)
+                {
                     printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                    any_error=1;
+                }
                 else if(t->s==TK_ERROR2)
+                {
                     printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
+                    any_error=1;
+                }
                 return NULL;
             }
             else if(strlen(t->lexeme) > 30 && t->s==TK_FUNID || strlen(t->lexeme) > 20 && t->s!=TK_FUNID  || t->lexeme[strlen(t->lexeme)-1] =='!')
@@ -550,6 +558,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                     if(t->s==TK_FUNID)
                         q=30;
                     printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", lineno,q);
+                    any_error=1;
                     return NULL;
                 }
             break;
@@ -666,26 +675,26 @@ void printParseTree(parseTree  PT, FILE *outfile)
         return;
     }
     if(PT->next[0]==NULL)
-        fprintf(outfile, "%-31s", PT->t->lexeme);
+        printf( "%-31s", PT->t->lexeme);
     else
-        fprintf(outfile, "%-31s", empty);
-    fprintf(outfile, "%-5d%-20s", PT->lineno, toStr(PT->t->s));
+        printf( "%-31s", empty);
+    printf( "%-5d%-20s", PT->lineno, toStr(PT->t->s));
     if(PT->t->s==TK_NUM || PT->t->s==TK_RNUM)
-        fprintf(outfile, "%-21s", PT->t->lexeme);
+        printf( "%-21s", PT->t->lexeme);
     else
-        fprintf(outfile, "%-21s", empty);
+        printf( "%-21s", empty);
     if(PT->parent!=NULL)
-        fprintf(outfile, "%-21s", toStr(PT->parent->t->s));
+        printf( "%-21s", toStr(PT->parent->t->s));
     else
-        fprintf(outfile, "%-21s", empty);
+        printf( "%-21s", empty);
     if(PT->next[0]==NULL)
-        fprintf(outfile, "%-5s", yes);
+        printf( "%-5s", yes);
     else
-        fprintf(outfile, "%-5s", no);
+        printf( "%-5s", no);
     if(!isTerminal(PT->t->s))
-        fprintf(outfile, "%-21s\n", toStr(PT->t->s));
+        printf( "%-21s\n", toStr(PT->t->s));
     else
-        fprintf(outfile, "%-21s\n", empty);
+        printf( "%-21s\n", empty);
     for(i=0;i<20 && PT->next[i]!=NULL;i++)   printParseTree(PT->next[i],outfile);
 }
 
@@ -817,25 +826,25 @@ void printAST(parseTree PT, FILE *outfile, int *totalAllocatedMemory)
     strcpy(no, "no");
     *totalAllocatedMemory+=sizeof(PT);
     if(PT->next[0]==NULL)
-        fprintf(outfile, "%-31s", PT->t->lexeme);
+        printf( "%-31s", PT->t->lexeme);
     else
-        fprintf(outfile, "%-31s", empty);
-    fprintf(outfile, "%-5d%-20s", PT->lineno, toStr(PT->t->s));
+        printf( "%-31s", empty);
+    printf( "%-5d%-20s", PT->lineno, toStr(PT->t->s));
     if(PT->t->s==TK_NUM || PT->t->s==TK_RNUM)
-        fprintf(outfile, "%-21s", PT->t->lexeme);
+        printf( "%-21s", PT->t->lexeme);
     else
-        fprintf(outfile, "%-21s", empty);
+        printf( "%-21s", empty);
     if(PT->parent!=NULL)
-        fprintf(outfile, "%-21s", toStr(PT->parent->t->s));
+        printf( "%-21s", toStr(PT->parent->t->s));
     else
-        fprintf(outfile, "%-21s", empty);
+        printf( "%-21s", empty);
     if(PT->next[0]==NULL)
-        fprintf(outfile, "%-5s", yes);
+        printf( "%-5s", yes);
     else
-        fprintf(outfile, "%-5s", no);
+        printf( "%-5s", no);
     if(!isTerminal(PT->t->s))
-        fprintf(outfile, "%-21s\n", toStr(PT->t->s));
+        printf( "%-21s\n", toStr(PT->t->s));
     else
-        fprintf(outfile, "%-21s\n", empty);
-    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printParseTree(PT->next[i],outfile);
+        printf( "%-21s\n", empty);
+    for(i=0;i<20 && PT->next[i]!=NULL;i++)   printAST(PT->next[i],outfile,totalAllocatedMemory);
 }

@@ -19,13 +19,16 @@ driver.c
 #include "parserDef.h"
 #include "parser.h"
 #include "symbolTable.h"
+#include "codegen.h"
+
+bool any_error =0;
 
 int main(int argc, char *argv[])
 {
     FILE *g=fopen("grammar.txt", "r");
     FILE *p=fopen("parsetable.csv", "w");
-    FILE *tree=fopen("tree.txt", "w");
-    FILE *ast=fopen("ast.txt", "w");
+    FILE *tree;
+ //   FILE *ast=fopen("ast.txt", "w");
     if(g==NULL)
     {
         printf("Grammar file not found\n");
@@ -36,13 +39,14 @@ int main(int argc, char *argv[])
         printf("parsetable file can not be opened\n");
         return 0;
     }    
-    if(tree==NULL)
-    {
-        printf("tree file can not be opened\n");
-        return 0;
-    }
+    // if(tree==NULL)
+    // {
+    //     printf("tree file can not be opened\n");
+    //     return 0;
+    // }
     int opt,i,fp,Gno, totalAllocatedMemory=0;
     fp = open(argv[1],O_RDONLY);
+
     if(fp==-1)
     {
         printf("input file not found\n");
@@ -73,9 +77,10 @@ int main(int argc, char *argv[])
     funTable FT[100];
     recTable RT[100];
     tokenList list;
+    printf("LEVEL 4: AST, Symbol table, Type Checking, Semantic Rules modules work\n");
     do
     {
-        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4: Print Symbol Table\n 5: Do Type Checking\n\nSelect option->");
+        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4 : Print Symbol Table\n 5 : Verify Semantic correctness\n 6 : Generate 8086 Code\n\n\nSelect option->");
         scanf("%d", &opt);
         switch(opt)
         {
@@ -88,8 +93,8 @@ int main(int argc, char *argv[])
                 if(!error)
                 {
                     printParseTree(P, tree);
-                    if(P!=NULL)
-                        printf("\nParse Tree generated and printed in file tree.txt\n");
+                    //if(P!=NULL)
+                    //    printf("\nParse Tree generated and printed in file tree.txt\n");
                 }
                 break;
             case 3:
@@ -100,9 +105,9 @@ int main(int argc, char *argv[])
                 A = createAbstractSyntaxTree(P);
                 if(!error)
                 {
-                    printAST(A, ast, &totalAllocatedMemory);
-                    if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                    printAST(A, tree, &totalAllocatedMemory);
+                    //if(A!=NULL)
+                        //printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
                 break;
             case 4:
@@ -113,9 +118,9 @@ int main(int argc, char *argv[])
                 A = createAbstractSyntaxTree(P);
                 if(!error)
                 {
-                    printAST(A, ast, &totalAllocatedMemory);
-                    if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                    //printAST(A, ast, &totalAllocatedMemory);
+                    // if(A!=NULL)
+                    //     printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
 
                 initSymbolTable(GT,FT,RT);
@@ -136,29 +141,73 @@ int main(int argc, char *argv[])
                 A = createAbstractSyntaxTree(P);
                 if(!error)
                 {
-                    printAST(A, ast, &totalAllocatedMemory);
-                    if(A!=NULL)
-                        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                    //printAST(A, ast, &totalAllocatedMemory);
+                //    if(A!=NULL)
+                //        printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
                 }
                 initSymbolTable(GT,FT,RT);
 
                 createGlobalTable(GT,A);
                 createRecordTable(RT,A);
                 createSymbolTable( GT, FT, RT, A);
-                printGT(GT,RT);
+                //printGT(GT,RT);
                 //printRT(RT);
-                printFT(FT,RT);
+                //printFT(FT,RT);
                 char funname[50];
                 strcpy(funname," ");
                 typeParse(A,GT, FT,RT,funname);
+                if(any_error==0)
+                    printf("Code compiles successfully..........\n");
+                break;
+            case 6:
+                P = parseInputSourceCode(fp, T, kt, G, &error, S);
+                if(error)
+                    printf("error\n");
+                
+                A = createAbstractSyntaxTree(P);
+                if(!error)
+                {
+                    //printAST(A, ast, &totalAllocatedMemory);
+                    //if(A!=NULL)
+                    //    printf("\nAST generated and printed in file ast.txt\nSize of AST is %d\n",totalAllocatedMemory);
+                }
+                initSymbolTable(GT,FT,RT);
+
+                createGlobalTable(GT,A);
+                createRecordTable(RT,A);
+                createSymbolTable( GT, FT, RT, A);
+                //printGT(GT,RT);
+
+                FILE *fp = fopen(argv[2],"w");
+                fprintf(fp, ".model small\n.stack\n" );
+                fprintf(fp, ".data\n" );
+                int hval = hash("_main",100);
+                //for(i=0;i<100;i++)if(GT[i].filled)printf("AHHH %d\n",i);
+                for(i=0;i<100;i++)
+                {
+                    if(GT[i].filled == 1)
+                        fprintf(fp, "%s dw 0\n", GT[i].name);
+                    if(FT[hval].table[i].filled == 1)
+                        fprintf(fp, "%s dw 0\n", FT[hval].table[i].name);
+
+                }
+                fprintf(fp, ".code\n");
+                fprintf(fp,"%s" ,longtext);
+                fprintf(fp, "\n\n\nstart proc\n\n\n");
+                generateCode(GT,FT,RT,A,fp);
+                //fprintf(fp, "true:\nmov AX,0\n" );
+                //fprintf(fp, "false:\nmov AX,1\n" );
+                fprintf(fp, "ret\n\n\nstart endp\nend start\n" );
+                fclose(fp);
+                printf("Generated 8086 code in %s\n",argv[2]);
                 break;
             default:
                 printf("\nPlease select a valid option\n");
         }
-    }while(opt<1 || opt>5);
+    }while(opt<1 || opt>6);
     fclose(g);
     fclose(p);
-    fclose(tree);
-    fclose(ast);
+    // fclose(tree);
+    // fclose(ast);
     return 0;
 }
