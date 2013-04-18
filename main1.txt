@@ -7,7 +7,7 @@ endrecord;
 type record #marks : d4;
 type real : d5 : global;
 type int : d3;
-d5 <--- 1;
+d5 <--- 1.50;
 d4.maths <--- 1.50 + 2.50;
 if((~d5 == 0.00) &&& (d3 > 2)) 
 	then

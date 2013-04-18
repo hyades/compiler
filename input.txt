@@ -1,9 +1,0 @@
-%comment here
-
-%type int aaaaaaaaaaaaaaaaaaaaaaaaaa
-_sdsdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-_main
-return    ;
-%comment here
-%mayank
-end

@@ -64,7 +64,7 @@ int checkMultigt(variable GT[],int recindex,char* name)
 	hval = hash(name,hkey);
 	if(GT[hval].filled)
 	{
-		printf("ERROR: Variable %s has been already globally declared\n",name);
+		printf("ERROR: Variable %s being a global variable, cannot be declared more than once\n", name);
 		any_error=1;
 	}
 	return GT[hval].filled;

@@ -32,6 +32,8 @@ void insertft(variable GT[],funTable FT[],char *fname, symbol type, int recindex
 		any_error=1;
 		return;
 	}
+	if(checkMultigtN(GT,recindex,name))
+	 	return;
 	int hval,hval2,hkey=100;
 	struct paralist *curr;
 

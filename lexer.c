@@ -798,9 +798,9 @@ int getStream(int fp, buffer B, buffersize k)//reads k characters from source fi
 
 char getNextChar(int fp, int *back)//gets next character from source file at position x
 {
-    static int x=0,k=1000,y;
-    static char cb1[1000];
-    static char cb2[1000];
+    static int x=0,k=2000,y;
+    static char cb1[2000];
+    static char cb2[2000];
     buffer b1=cb1;
     buffer b2=cb2;
     int flag=0;

@@ -106,17 +106,33 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	else if(A->t->s == conditionalstmt)
 	{
 		return typeCheck(A->next[1],GT,FT,RT,funname);
+
 	}
 	else if(A->t->s == iostmt)
 	{
 		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
-			return getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
+			s1= getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
-			return getVarType(GT,FT,A->next[1]->t->lexeme,funname);
+			s1= getVarType(GT,FT,A->next[1]->t->lexeme,funname);
 		else
 		{
-			return typeCheck(A->next[1],GT,FT,RT,funname);
+			s2= typeCheck(A->next[1],GT,FT,RT,funname);
+			return s2;
 		}
+		if(s1==TK_ERROR)
+		{
+			if((A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all))
+			{
+				printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[1]->next[1]->t->lexeme,A->next[1]->next[0]->t->lexeme);
+				any_error=1;
+			}
+			else if(A->next[1]->t->s==TK_ID)
+			{
+				printf("ERROR: Variable %s is not declared in this scope\n",A->next[1]->t->lexeme);
+				any_error=1;
+			}
+		}
+		return s1;
 	}
 	// else if(A->t->s == funcallstmt)
 	// {
