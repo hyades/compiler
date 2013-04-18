@@ -62,7 +62,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	int i;
 	if(A->t->s == assignmentstmt)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 		{
 			//printf("singleorrecid %s %s\n", A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme);	
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
@@ -73,9 +73,9 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		//printf("%s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[2]->t->s),toStr(s2));
 		if(s1==TK_ERROR || s2==TK_ERROR)
 		{
-			if(s1==TK_ERROR || s2==TK_ERROR)
+			if(s1==TK_ERROR)
 			{
-				if(A->next[0]->t->s==singleorrecid && s1==TK_ERROR)
+				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
 				{
 					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
 					any_error=1;
@@ -109,7 +109,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == iostmt)
 	{
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			return getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			return getVarType(GT,FT,A->next[1]->t->lexeme,funname);
@@ -143,14 +143,14 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	// }
 	else if(A->t->s == arithmeticexpression)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else
 			s1=typeCheck(A->next[0],GT,FT,RT,funname);
 
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			s2=getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			s2=getVarType(GT,FT,A->next[1]->t->lexeme,funname);
@@ -159,9 +159,9 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		//printf("ae %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
 		if(s1==TK_ERROR || s2==TK_ERROR)
 		{
-			if(s1==TK_ERROR || s2==TK_ERROR)
+			if(s1==TK_ERROR)
 			{
-				if(A->next[0]->t->s==singleorrecid && s1==TK_ERROR)
+				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
 				{
 					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
 					any_error=1;
@@ -186,23 +186,23 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 	}
 	else if(A->t->s == booleanexpression || A->t->s == TK_EQ || A->t->s == TK_LE || A->t->s == TK_LT || A->t->s == TK_GE || A->t->s == TK_GT || A->t->s == TK_AND || A->t->s == TK_OR)
 	{
-		if(A->next[0]->t->s==singleorrecid)
+		if(A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all)
 			s1=getRecType(RT,GT,FT,A->next[0]->next[0]->t->lexeme,A->next[0]->next[1]->t->lexeme,funname);
 		else if(A->next[0]->t->s==TK_ID)
 			s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
 		else
 			s1=typeCheck(A->next[0],GT,FT,RT,funname);
 
-		if(A->next[1]->t->s==singleorrecid)
+		if(A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all)
 			s2=getRecType(RT,GT,FT,A->next[1]->next[0]->t->lexeme,A->next[1]->next[1]->t->lexeme,funname);
 		else if(A->next[1]->t->s==TK_ID)
 			s2=getVarType(GT,FT,A->next[1]->t->lexeme,funname);
 		else
 			s2=typeCheck(A->next[1],GT,FT,RT,funname);
 		//printf("be %s %s %s %s\n",toStr(A->next[0]->t->s),toStr(s1),toStr(A->next[1]->t->s),toStr(s2));
-		if(s1==TK_ERROR || s2==TK_ERROR)
+		if(s1==TK_ERROR)
 		{
-			if(A->next[0]->t->s==singleorrecid && s1==TK_ERROR)
+			if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
 			{
 				printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
 				any_error=1;

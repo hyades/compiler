@@ -1194,17 +1194,17 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
             else if((strlen(list->t->lexeme) > 30 && list->t->s==TK_FUNID) || (strlen(list->t->lexeme) > 20 && list->t->s!=TK_FUNID) || list->t->lexeme[strlen(list->t->lexeme)-1] =='!')
             {
                 q=20;
-                printf("sdgdg\n");
+                //printf("sdgdg\n");
                 if(list->t->s==TK_FUNID)
                     q=30;
                 printf("ERROR_1 : Identifier at line %d is longer than the prescribed length of %d characters\n", list->linenumber,q);
                 any_error=1;
                 break;
             }
-            else
-                printf("%s\n",list->t->lexeme);
+            //else
+            //    printf("%s\n",list->t->lexeme);
 
-        printf("%s %s %d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
+        printf("%-20s%-30s%-10d\n",toStr(list->t->s), list->t->lexeme, list->linenumber);
         list=list->next;
     }
 }

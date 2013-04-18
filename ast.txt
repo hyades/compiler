@@ -1,0 +1,56 @@
+LEVEL 4: AST, Symbol table, Type Checking, Semantic Rules modules work
+
+ 1 : Print the token list.
+ 2 : Verify the syntactic correctness
+ 3 : Print abstract syntax tree
+ 4 : Print Symbol Table
+ 5 : Verify Semantic correctness
+
+Select option->----                           2    mainfunction        ----                 ----                 no   mainfunction         
+_main                          2    TK_MAIN             ----                 mainfunction         yes  ----                 
+----                           2    stmts               ----                 mainfunction         no   stmts                
+----                           3    declarations        ----                 stmts                no   declarations         
+----                           3    declaration         ----                 declarations         no   declaration          
+type                           3    TK_TYPE             ----                 declaration          yes  ----                 
+int                            3    TK_INT              ----                 declaration          yes  ----                 
+b3                             3    TK_ID               ----                 declaration          yes  ----                 
+----                           4    declaration         ----                 declarations         no   declaration          
+type                           4    TK_TYPE             ----                 declaration          yes  ----                 
+real                           4    TK_REAL             ----                 declaration          yes  ----                 
+b4                             4    TK_ID               ----                 declaration          yes  ----                 
+----                           3    otherstmts          ----                 stmts                no   otherstmts           
+----                           5    assignmentstmt      ----                 otherstmts           no   assignmentstmt       
+b4                             5    TK_ID               ----                 assignmentstmt       yes  ----                 
+<---                           5    TK_ASSIGNOP         ----                 assignmentstmt       yes  ----                 
+----                           5    arithmeticexpression----                 assignmentstmt       no   arithmeticexpression 
+b3                             5    TK_ID               ----                 arithmeticexpression yes  ----                 
+----                           5    TK_PLUS             ----                 arithmeticexpression no   ----                 
+----                           5    all                 ----                 TK_PLUS              no   all                  
+b3b3                           5    TK_ID               ----                 all                  yes  ----                 
+marks                          5    TK_FIELDID          ----                 all                  yes  ----                 
+----                           5    otherstmts          ----                 otherstmts           no   otherstmts           
+----                           7    iostmt              ----                 otherstmts           no   iostmt               
+read                           7    TK_READ             ----                 iostmt               yes  ----                 
+d5cb34567                      7    TK_ID               ----                 iostmt               yes  ----                 
+----                           8    conditionalstmt     ----                 otherstmts           no   conditionalstmt      
+if                             8    TK_IF               ----                 conditionalstmt      yes  ----                 
+----                           8    TK_GE               ----                 conditionalstmt      no   ----                 
+b4                             8    TK_ID               ----                 TK_GE                yes  ----                 
+12                             8    TK_NUM              12                   TK_GE                yes  ----                 
+then                           8    TK_THEN             ----                 conditionalstmt      yes  ----                 
+----                           9    assignmentstmt      ----                 conditionalstmt      no   assignmentstmt       
+b4                             9    TK_ID               ----                 assignmentstmt       yes  ----                 
+<---                           9    TK_ASSIGNOP         ----                 assignmentstmt       yes  ----                 
+123                            9    TK_NUM              123                  assignmentstmt       yes  ----                 
+----                           8    elsepart            ----                 conditionalstmt      no   elsepart             
+else                           10   TK_ELSE             ----                 elsepart             yes  ----                 
+----                           11   assignmentstmt      ----                 elsepart             no   assignmentstmt       
+b4                             11   TK_ID               ----                 assignmentstmt       yes  ----                 
+<---                           11   TK_ASSIGNOP         ----                 assignmentstmt       yes  ----                 
+212                            11   TK_NUM              212                  assignmentstmt       yes  ----                 
+endif                          12   TK_ENDIF            ----                 elsepart             yes  ----                 
+return                         16   TK_RETURN           ----                 stmts                yes  ----                 
+end                            17   TK_END              ----                 mainfunction         yes  ----                 
+
+AST generated and printed in file ast.txt
+Size of AST is 360
