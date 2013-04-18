@@ -1181,7 +1181,7 @@ void printTokenList(keywordTable kt, tokenList list)//print Token List
             //printf("LEXEME:%s\n",list->t->lexeme);
             if(list->t->s==TK_ERROR)
             {
-                printf("ERROR_3: Unknown pattern %s\n", list->t->lexeme);
+                printf("ERROR_3: Unknown pattern %s at line %d\n", list->t->lexeme, list->linenumber);
                 any_error=1;
                 break;
             }

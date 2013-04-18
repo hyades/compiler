@@ -542,7 +542,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
             {
                 if(t->s==TK_ERROR)
                 {
-                    printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                    printf("ERROR_3: Unknown pattern %s\n at line %d\n", t->lexeme, lineno);
                     any_error=1;
                 }
                 else if(t->s==TK_ERROR2)
@@ -584,7 +584,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
                         if(*error)
                         {
                             if(t->s==TK_ERROR)
-                                printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+                                printf("ERROR_3: Unknown pattern %s at line %d\n", t->lexeme, lineno);
                             else if(t->s==TK_ERROR2)
                                 printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
                             return NULL;
@@ -651,7 +651,7 @@ parseTree parseInputSourceCode(int fp,Table M[][60], keywordTable kt, grammar g[
     if(!t && *error)
     {
         if(t->s==TK_ERROR)
-            printf("ERROR_3: Unknown pattern %s\n", t->lexeme);
+            printf("ERROR_3: Unknown pattern %sat line %d\n", t->lexeme, lineno);
         else if(t->s==TK_ERROR2)
             printf("ERROR_2: Unknown Symbol %s at line %d\n", t->lexeme, lineno);
         return NULL;
