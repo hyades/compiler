@@ -1,0 +1,22 @@
+
+%The following program performs the following operations on two numbers(unsigned):
+% PLUS, MINUS, MULTIPLY
+% Inputs should be made after pressing Enter key. 
+% NOTE  OUTPUT WILL BE WITHOUT SPACES
+_main
+    type int : b3;
+    type int : b4;
+	type int : b3b3;
+
+	read(b3);
+    read(b4);
+	b3b3 <--- b3 + b4;
+    write(b3b3);
+    b3b3 <--- b3 - b4;
+    write(b3b3);
+    b3b3 <--- b3 * b4;
+    write(b3b3);
+    
+    
+	return;
+end

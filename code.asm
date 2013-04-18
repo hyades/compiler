@@ -63,28 +63,22 @@ call scanf
 mov b3, AX
 call scanf
 mov b4, AX
+label_11:
 mov AX,b3
 push AX
-mov AX,b4
+mov AX,0
 pop DX
 cmp AX,DX
-jle true_32_9383
-jmp false_32_9383
-true_32_9383:
-mov AX, 0
-jmp resume_32_9383
-false_32_9383:
+jle true_11_9383
+jmp false_11_9383
+true_11_9383:
 mov AX, 1
-resume32_9383:
+jmp resume_11_9383
+false_11_9383:
+mov AX, 0
+resume_11_9383:
 cmp AX,1
-jne else32
-jmp then32
-then32:
-mov AX,b3
-call printf
-else32:
-mov AX,b4
-call printf
+je label_11
 ret
 
 

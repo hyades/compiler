@@ -3,15 +3,16 @@
 _main
     type int : b3;
     type real : b4;
-    
+	
 
-    read(b3);
+	read(b3);
     read(b4);
+	
 
-    while(b3 > 0)
-    write(b3);
-    b3<---b3-1;
-    endwhile
-
-    return;
+    if(b3 > b4)
+    then write(b3);
+    else
+        write(b4);
+    endif
+	return;
 end

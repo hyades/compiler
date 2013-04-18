@@ -59,6 +59,7 @@ void evaluate(parseTree A, FILE *fp)
 			evaluate(A->next[0],fp);
 			fprintf(fp, "push AX\n");
 			fprintf(fp, "pop DX\n");
+			fprintf(fp, "pop AX\n");
 			fprintf(fp, "idiv DX\n");
 		}
 		//calculate();
@@ -110,8 +111,8 @@ void ifelse(variable GT[], funTable FT[], recTable RT[], parseTree A, FILE * fp)
 		int r =  rand()%10000;
 		fprintf(fp, "jle true_%d_%d\n",A->lineno,r);
 		fprintf(fp, "jmp false_%d_%d\n",A->lineno,r);
-		fprintf(fp, "true_%d_%d:\nmov AX, 0\njmp resume_%d_%d\n",A->lineno,r,A->lineno,r );
-		fprintf(fp, "false_%d_%d:\nmov AX, 1\nresume%d_%d:\n",A->lineno,r,A->lineno,r );
+		fprintf(fp, "true_%d_%d:\nmov AX, 1\njmp resume_%d_%d\n",A->lineno,r,A->lineno,r );
+		fprintf(fp, "false_%d_%d:\nmov AX, 0\nresume_%d_%d:\n",A->lineno,r,A->lineno,r );
 
 
 	}
@@ -234,16 +235,19 @@ void generateCode(variable GT[], funTable FT[], recTable RT[],parseTree A, FILE 
 
 	else if(A->t->s == conditionalstmt)
 	{
+		int r = rand()%100;
 		ifelse(GT,FT,RT,A->next[1],fp);
 		fprintf(fp, "cmp AX,1\n");
-		fprintf(fp, "jne else%d\n", A->lineno);
+		fprintf(fp, "jne else_%d_%d\n", A->lineno,r);
 
-		fprintf(fp, "jmp then%d\n", A->lineno);
-		fprintf(fp, "then%d:\n",A->lineno );
+		fprintf(fp, "jmp then_%d_%d\n", A->lineno,r);
+		fprintf(fp, "then_%d_%d:\n",A->lineno,r );
 		//fprintf(fp,"%s\n",toStr(A->next[3]->t->s));
 		generateCode(GT,FT,RT,A->next[3],fp);
-		fprintf(fp, "else%d:\n", A->lineno);
+		fprintf(fp, "jmp cont_%d_%d\n",A->lineno,r );
+		fprintf(fp, "else_%d_%d:\n", A->lineno,r);
 		generateCode(GT,FT,RT,A->next[4],fp);
+		fprintf(fp, "cont_%d_%d:\n",A->lineno,r );
 
 	}
 	else if(A->t->s == iterativestmt)
