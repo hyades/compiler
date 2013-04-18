@@ -51,6 +51,11 @@ symbol getRecType(recTable RT[],variable GT[], funTable FT[],char *recname, char
 	int rval=hash(recname, hashkey);
 	int rindex=FT[hval].table[rval].recindex;
 	int vval=hash(varname, hashkey);
+	if(GT[rval].filled && !strcmp(GT[rval].name,recname))
+	{
+		rindex=GT[rval].recindex;
+		return RT[rindex].table[vval].type;	
+	}
 	if(RT[rindex].table[vval].filled && !strcmp(RT[rindex].table[vval].name,varname))
 		return RT[rindex].table[vval].type;
 	return TK_ERROR;
@@ -75,14 +80,14 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		{
 			if(s1==TK_ERROR)
 			{
-				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
+				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all))
 				{
-					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+					printf("ERROR: Variable %s of Record %s is not declared in this scope at line %d\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme,A->next[0]->lineno);
 					any_error=1;
 				}
 				else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
 				{
-					printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+					printf("ERROR: Variable %s is not declared in this scope at line %d\n",A->next[0]->t->lexeme,A->next[0]->lineno);
 					any_error=1;
 				}
 				return TK_ERROR;
@@ -90,7 +95,7 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		}
 		else if(s1!=s2)
 		{
-			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s at line %d\n",toStr(s1),toStr(s2),A->lineno);
 			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}
@@ -123,12 +128,12 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		{
 			if((A->next[1]->t->s==singleorrecid || A->next[1]->t->s==all))
 			{
-				printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[1]->next[1]->t->lexeme,A->next[1]->next[0]->t->lexeme);
+				printf("ERROR: Variable %s of Record %s is not declared in this scope at line %d\n",A->next[1]->next[1]->t->lexeme,A->next[1]->next[0]->t->lexeme,A->next[1]->lineno);
 				any_error=1;
 			}
 			else if(A->next[1]->t->s==TK_ID)
 			{
-				printf("ERROR: Variable %s is not declared in this scope\n",A->next[1]->t->lexeme);
+				printf("ERROR: Variable %s is not declared in this scope at line %d\n",A->next[1]->t->lexeme,A->next[1]->lineno);
 				any_error=1;
 			}
 		}
@@ -179,19 +184,19 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 			{
 				if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
 				{
-					printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+					printf("ERROR: Variable %s of Record %s is not declared in this scope at line %d\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme,A->next[0]->lineno);
 					any_error=1;
 				}
 				else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
 				s1=getVarType(GT,FT,A->next[0]->t->lexeme,funname);
-					printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+					printf("ERROR: Variable %s is not declared in this scope at line %d\n",A->next[0]->t->lexeme,A->next[0]->lineno);
 					any_error=1;
 				return TK_ERROR;
 			}
 		}
 		else if(s1!=s2)
 		{
-			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s at line %d\n",toStr(s1),toStr(s2),A->lineno);
 			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}
@@ -220,19 +225,19 @@ symbol typeCheck(parseTree A,variable GT[], funTable FT[],recTable RT[],char *fu
 		{
 			if((A->next[0]->t->s==singleorrecid || A->next[0]->t->s==all) && s1==TK_ERROR)
 			{
-				printf("ERROR: Variable %s of Record %s is not declared in this scope\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme);
+				printf("ERROR: Variable %s of Record %s is not declared in this scope at line %d\n",A->next[0]->next[1]->t->lexeme,A->next[0]->next[0]->t->lexeme,A->next[0]->lineno);
 				any_error=1;
 			}
 			else if(A->next[0]->t->s==TK_ID && s1==TK_ERROR)
 			{
-				printf("ERROR: Variable %s is not declared in this scope\n",A->next[0]->t->lexeme);
+				printf("ERROR: Variable %s is not declared in this scope at line\n",A->next[0]->t->lexeme,A->next[0]->lineno);
 				any_error=1;
 			}
 			return TK_ERROR;
 		}
 		else if(s1!=s2)
 		{
-			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s\n",toStr(s1),toStr(s2));
+			printf("ERROR: Mismatched Datatype. Datatype %s does not match %s at line %d\n",toStr(s1),toStr(s2),A->lineno);
 			any_error=1;
 			return TK_ERROR2;//mismatched datatype
 		}

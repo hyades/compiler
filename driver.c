@@ -19,6 +19,7 @@ driver.c
 #include "parserDef.h"
 #include "parser.h"
 #include "symbolTable.h"
+#include "codegen.h"
 
 bool any_error =0;
 
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
     printf("\nLEVEL 4: AST, Symbol table, Type Checking, Semantic Rules modules work\n");
     do
     {
-        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4 : Print Symbol Table\n 5 : Verify Semantic correctness\n 6 : Produce Assembly Code\n\nSelect option->");
+        printf("\n 1 : Print the token list.\n 2 : Verify the syntactic correctness\n 3 : Print abstract syntax tree\n 4 : Print Symbol Table\n 5 : Verify Semantic correctness\n 6 : Generate Assembly Code\n\nSelect option->");
         scanf("%d", &opt);
         switch(opt)
         {
@@ -155,7 +156,6 @@ int main(int argc, char *argv[])
                 fprintf(fp, ".model small\n.stack\n" );
                 fprintf(fp, ".data\n" );
                 int hval = hash("_main",100);
-                for(i=0;i<100;i++)if(GT[i].filled)printf("AHHH %d\n",i);
                 for(i=0;i<100;i++)
                 {
                     if(GT[i].filled == 1)
@@ -165,12 +165,14 @@ int main(int argc, char *argv[])
 
                 }
                 fprintf(fp, ".code\n");
+                fprintf(fp,"%s" ,longtext);
+                fprintf(fp, "\n\n\nstart proc\n\n\n");
                 generateCode(GT,FT,RT,A,fp);
-                fprintf(fp, "true:\nmov AX,0\n" );
-                fprintf(fp, "false:\nmov AX,1\n" );
-                fprintf(fp, "ret\nend\n" );
+                //fprintf(fp, "true:\nmov AX,0\n" );
+                //fprintf(fp, "false:\nmov AX,1\n" );
+                fprintf(fp, "ret\n\n\nstart endp\nend start\n" );
                 fclose(fp);
-                printf("Code generated and printed in file %s\n", argv[2]);
+                printf("Generated Assembly code in %s\n",argv[2]);
                 break;
             default:
                 printf("\nPlease select a valid option\n");

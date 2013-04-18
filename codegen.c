@@ -1,4 +1,13 @@
-
+/*
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+BATCH 26
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+AAYUSH AHUJA 2010A7PS023P
+MAYANK GUPTA 2010A7PS022P
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+codegen.c
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+*/
 
 #include<stdio.h>
 #include<ctype.h>
@@ -30,29 +39,38 @@ void evaluate(parseTree A, FILE *fp)
 		fprintf(fp,"push AX\n");
 		//push();
 		evaluate(A->next[1],fp);
-		fprintf(fp,"pop DX\n");
-		if(A->next[1]->t->s == TK_PLUS)
-			fprintf(fp,"add AX,DX\n");
-		if(A->next[1]->t->s == TK_MINUS)
-			fprintf(fp,"sub AX,DX\n");
-		if(A->next[1]->t->s == TK_MUL)
-			fprintf(fp,"imul DX\n");
-		if(A->next[1]->t->s == TK_DIV)
-			fprintf(fp,"idiv DX\n");
+		//fprintf(fp,"pop DX\n");
+		// if(A->next[1]->t->s == TK_PLUS)
+		// 	fprintf(fp,"add AX,DX\n");
+		// if(A->next[1]->t->s == TK_MINUS)
+		// 	fprintf(fp,"sub AX,DX\n");
+		// if(A->next[1]->t->s == TK_MUL)
+		// 	fprintf(fp,"imul DX\n");
+		// if(A->next[1]->t->s == TK_DIV)
+		// 	fprintf(fp,"idiv DX\n");
 		//calculate();
 	}
 	else if(c1==1)
 	{
-		evaluate(A->next[0],fp);
-		fprintf( fp,"pop DX\n");
-		if(A->t->s == TK_PLUS)
-			fprintf(fp,"add AX,DX\n");
-		if(A->t->s == TK_MINUS)
-			fprintf(fp,"sub AX,DX\n");
-		if(A->t->s == TK_MUL)
-			fprintf(fp,"imul DX\n");
-		if(A->t->s == TK_DIV)
-			fprintf(fp,"idiv DX\n");
+		if(A->t->s != TK_DIV)
+		{
+			evaluate(A->next[0],fp);
+			fprintf( fp,"pop DX\n");
+			if(A->t->s == TK_PLUS)
+				fprintf(fp,"add AX,DX\n");
+			if(A->t->s == TK_MINUS)
+				{fprintf(fp,"sub DX,AX\n");fprintf(fp, "mov AX,DX\n");}
+			if(A->t->s == TK_MUL)
+				fprintf(fp,"imul DX\n");
+		}
+		else
+		{
+			evaluate(A->next[0],fp);
+			fprintf(fp, "push AX\n");
+			fprintf(fp, "pop DX\n");
+			fprintf(fp, "pop AX\n");
+			fprintf(fp, "idiv DX\n");
+		}
 		//calculate();
 	}
 	else if(c1==0)
@@ -75,6 +93,7 @@ void evaluate(parseTree A, FILE *fp)
 
 void ifelse(variable GT[], funTable FT[], recTable RT[], parseTree A, FILE * fp)
 {
+	//set value of AX=1 for true and AX=0 for false
 	if(A->t->s==TK_AND )
 	{
 		ifelse(GT,FT,RT,A->next[0],fp);
@@ -101,8 +120,8 @@ void ifelse(variable GT[], funTable FT[], recTable RT[], parseTree A, FILE * fp)
 		int r =  rand()%10000;
 		fprintf(fp, "jle true_%d_%d\n",A->lineno,r);
 		fprintf(fp, "jmp false_%d_%d\n",A->lineno,r);
-		fprintf(fp, "true_%d_%d:\nmov AX, 0\n",A->lineno,r );
-		fprintf(fp, "false_%d_%d:\nmov AX, 1\n",A->lineno,r );
+		fprintf(fp, "true_%d_%d:\nmov AX, 1\njmp resume_%d_%d\n",A->lineno,r,A->lineno,r );
+		fprintf(fp, "false_%d_%d:\nmov AX, 0\nresume_%d_%d:\n",A->lineno,r,A->lineno,r );
 
 
 	}
@@ -178,8 +197,22 @@ void generateCode(variable GT[], funTable FT[], recTable RT[],parseTree A, FILE 
 	int j;
 	char idname[30]="",fieldname[30]="",name[60]="";
 	int f=0;
+
+	if(A->t->s ==TK_READ)
+	{
+		temp = A->parent;
+		fprintf(fp, "call scanf\n");
+		fprintf(fp, "mov %s, AX\n",temp->next[1]->t->lexeme );
+	}
+	else if(A->t->s == TK_WRITE)
+	{
+		temp = A->parent;
+		
+		fprintf(fp, "mov AX,%s\n",temp->next[1]->t->lexeme );
+		fprintf(fp, "call printf\n");
+	}
 	
-	if(A->t->s == assignmentstmt)
+	else if(A->t->s == assignmentstmt)
 	{
 		if(A->next[0]->t->s == TK_ID)
 		{
@@ -196,34 +229,44 @@ void generateCode(variable GT[], funTable FT[], recTable RT[],parseTree A, FILE 
 			strcat(name,fieldname);
 
 		}
-		
 		temp = A->next[2];
+		// while(1)
+		// {	
+		// 	if(temp->t->s == arithmeticexpression || temp->t->s == term)
+		// 	temp = temp->next[0];
+
+		// }
+
+				
 		evaluate(temp,fp);
 		fprintf(fp, "mov %s, AX\n",name );
 	}
 
 	else if(A->t->s == conditionalstmt)
 	{
+		int r = rand()%100;
 		ifelse(GT,FT,RT,A->next[1],fp);
 		fprintf(fp, "cmp AX,1\n");
-		fprintf(fp, "jne else%d\n", A->lineno);
+		fprintf(fp, "jne else_%d_%d\n", A->lineno,r);
 
-		fprintf(fp, "jmp then%d\n", A->lineno);
-		fprintf(fp, "then%d:\n",A->lineno );
+		fprintf(fp, "jmp then_%d_%d\n", A->lineno,r);
+		fprintf(fp, "then_%d_%d:\n",A->lineno,r );
 		//fprintf(fp,"%s\n",toStr(A->next[3]->t->s));
 		generateCode(GT,FT,RT,A->next[3],fp);
-		fprintf(fp, "else%d:\n", A->lineno);
+		fprintf(fp, "jmp cont_%d_%d\n",A->lineno,r );
+		fprintf(fp, "else_%d_%d:\n", A->lineno,r);
 		generateCode(GT,FT,RT,A->next[4],fp);
+		fprintf(fp, "cont_%d_%d:\n",A->lineno,r );
 
 	}
-	// else if(A->t->s == iterativestmt)
-	// {
-	// 	fprintf(fp, "label_%d:\n",A->lineo );
-	// 	ifelse(GT,FT,RT,A->next[1],fp);
-	// 	fprintf(fp, "cmp AX,1\n");
-	// 	fprintf(fp, "jne out_%d\n",A->lineno );
-	// 	fprintf(fp, "label_%d\n",A->lineno);
-	// }
+	else if(A->t->s == iterativestmt)
+	{
+		fprintf(fp, "label_%d:\n",A->lineno );
+		ifelse(GT,FT,RT,A->next[1],fp);
+		fprintf(fp, "cmp AX,1\n");
+		fprintf(fp, "je label_%d\n",A->lineno );
+		//fprintf(fp, "label_%d\n",A->lineno);
+	}
 	else
 	{
 		for(j=0;A->next[j]!=NULL;j++)

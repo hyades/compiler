@@ -1,25 +1,18 @@
+
+%The following program maximum of two integers. Inputs should be made after pressing Enter key.
 _main
-record #marks
-	type real : maths; 
-	type real: physics; 
-	type real: chemistry;
-endrecord;
-type record #marks : d4;
-type real : d5 : global;
-type int : d3;
-d5 <--- 1.50;
-d4.maths <--- 1.50 + 2.50;
-if((~d5 == 0.00) &&& (d3 > 2)) 
-	then
-		d5<--- 2.22;
-endif
-d3 <--- 2;
-while(d3 < 5 )
-	d3 <--- d3 + 1;
-	read(d3);
-	read(d5);
-	write(d5);
-	write(d3);
-endwhile
-return;
+    type int : b3;
+    type int : b4;
+	
+
+	read(b3);
+    read(b4);
+	
+
+    if(b3 > b4)
+    then write(b3);
+    else
+        write(b4);
+    endif
+	return;
 end
